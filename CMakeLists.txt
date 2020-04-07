@@ -8,7 +8,7 @@ add_subdirectory(lib)
 
 add_executable(serial main.cpp)
 
-target_link_libraries(serial PUBLIC lib)
+target_link_libraries(serial PUBLIC serialconnect)
 
 target_include_directories(serial PUBLIC
                           "${PROJECT_BINARY_DIR}"

@@ -10,4 +10,5 @@ else ()
     set (LINUX_SRC read.cpp serial.cpp)
 endif (WIN32)
 
-add_library(lib ${C_SRC} ${WIN_SRC} ${LINUX_SRC})
+add_library(serialconnect SHARED ${C_SRC} ${WIN_SRC} ${LINUX_SRC})
+target_link_libraries(serialconnect ${LIBRARIES})
