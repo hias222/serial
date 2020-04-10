@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <string>
 // Linux headers
 #include <fcntl.h> // Contains file controls like O_RDWR
 #include <errno.h> // Error integer and strerror() function
@@ -8,7 +9,9 @@
 #include <termios.h>
 #include "serialData.h"
 
-bool read(int port)
+using namespace std;
+
+bool read(string port)
 {
 
     unsigned char loop = 0;
@@ -99,10 +102,5 @@ bool read(int port)
 
     close(serial_port);
 
-    return true;
-}
-
-bool readtest(int port)
-{
     return true;
 }

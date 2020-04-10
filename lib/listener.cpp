@@ -15,14 +15,12 @@ using namespace std;
 #include "serial.h"
 #endif
 
-bool startconnect()
+bool checkPort()
 {
     bool check;
-
     check = false;
 
     printf("Start listener ..\n");
-
     printf("%s\n", getInfo().c_str());
 
     check = open(1);
@@ -36,17 +34,28 @@ bool startconnect()
         printf("open failure");
     }
 
-    printf("Read ..\n");
+    return check;
+}
+
+bool start()
+{
+    bool check = false;
     try
     {
-        read(2);
+        read("2");
+        check = true;
+        printf("Read success\n");
     }
     catch (...)
     {
-        printf("exception");
+        printf("Read exception");
     }
+    return check;
+}
 
-    readtest(2);
-    printf("End ..\n");
-    return true;
+int startListen()
+{
+    //ToDo Loop
+    start();
+    return 0;
 }
