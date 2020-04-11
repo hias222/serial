@@ -11,7 +11,7 @@ using namespace std;
 bool testBasic()
 {
     bool check = checkPort();
-    ALEPH_ASSERT_THROW(check);
+    TEST_ASSERT_THROW(check);
     //ALEPH_ASSERT_EQUAL(1, 2);
     return check;
 }
@@ -20,7 +20,7 @@ void testAdvanced()
 {
     // a more advanced test
     bool check = start();
-    ALEPH_ASSERT_THROW(check);
+    TEST_ASSERT_THROW(check);
 }
 
 int main(int, char **)

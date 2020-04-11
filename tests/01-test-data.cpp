@@ -88,7 +88,7 @@ int main()
     myData.putData(0x80);
     */
 
-    ALEPH_ASSERT_THROW(false);
+    TEST_ASSERT_THROW(false);
 
     return 0;
 }

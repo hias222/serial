@@ -10,7 +10,6 @@ else ()
     set (LINUX_SRC read.cpp serial.cpp)
 endif (WIN32)
 
-add_subdirectory(mosquitto-1.6.9)
-
 add_library(serialconnect SHARED ${C_SRC} ${WIN_SRC} ${LINUX_SRC})
+
 target_link_libraries(serialconnect ${LIBRARIES})

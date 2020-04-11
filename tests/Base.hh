@@ -1,4 +1,4 @@
-#define ALEPH_ASSERT_THROW( condition )                             \
+#define TEST_ASSERT_THROW( condition )                             \
 {                                                                   \
   if( !( condition ) )                                              \
   {                                                                 \
@@ -11,7 +11,7 @@
   }                                                                 \
 }
 
-#define ALEPH_ASSERT_EQUAL( x, y )                                  \
+#define TEST_ASSERT_EQUAL( x, y )                                  \
 {                                                                   \
   if( ( x ) != ( y ) )                                              \
   {                                                                 \
