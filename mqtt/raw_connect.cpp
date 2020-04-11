@@ -1,27 +1,64 @@
-#include <cstdio>
+#include <stdlib.h>
+#include <signal.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <string.h>
 #include <cstring>
+#include "mosquitto.h"
 
-#include "raw_connect.h"
-#include <mosquittopp.h>
-
-raw_connect::raw_connect(const char *id, const char *host, int port) : mosquittopp(id)
+int raw_connect()
 {
-	int keepalive = 60;
+	int rc;
+	struct mosquitto_message *msg;
+	struct mosquitto *mosq;
 
-	/* Connect immediately. This could also be done by calling
-	 * mqtt_tempconv->connect(). */
-	connect(host, port, keepalive);
-};
+	bool clean_session = true;
 
-raw_connect::~raw_connect()
-{
-}
+	int *msgid;
+	char buf[50];
+	snprintf(buf, 50, "%s", "Hello World");
 
-void raw_connect::on_connect(int rc)
-{
-	printf("Connected with code %d.\n", rc);
-	if(rc == 0){
-		/* Only attempt to subscribe on a successful connect. */
-		subscribe(NULL, "temperature/celsius");
+	mosquitto_lib_init();
+	mosq = mosquitto_new(NULL, clean_session, NULL);
+
+	if (!mosq)
+	{
+		fprintf(stderr, "Error: Out of memory.\n");
+		mosquitto_lib_cleanup();
+		return 1;
 	}
+
+	rc = mosquitto_connect(mosq,
+						   "localhost",
+						   1883,
+						   60);
+
+	if (rc)
+	{
+		printf("Error: %s\n", mosquitto_strerror(rc));
+		mosquitto_lib_cleanup();
+		return rc;
+	}
+
+	//printf("%s %s\n", msg->topic, (char *)msg->payload);
+
+	printf("publish");
+
+	rc = mosquitto_publish(mosq,
+						   msgid,
+						   "raw",
+						   strlen(buf),
+						   buf,
+						   0,
+						   0);
+	if (rc)
+	{
+		printf("Error: %s\n", mosquitto_strerror(rc));
+		mosquitto_lib_cleanup();
+		return rc;
+	}
+
+	mosquitto_lib_cleanup();
+
+	return 0;
 }
