@@ -15,6 +15,8 @@ publisher::publisher(const char *id, const char *host, const char *topic, int po
     strcpy(mqttid, id);
 
     mqttport = port;
+
+    //char *mqttmessage = (char *)malloc(100);
 }
 
 int publisher::connect()
@@ -45,7 +47,7 @@ int publisher::connect()
     return 0;
 }
 
-int publisher::publish(const char *message)
+int publisher::publish(char *message)
 {
 
     printf("publish start \n");
@@ -54,8 +56,6 @@ int publisher::publish(const char *message)
 
     char mqttmessage[strlen(message) + 1];
     snprintf(mqttmessage, strlen(message) + 1, "%s", message);
-
-    printf("mqqt %s \n", mqttmessage);
 
     rc = mosquitto_publish(mosq,
                            msgid,
@@ -70,6 +70,7 @@ int publisher::publish(const char *message)
         printf("Error: %s\n", mosquitto_strerror(rc));
         return rc;
     }
+    
 
     return 0;
 }

@@ -8,9 +8,11 @@ public:
     ~publisher();
 
     int connect();
-    int publish(const char * message);
+    int publish(char * message);
 
     struct mosquitto *mosq;
     char* mqtthost, *mqttid, *mqtttopic;
     int mqttport;
+
+    char* mqttmessage;
 };
