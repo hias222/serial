@@ -83,7 +83,7 @@ int putReadData(uint8_t ReadData)
 #ifdef debug_incoming
                     printf("--- update header %02x \n", ReadData);
 #endif
-                    analyseActiveData(colorado_control_channel, colorado_data[colorado_control_channel]);
+                    getHeader(colorado_data[colorado_control_channel]);
                 }
             }
         }

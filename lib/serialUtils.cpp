@@ -1,8 +1,10 @@
 #include <string>
 #include <stdio.h>
 #include <string.h>
-
+#include "mosquitto.h"
 #include "serialUtils.h"
+#include "mqttUtils.h"
+#include <unistd.h>
 //#include "commonData.h"
 
 #define DISPLAY_LANE_COUNT 8
@@ -55,36 +57,33 @@ int getTime(int lane, uint8_t data[])
     sprintf(mydata, "lane %d %d%d:%d%d,%d%d %d", lane, checkBitValue(data[4]), checkBitValue(data[6]), checkBitValue(data[8]), checkBitValue(data[10]), checkBitValue(data[12]), checkBitValue(data[14]), checkBitValue(data[2]));
     sprintf(place, "%d", checkBitValue(data[2]));
 
-    /*
-  if (strcmp(shortdata, COLORADO_HEAT_DATA[lane - 1]) == 0)
-  {
-    array_match = true;
-    
-    if (strcmp(place, COLORADO_PLACE_DATA[lane - 1]) != 0)
+    if (strcmp(shortdata, COLORADO_HEAT_DATA[lane - 1]) == 0)
     {
+        array_match = true;
 
-      //der platz ist ungleich
-      if (strcmp(place, "0") != 0)
-      {
-        //jetzt müssen wir schicken
-        array_match = false;
-      }
-    }
-    
-  }
-  else
-  {
+        if (strcmp(place, COLORADO_PLACE_DATA[lane - 1]) != 0)
+        {
 
-    if (strcmp(shortdata, "000000") == 0)
-    {
-      array_match = true;
+            //der platz ist ungleich
+            if (strcmp(place, "0") != 0)
+            {
+                //jetzt müssen wir schicken
+                array_match = false;
+            }
+        }
     }
     else
     {
-      array_match = false;
+
+        if (strcmp(shortdata, "000000") == 0)
+        {
+            array_match = true;
+        }
+        else
+        {
+            array_match = false;
+        }
     }
-  }
-  */
 
     if (checkBitValue(data[2]) == 0 && checkBitValue(data[14]) == 13)
     {
@@ -94,6 +93,7 @@ int getTime(int lane, uint8_t data[])
     if (!array_match)
     {
         //publish->publish(mydata);
+        mqtt_send(mydata);
 
         for (int i = 0; i < MQTT_MESSAGE_LENGTH; i++)
         {
@@ -116,6 +116,55 @@ int8_t checkBitValue(int8_t data)
     }
     return data;
 };
+
+void getHeader(uint8_t data[])
+{
+    char mydata[MQTT_LONG_LENGTH];
+    bool array_match = true;
+
+    sprintf(mydata, "header %d%d%d %d%d%d", checkBitValue(data[0]), checkBitValue(data[2]), checkBitValue(data[4]), checkBitValue(data[10]), checkBitValue(data[12]), checkBitValue(data[14]));
+
+    mqtt_send(mydata);
+
+    if (strcmp(mydata, "header 000 000") == 0)
+    {
+        sprintf(mydata, "clock");
+    }
+    else if (strcmp(mydata, COLORADO_HEADER_DATA) == 0)
+    {
+        array_match = true;
+    }
+    else
+    {
+        array_match = false;
+        mqtt_send(mydata);
+
+        //TODO clean Lane Data
+        //nein es werden immer alle Zeiten bis zum erbrechen geschickt ...
+
+        for (int clearnr = 0; clearnr < DISPLAY_LANE_COUNT; clearnr++)
+        {
+
+            sprintf(COLORADO_HEAT_DATA[clearnr], "000000");
+            /* 
+        COLORADO_HEAT_DATA[clearnr] = shortdata;
+      for (int i = 0; i < MQTT_MESSAGE_LENGTH; i++)
+      {
+        COLORADO_HEAT_DATA[clearnr][i] = 0x00;
+      }
+      */
+        }
+    }
+
+    if (!array_match)
+    {
+        mqtt_send(mydata);
+        for (int i = 0; i < MQTT_LONG_LENGTH; i++)
+        {
+            COLORADO_HEADER_DATA[i] = mydata[i];
+        }
+    }
+}
 
 bool checknotnull(uint8_t data[])
 {
@@ -144,26 +193,22 @@ bool checknotnull(uint8_t data[])
 bool checkStartStop(uint8_t data[])
 {
     running = checknotnull(data);
+    char mydata[MQTT_LONG_LENGTH];
 
     if (stopping != running)
     {
         if (running)
         {
             //coloradoraw.publish("start");
+            sprintf(mydata, "start");
+            mqtt_send(mydata);
             new_race_started = 0x01;
-
-#ifdef INFO_MQTT
-            //coloradodebug.publish("Start ---->");
-            printf("Start ---->\n");
-#endif
         }
         else
         {
             //coloradoraw.publish("stop");
-#ifdef INFO_MQTT
-            //coloradodebug.publish("Stop ---->");
-            printf("Stop ---->\n");
-#endif
+            sprintf(mydata, "stop");
+            mqtt_send(mydata);
         }
     }
     stopping = running;

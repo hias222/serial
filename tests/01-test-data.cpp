@@ -1,7 +1,9 @@
 #include <stdio.h>
+#include <unistd.h>
 
 #include "analyseData.h"
 #include "Base.hh"
+#include "mqttUtils.h"
 
 int main()
 {
@@ -9,6 +11,7 @@ int main()
 
     printf("Start testSerialData ..\n");
 
+    mqtt_connect();
 
     //myData.setstart();
     printf("lane\n");
@@ -65,6 +68,32 @@ int main()
         putReadData(0x3f);
         putReadData(0x4f);
         putReadData(0x5f);
+    }
+
+    //lane
+    for (int i = 0; i < 120; i++)
+    {
+        putReadData(0xb0);
+        printf("lane data\n");
+        putReadData(0x3);
+        putReadData(0x1f);
+        putReadData(0x2f);
+        putReadData(0x49);
+        putReadData(0x56);
+        putReadData(0x5d);
+        putReadData(0x5f);
+        putReadData(0x7f);
+        sleep(1);
+        putReadData(0xb0);
+        printf("lane data\n");
+        putReadData(0x3);
+        putReadData(0x1f);
+        putReadData(0x2f);
+        putReadData(0x49);
+        putReadData(0x56);
+        putReadData(0x5d);
+        putReadData(0x6f);
+        putReadData(0x7f);
     }
 
     //next
