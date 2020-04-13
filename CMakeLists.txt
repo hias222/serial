@@ -26,7 +26,6 @@ target_include_directories(serial PUBLIC
                           "${PROJECT_BINARY_DIR}"
                           "${PROJECT_SOURCE_DIR}/lib"
                           "${PROJECT_SOURCE_DIR}/mosquitto-1.6.9/lib"
-                          "${PROJECT_SOURCE_DIR}/mosquitto-1.6.9/lib/cpp"
                           )
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
