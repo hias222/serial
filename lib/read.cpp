@@ -7,7 +7,7 @@
 
 #include <unistd.h>
 #include <termios.h>
-#include "serialData.h"
+#include "analyseData.h"
 
 using namespace std;
 
@@ -73,14 +73,13 @@ bool read(string port)
     // Read bytes. The behaviour of read() (e.g. does it block?,
     // how long does it block for?) depends on the configuration
     // settings above, specifically VMIN and VTIME
-    serialData myReaddata = serialData();
     int num_bytes;
     do
     {
         num_bytes = read(serial_port, &ReadData, sizeof(ReadData));
         //ReadFile(hComm, &ReadData, sizeof(ReadData), &NoBytesRead, NULL);
         //printf("incoming %02x", ReadData  );
-        myReaddata.putData(ReadData);
+        putReadData(ReadData);
         ++loop;
     } while (num_bytes > 0);
     --loop; //Get Actual length of received data

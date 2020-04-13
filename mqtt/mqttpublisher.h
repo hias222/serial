@@ -1,11 +1,11 @@
 #include "mosquitto.h"
 
-class publisher
+class mqttpublisher
 {
 
 public:
-    publisher(const char *id, const char *host, const char *topic, int port);
-    ~publisher();
+    mqttpublisher(const char *id, const char *host, const char *topic, int port);
+    ~mqttpublisher();
 
     int connect();
     int publish(char * message);

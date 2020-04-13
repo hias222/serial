@@ -15,7 +15,7 @@
 // for the message to broker
 #define MQTT_LONG_LENGTH 25
 
-int serialData::setstart()
+serialData::serialData()
 {
   colorado_start_detected = 0;
   loop = 0;
@@ -26,6 +26,27 @@ int serialData::setstart()
   new_race_started = 0x00;
   noworking = 0;
   pending = false;
+  publish = new mqttpublisher("test", "localhost", "raw", 1883);
+  publish->connect();
+
+  for (int i; i < DISPLAY_LANE_COUNT; i++)
+  {
+    for (int g; g < DISPLAY_LANE_COUNT; g++)
+    {
+      COLORADO_HEAT_DATA[i][g] = '\0';
+    }
+  }
+  for (int i; i < DISPLAY_LANE_COUNT; i++)
+  {
+    for (int g; g < 2; g++)
+    {
+      COLORADO_PLACE_DATA[i][g] = '\0';
+    }
+  }
+}
+
+int serialData::setstart()
+{
   return 1;
 }
 
@@ -133,7 +154,95 @@ bool serialData::analyseActiveData(uint8_t channel, uint8_t data[32])
   sprintf(mydata, "%d: %d %d%d %d%d %d%d", channel, checkBitValue(data[2]), checkBitValue(data[4]), checkBitValue(data[6]), checkBitValue(data[8]), data[10], data[12], data[14]);
   printf("%s \n", mydata);
 
+  getTime(channel, data);
+
   return true;
+}
+
+int serialData::getTime(int lane, uint8_t data[])
+{
+  char mydata[MQTT_LONG_LENGTH];
+  char shortdata[MQTT_MESSAGE_LENGTH] = "0000000";
+  char log[MQTT_MESSAGE_LENGTH];
+  char place[2];
+  bool array_match = false;
+  publish->publish("getTime");
+
+  publish->publish("---");
+  publish->publish(shortdata);
+  publish->publish("---");
+  printf(shortdata);
+
+  // Button ZEit
+  //Problem ees wird die ZEit aus dem letzten lauf geschickt mit 0 als platz
+  sprintf(shortdata, "%d%d%d%d%d%d", checkBitValue(data[4]), checkBitValue(data[14]), checkBitValue(data[12]), checkBitValue(data[10]), checkBitValue(data[8]), checkBitValue(data[6]));
+  //sprintf(shortdata, "%d%d%d%d%d%d", checkBitValue(data[2]), checkBitValue(data[14]), checkBitValue(data[12]), checkBitValue(data[10]), checkBitValue(data[8]), checkBitValue(data[6]));
+  sprintf(mydata, "lane %d %d%d:%d%d,%d%d %d", lane, checkBitValue(data[4]), checkBitValue(data[6]), checkBitValue(data[8]), checkBitValue(data[10]), checkBitValue(data[12]), checkBitValue(data[14]), checkBitValue(data[2]));
+  sprintf(place, "%d", checkBitValue(data[2]));
+
+  publish->publish("---");
+  publish->publish(shortdata);
+  publish->publish(mydata);
+  publish->publish(mydata);
+  publish->publish(place);
+  publish->publish("---");
+
+  if (strcmp(shortdata, COLORADO_HEAT_DATA[lane - 1]) == 0)
+  {
+    publish->publish("#");
+  }
+
+  /*
+  if (strcmp(shortdata, COLORADO_HEAT_DATA[lane - 1]) == 0)
+  {
+    array_match = true;
+    
+    if (strcmp(place, COLORADO_PLACE_DATA[lane - 1]) != 0)
+    {
+
+      //der platz ist ungleich
+      if (strcmp(place, "0") != 0)
+      {
+        //jetzt müssen wir schicken
+        array_match = false;
+      }
+    }
+    
+  }
+  else
+  {
+
+    if (strcmp(shortdata, "000000") == 0)
+    {
+      array_match = true;
+    }
+    else
+    {
+      array_match = false;
+    }
+  }
+  */
+
+  if (checkBitValue(data[2]) == 0 && checkBitValue(data[14]) == 13)
+  {
+    array_match = true;
+  }
+
+  if (!array_match)
+  {
+    //publish->publish(mydata);
+
+    for (int i = 0; i < MQTT_MESSAGE_LENGTH; i++)
+    {
+      COLORADO_HEAT_DATA[lane - 1][i] = shortdata[i];
+    }
+
+    for (int i = 0; i < 2; i++)
+    {
+      COLORADO_PLACE_DATA[lane - 1][i] = place[i];
+    }
+  }
+  return 0;
 }
 
 int8_t serialData::checkBitValue(int8_t data)
@@ -143,7 +252,31 @@ int8_t serialData::checkBitValue(int8_t data)
     return 0x00;
   }
   return data;
-}
+};
+
+bool serialData::checknotnull(uint8_t data[])
+{
+  noworking++;
+
+  if (noworking > 5)
+  {
+    noworking = 0;
+    for (int i = 12; i > 4; i = i - 2)
+    {
+      if (data[i] != 0x0F)
+      {
+        if (data[i] > 0)
+        {
+          pending = true;
+          return true;
+        }
+      }
+    }
+    pending = false;
+    return false;
+  }
+  return pending;
+};
 
 bool serialData::checkStartStop(uint8_t data[])
 {
@@ -172,28 +305,4 @@ bool serialData::checkStartStop(uint8_t data[])
   }
   stopping = running;
   return true;
-}
-
-bool serialData::checknotnull(uint8_t data[])
-{
-  noworking++;
-
-  if (noworking > 5)
-  {
-    noworking = 0;
-    for (int i = 12; i > 4; i = i - 2)
-    {
-      if (data[i] != 0x0F)
-      {
-        if (data[i] > 0)
-        {
-          pending = true;
-          return true;
-        }
-      }
-    }
-    pending = false;
-    return false;
-  }
-  return pending;
-}
+};

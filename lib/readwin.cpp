@@ -12,7 +12,7 @@
 #include <assert.h>
 #endif
 
-#include "serialData.h"
+#include "analyseData.h"
 
 #define RS232_PORTNR 32
 #define COLORADO_ADDRESS_WORD_MASK 0x80
@@ -129,8 +129,6 @@ bool read(string portstring)
             NULL   // no name
         );
 
-        serialData myReaddata = serialData();
-
         // Initialize the rest of the OVERLAPPED structure to zero.
         o.Internal = 0;
         o.InternalHigh = 0;
@@ -151,7 +149,7 @@ bool read(string portstring)
                 do
                 {
                     Status = ReadFile(hComm, &ReadData, sizeof(ReadData), &NoBytesRead, NULL);
-                    myReaddata.putData(ReadData);
+                    putReadData(ReadData);
                     ++loop;
                 } while (NoBytesRead > 0);
                 --loop; //Get Actual length of received data

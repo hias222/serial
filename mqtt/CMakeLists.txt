@@ -1,7 +1,7 @@
 
 set(C_SRC
 raw_connect.cpp 
-publisher.cpp
+mqttpublisher.cpp
 )
 
 add_library(mqtt SHARED ${C_SRC} )

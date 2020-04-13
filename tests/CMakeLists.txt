@@ -34,6 +34,6 @@ target_include_directories(01-test-mqtt PUBLIC
                           )
 
 
-#ADD_TEST( 01-test-data  01-test-data )
-ADD_TEST( 01-test-mqtt  01-test-mqtt )
+ADD_TEST( 01-test-data  01-test-data )
+#ADD_TEST( 01-test-mqtt  01-test-mqtt )
 #ADD_TEST( 01-test-base  01-test-base )

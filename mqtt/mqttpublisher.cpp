@@ -1,9 +1,15 @@
-#include "publisher.h"
 #include <string>
 #include <cstring>
 #include "mosquitto.h"
 
-publisher::publisher(const char *id, const char *host, const char *topic, int port)
+#include <signal.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <string.h>
+
+#include "mqttpublisher.h"
+
+mqttpublisher::mqttpublisher(const char *id, const char *host, const char *topic, int port)
 {
     mqtthost = new char[strlen(host) + 1];
     strcpy(mqtthost, host);
@@ -16,22 +22,22 @@ publisher::publisher(const char *id, const char *host, const char *topic, int po
 
     mqttport = port;
 
-    connect();
+    mosquitto_lib_init();
     //char *mqttmessage = (char *)malloc(100);
 }
 
-publisher::~publisher()
+mqttpublisher::~mqttpublisher()
 {
+    mosquitto_disconnect(mosq);
+    mosquitto_destroy(mosq);
     mosquitto_lib_cleanup();
     printf("destroy");
 };
 
-int publisher::connect()
+int mqttpublisher::connect()
 {
     int rc;
     bool clean_session = true;
-
-    mosquitto_lib_init();
 
     mosq = mosquitto_new(NULL, clean_session, NULL);
 
@@ -56,9 +62,8 @@ int publisher::connect()
     return 0;
 }
 
-int publisher::publish(char *message)
+int mqttpublisher::publish(char *message)
 {
-    connect();
     printf("publish start \n");
     int *msgid;
     int rc;
@@ -79,6 +84,14 @@ int publisher::publish(char *message)
         printf("Error: %s\n", mosquitto_strerror(rc));
         return rc;
     }
+
+    /*
+    			if(run && rc){
+				printf("connection error!\n");
+				sleep(10);
+				mosquitto_reconnect(mosq);
+			}
+            */
 
     return 0;
 }

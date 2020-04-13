@@ -3,34 +3,36 @@
 
 #include "Base.hh"
 #include "raw_connect.h"
-#include "publisher.h"
+#include "mqttpublisher.h"
 #include "mosquitto.h"
 
-int main()
+int send_message()
 {
     int rc;
 
-    class publisher *publish;
-    publish = new publisher("test", "localhost", "raw", 1883);
+    class mqttpublisher *publish;
+    publish = new mqttpublisher("test", "localhost", "raw", 1883);
 
     char buf[50];
     sprintf(buf, "%s", "Nachricht eins");
 
     publish->connect();
-    TEST_ASSERT_THROW(publish->publish(buf) == 0);
+    publish->publish(buf);
 
-    //publish->~publisher();
-
-    //publish = new publisher("test", "localhost", "raw", 1883);
     sprintf(buf, "%s", "Nachricht zwei");
 
-    for (int i = 0; i < 5 ; i++)
+    for (int i = 0; i < 5; i++)
     {
-        publish->connect();
-        TEST_ASSERT_THROW(publish->publish(buf) == 0);
+        publish->publish(buf);
     }
 
-    publish->~publisher();
+    publish->~mqttpublisher();
+    //delete publish;
 
     return 0;
+}
+
+int main()
+{
+    TEST_ASSERT_THROW(send_message() == 0);
 };
