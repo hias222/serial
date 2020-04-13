@@ -10,25 +10,27 @@ int main()
 {
     int rc;
 
-    mosquitto_lib_init();
-
     class publisher *publish;
     publish = new publisher("test", "localhost", "raw", 1883);
 
     char buf[50];
-    //buf=(char)malloc(60*sizeof(char));
-    sprintf(buf,"%s", "h123456789 ello");
+    sprintf(buf, "%s", "Nachricht eins");
 
     publish->connect();
     TEST_ASSERT_THROW(publish->publish(buf) == 0);
 
-    char buf2[50];
-    publish->connect();
+    //publish->~publisher();
 
-    sprintf(buf2,"%s", "end");
-    TEST_ASSERT_THROW(publish->publish(buf2) == 0);
-    
-    mosquitto_lib_cleanup();
+    //publish = new publisher("test", "localhost", "raw", 1883);
+    sprintf(buf, "%s", "Nachricht zwei");
+
+    for (int i = 0; i < 5 ; i++)
+    {
+        publish->connect();
+        TEST_ASSERT_THROW(publish->publish(buf) == 0);
+    }
+
+    publish->~publisher();
 
     return 0;
 };

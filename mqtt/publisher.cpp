@@ -16,13 +16,22 @@ publisher::publisher(const char *id, const char *host, const char *topic, int po
 
     mqttport = port;
 
+    connect();
     //char *mqttmessage = (char *)malloc(100);
 }
+
+publisher::~publisher()
+{
+    mosquitto_lib_cleanup();
+    printf("destroy");
+};
 
 int publisher::connect()
 {
     int rc;
     bool clean_session = true;
+
+    mosquitto_lib_init();
 
     mosq = mosquitto_new(NULL, clean_session, NULL);
 
@@ -49,7 +58,7 @@ int publisher::connect()
 
 int publisher::publish(char *message)
 {
-
+    connect();
     printf("publish start \n");
     int *msgid;
     int rc;
@@ -70,7 +79,6 @@ int publisher::publish(char *message)
         printf("Error: %s\n", mosquitto_strerror(rc));
         return rc;
     }
-    
 
     return 0;
 }
