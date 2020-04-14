@@ -1,8 +1,16 @@
 #include <stdio.h>
+
+#ifdef _WIN32
+#include <process.h>
+#include <Windows.h>
+#include <iostream>
+#include "BaseWin.hh"
+#else
 #include <unistd.h>
+#include "Base.hh"
+#endif
 
 #include "analyseData.h"
-#include "Base.hh"
 #include "mqttUtils.h"
 
 int main()
@@ -83,7 +91,11 @@ int main()
         putReadData(0x5d);
         putReadData(0x5f);
         putReadData(0x7f);
-        sleep(1);
+#ifdef _WIN32
+        Sleep(1);
+#else
+        sleep(1)
+#endif
         putReadData(0xb0);
         printf("lane data\n");
         putReadData(0x3);

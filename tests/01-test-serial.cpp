@@ -4,9 +4,16 @@
 
 #include "listener.h"
 
-using namespace std;
-
+#ifdef _WIN32
+#include <process.h>
+#include <Windows.h>
+#include <iostream>
+#include "BaseWin.hh"
+#else
+#include <unistd.h>
 #include "Base.hh"
+#endif
+
 
 bool testBasic()
 {

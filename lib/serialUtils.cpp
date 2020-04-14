@@ -4,7 +4,13 @@
 #include "mosquitto.h"
 #include "serialUtils.h"
 #include "mqttUtils.h"
+
+#ifdef _WIN32
+#include <process.h>
+#else
 #include <unistd.h>
+#endif
+
 //#include "commonData.h"
 
 #define DISPLAY_LANE_COUNT 8

@@ -2,7 +2,12 @@
 #include <stdio.h>
 #include <string.h>
 #include "mosquitto.h"
+
+#ifdef _WIN32
+#include <process.h>
+#else
 #include <unistd.h>
+#endif
 
 #include "mqttUtils.h"
 
@@ -22,7 +27,12 @@ int mqtt_connect()
     mosquitto_lib_init();
 
     memset(clientid, 0, 24);
+#ifdef _WIN32
+    snprintf(clientid, 23, "mysql_log_%d", 1);
+#else
     snprintf(clientid, 23, "mysql_log_%d", getpid());
+#endif
+
     mosq = mosquitto_new(clientid, true, 0);
 
     if (!mosq)
@@ -39,9 +49,13 @@ int mqtt_send(char message[MQTT_LONG_LENGTH])
     int rc;
     int *msgid;
 
-    char buf[50];
+    //char buf[50];
     //snprintf(buf, 50, "%s", "Hello World");
+#ifdef _WIN32
+    char mqttmessage[MQTT_LONG_LENGTH + 1];
+#else
     char mqttmessage[strlen(message) + 1];
+#endif
     snprintf(mqttmessage, strlen(message) + 1, "%s", message);
 
     if (mosq)

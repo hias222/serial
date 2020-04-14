@@ -13,10 +13,10 @@ endif (WIN32)
 
 add_library(serialconnect SHARED ${C_SRC} ${WIN_SRC} ${LINUX_SRC})
 
-target_link_libraries(serialconnect 
+target_link_libraries(serialconnect PUBLIC
                     mqtt
-                    libmosquitto
-                    ${LIBRARIES})
+                   )
+        #  ${LIBRARIES}
 
                         
 target_include_directories(serialconnect PUBLIC
@@ -24,5 +24,4 @@ target_include_directories(serialconnect PUBLIC
                             "${PROJECT_SOURCE_DIR}/lib"
                             "${PROJECT_SOURCE_DIR}/mqtt"
                             "${PROJECT_SOURCE_DIR}/mosquitto-1.6.9/lib"
-                            "${PROJECT_SOURCE_DIR}/mosquitto-1.6.9/cpp/lib"
                           )
