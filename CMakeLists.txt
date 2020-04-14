@@ -42,21 +42,21 @@ target_include_directories(serial PUBLIC
                           "${PROJECT_SOURCE_DIR}/mosquitto-1.6.9/lib"
                           )
 
-                          if(WIN32)
-                          set(LIBRARY_OUTPUT_PATH "${PROJECT_BINARY_DIR}")
-                          set(EXECUTABLE_OUTPUT_PATH "${PROJECT_BINARY_DIR}")
+if(WIN32)
+    set(LIBRARY_OUTPUT_PATH "${PROJECT_BINARY_DIR}")
+    set(EXECUTABLE_OUTPUT_PATH "${PROJECT_BINARY_DIR}")
 
-file(COPY ${PROJECT_BINARY_DIR}/mosquitto-1.6.9/lib/mosquitto.dll
-                          DESTINATION ${PROJECT_BINARY_DIR})
+    file(COPY ${PROJECT_BINARY_DIR}/mosquitto-1.6.9/lib/mosquitto.dll
+                            DESTINATION ${PROJECT_BINARY_DIR})
 
-file(COPY C:/Users/User/git/vcpkg/installed/x86-windows/bin/libssl-1_1.dll
-                          DESTINATION ${PROJECT_BINARY_DIR})
+    file(COPY C:/Users/User/git/vcpkg/installed/x86-windows/bin/libssl-1_1.dll
+                            DESTINATION ${PROJECT_BINARY_DIR})
 
-file(COPY C:/Users/User/git/vcpkg/installed/x86-windows/bin/libcrypto-1_1.dll
-DESTINATION ${PROJECT_BINARY_DIR})
+    file(COPY C:/Users/User/git/vcpkg/installed/x86-windows/bin/libcrypto-1_1.dll
+    DESTINATION ${PROJECT_BINARY_DIR})
 
-file(COPY C:/Users/User/git/vcpkg/installed/x86-windows/bin/pthreadVC3.dll
-DESTINATION ${PROJECT_BINARY_DIR})
+    file(COPY C:/Users/User/git/vcpkg/installed/x86-windows/bin/pthreadVC3.dll
+    DESTINATION ${PROJECT_BINARY_DIR})
 endif()
 
 
