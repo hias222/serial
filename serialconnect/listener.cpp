@@ -3,17 +3,23 @@
 #include <string>
 
 #include "listener.h"
-using namespace std;
 
-#include "info.h"
+using namespace std;
 
 #ifdef _WIN32
 #include "serialwin.h"
 #include "readwin.h"
+#include <process.h>
+#include <Windows.h>
+#include <iostream>
 #else
+#include <unistd.h>
 #include "read.h"
 #include "serial.h"
 #endif
+
+#include "info.h"
+
 
 bool checkPort()
 {
@@ -40,6 +46,7 @@ bool checkPort()
 bool start()
 {
     bool check = false;
+    printf("Serial ...\n");
     try
     {
         read("2");
@@ -50,12 +57,19 @@ bool start()
     {
         printf("Read exception");
     }
+    printf("... Serial\n");
     return check;
 }
 
 int startListen()
 {
+    printf("Serial loop start!\n");
     //ToDo Loop
-    start();
+    for (int i = 0; i< 5;i++){
+        printf("Serial loop start! %d\n", i);
+        start();
+        sleep(5);
+    }
+
     return 0;
 }

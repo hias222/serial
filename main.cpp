@@ -2,14 +2,16 @@
 
 #include "listener.h"
 #include "analyseData.h"
+#include "mqttUtils.h"
 
-int main(int, char**) {
-    std::cout << "Serial start!\n";
-    //startListen();
-     //char readData = { 0x80 };
+int main(int, char **)
+{
+    mqtt_connect();
+    startListen();
+
+    //char readData = { 0x80 };
 
     printf("Start testSerialData ..\n");
-
 
     //myData.setstart();
     printf("lane\n");
@@ -88,5 +90,4 @@ int main(int, char**) {
     //more
     putReadData(0x80);
     */
-
 }

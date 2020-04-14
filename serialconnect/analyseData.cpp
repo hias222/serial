@@ -4,7 +4,8 @@
 
 #include "analyseData.h"
 #include "serialUtils.h"
-
+//#define debug_incoming
+#define debug_lane
 #define COLORADO_CHANNELS 32
 #define COLORADO_ADDRESS_WORD_MASK 0x80
 #define COLORADO_ROWS 16
@@ -42,6 +43,7 @@ int putReadData(uint8_t ReadData)
         {
             if (in_count == colorado_channel_length[colorado_control_channel])
             {
+                printf ("save %d ctrl %02x", in_count , colorado_control_channel);
 
                 for (j = 1; j < colorado_channel_length[colorado_control_channel]; j++)
                 {
@@ -58,7 +60,7 @@ int putReadData(uint8_t ReadData)
 
                 if (colorado_control_channel != 0x00 && colorado_control_channel < (DISPLAY_LANE_COUNT + 1))
                 {
-#ifdef debug_incoming
+#ifdef debug_lane
                     printf("--- lane %02x \n", ReadData);
 #endif
                     analyseActiveData(colorado_control_channel, colorado_data[colorado_control_channel]);
@@ -80,11 +82,13 @@ int putReadData(uint8_t ReadData)
                 }
                 else
                 {
-#ifdef debug_incoming
+#ifdef debug_lane
                     printf("--- update header %02x \n", ReadData);
 #endif
                     getHeader(colorado_data[colorado_control_channel]);
                 }
+            } else {
+                 printf ("not save %d ctrl %02x \n", in_count , colorado_control_channel);
             }
         }
         in_count = 1;
@@ -102,6 +106,7 @@ int putReadData(uint8_t ReadData)
     {
         if (0x01 == colorado_start_detected)
         { // wir hatten ein Adress Word erkannt => Daten speichern
+            printf(".");
             buf[in_count] = ReadData;
             in_count++;
             //printf("store %02x  \n", ReadData);

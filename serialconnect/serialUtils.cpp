@@ -54,14 +54,14 @@ int getTime(int lane, uint8_t data[])
     char place[2];
     bool array_match = false;
 
-    printf(shortdata);
-
     // Button ZEit
     //Problem ees wird die ZEit aus dem letzten lauf geschickt mit 0 als platz
     sprintf(shortdata, "%d%d%d%d%d%d", checkBitValue(data[4]), checkBitValue(data[14]), checkBitValue(data[12]), checkBitValue(data[10]), checkBitValue(data[8]), checkBitValue(data[6]));
     //sprintf(shortdata, "%d%d%d%d%d%d", checkBitValue(data[2]), checkBitValue(data[14]), checkBitValue(data[12]), checkBitValue(data[10]), checkBitValue(data[8]), checkBitValue(data[6]));
     sprintf(mydata, "lane %d %d%d:%d%d,%d%d %d", lane, checkBitValue(data[4]), checkBitValue(data[6]), checkBitValue(data[8]), checkBitValue(data[10]), checkBitValue(data[12]), checkBitValue(data[14]), checkBitValue(data[2]));
     sprintf(place, "%d", checkBitValue(data[2]));
+
+    printf("gettime: %s ", mydata);
 
     if (strcmp(shortdata, COLORADO_HEAT_DATA[lane - 1]) == 0)
     {
