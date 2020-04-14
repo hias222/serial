@@ -11,10 +11,11 @@ else ()
     set (OTHER_SRC read.cpp serial.cpp)
 endif (WIN32)
 
+# not shared here - Windows
+
 add_library(serialconnect 
             ${C_SRC}
-            readwin.cpp
-            serialwin.cpp
+            ${OTHER_SRC}
             )
 
 
