@@ -21,7 +21,7 @@ target_link_libraries(serialconnect PUBLIC
                         
 target_include_directories(serialconnect PUBLIC
                             "${PROJECT_BINARY_DIR}"
-                            "${PROJECT_SOURCE_DIR}/lib"
+                            "${PROJECT_SOURCE_DIR}/serialconnect"
                             "${PROJECT_SOURCE_DIR}/mqtt"
-                            "${PROJECT_SOURCE_DIR}/mosquitto-1.6.9/lib"
+                           # "${PROJECT_SOURCE_DIR}/mosquitto-1.6.9/lib"
                           )

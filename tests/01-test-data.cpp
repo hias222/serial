@@ -94,7 +94,7 @@ int main()
 #ifdef _WIN32
         Sleep(1);
 #else
-        sleep(1)
+        sleep(1);
 #endif
         putReadData(0xb0);
         printf("lane data\n");

@@ -11,6 +11,6 @@ target_link_libraries(mqtt PUBLIC
 
 target_include_directories(mqtt PUBLIC
                           "${PROJECT_BINARY_DIR}"
-                          "${PROJECT_SOURCE_DIR}/lib"
+                          "${PROJECT_SOURCE_DIR}/serialconnect"
                           "${PROJECT_SOURCE_DIR}/mosquitto-1.6.9/lib"
                           )

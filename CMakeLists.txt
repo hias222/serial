@@ -18,9 +18,10 @@ endif()
 include(CTest)
 enable_testing()
 
-add_subdirectory(lib)
-add_subdirectory(mosquitto-1.6.9)
 add_subdirectory(mqtt)
+add_subdirectory(serialconnect)
+add_subdirectory(mosquitto-1.6.9)
+
 
 if(BUILD_TESTING)
     add_subdirectory(tests)
@@ -30,11 +31,13 @@ add_executable(serial main.cpp)
 
 target_link_libraries(serial PUBLIC 
                             serialconnect
+                            mqtt
                             )
 
 target_include_directories(serial PUBLIC
                           "${PROJECT_BINARY_DIR}"
-                          "${PROJECT_SOURCE_DIR}/lib"
+                          "${PROJECT_SOURCE_DIR}/serialconnect"
+                          "${PROJECT_SOURCE_DIR}/mqtt"
                           "${PROJECT_SOURCE_DIR}/mosquitto-1.6.9/lib"
                           )
 
