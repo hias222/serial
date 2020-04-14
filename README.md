@@ -21,6 +21,11 @@ or
 export OPENSSL_ROOT_DIR="/usr/local/opt/openssl@1.1"
 export OPENSSL_LIBRARIES="/usr/local/opt/openssl@1.1/lib"
 
+or
+
+    set(ENV{OPENSSL_ROOT_DIR} "/usr/local/opt/openssl@1.1")
+    set(ENV{OPENSSL_LIBRARIES} "/usr/local/opt/openssl@1.1/lib")
+
 error include utl..
 
 comment out:
@@ -29,3 +34,12 @@ comment out:
 #endif (WITH_BUNDLED_DEPS)
 
 remove projects except lib and src
+
+## Windows
+
+https://github.com/Microsoft/vcpkg
+
+CMake projects should use: "-DCMAKE_TOOLCHAIN_FILE=C:/Users/User/git/vcpkg/scripts/buildsystems/vcpkg.cmake"
+
+vcpkg install openssl:x86-windows
+vcpkg.exe install pthreads
