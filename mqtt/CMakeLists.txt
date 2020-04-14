@@ -3,9 +3,9 @@ set(C_SRC
 mqttUtils.cpp
 )
 
-add_library(mqtt SHARED ${C_SRC} )
+add_library(mqtt  ${C_SRC} )
 
-target_link_libraries(mqtt PUBLIC
+target_link_libraries(mqtt 
                             libmosquitto
                             )
 

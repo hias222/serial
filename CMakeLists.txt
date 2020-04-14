@@ -32,6 +32,7 @@ add_executable(serial main.cpp)
 target_link_libraries(serial PUBLIC 
                             serialconnect
                             mqtt
+                            libmosquitto
                             )
 
 target_include_directories(serial PUBLIC

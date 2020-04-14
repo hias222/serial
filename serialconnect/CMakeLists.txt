@@ -6,17 +6,30 @@ analyseData.cpp
 serialUtils.cpp)
 
 if (WIN32)
-    set (WIN_SRC readwin.cpp serialwin.cpp)
+    set (OTHER_SRC readwin.cpp serialwin.cpp)
 else ()
-    set (LINUX_SRC read.cpp serial.cpp)
+    set (OTHER_SRC read.cpp serial.cpp)
 endif (WIN32)
 
-add_library(serialconnect SHARED ${C_SRC} ${WIN_SRC} ${LINUX_SRC})
+add_library(serialconnect 
+            ${C_SRC}
+            readwin.cpp
+            serialwin.cpp
+            )
 
-target_link_libraries(serialconnect PUBLIC
+
+target_link_libraries(serialconnect
+                    libmosquitto
                     mqtt
                    )
         #  ${LIBRARIES}
+
+target_include_directories(serialconnect PUBLIC
+      "${PROJECT_BINARY_DIR}"
+      "${PROJECT_SOURCE_DIR}/serialconnect"
+      "${PROJECT_SOURCE_DIR}/mqtt"
+      "${PROJECT_SOURCE_DIR}/mosquitto-1.6.9/lib"
+      )
 
                         
 target_include_directories(serialconnect PUBLIC

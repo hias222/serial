@@ -24,7 +24,7 @@ bool read(string portname)
 {
     //int port = atoi(portname);
     int port = 3;
-    HANDLE Cport[RS232_PORTNR];
+    //HANDLE Cport[RS232_PORTNR];
     const char *comports[RS232_PORTNR] = {"\\\\.\\COM1", "\\\\.\\COM2", "\\\\.\\COM3", "\\\\.\\COM4",
                                           "\\\\.\\COM5", "\\\\.\\COM6", "\\\\.\\COM7", "\\\\.\\COM8",
                                           "\\\\.\\COM9", "\\\\.\\COM10", "\\\\.\\COM11", "\\\\.\\COM12",
@@ -34,7 +34,7 @@ bool read(string portname)
                                           "\\\\.\\COM25", "\\\\.\\COM26", "\\\\.\\COM27", "\\\\.\\COM28",
                                           "\\\\.\\COM29", "\\\\.\\COM30", "\\\\.\\COM31", "\\\\.\\COM32"};
 
-    char mode_str[128];
+    //char mode_str[128];
     int comport_number = 2;
     HANDLE hComm; // Handle to the Serial port
     BOOL Status;  // Status
