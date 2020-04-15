@@ -24,6 +24,12 @@ bool read(string port)
     // RPI und Linux "/dev/ttyUSB0"
     int serial_port = open("/dev/ttyUSB0", O_RDWR);
 #endif
+#ifdef __linux__
+    // RPI und Linux "/dev/ttyUSB0"
+    int serial_port = open("/dev/ttyUSB0", O_RDWR);
+#endif
+
+
     // Create new termios struc, we call it 'tty' for convention
     struct termios tty;
     memset(&tty, 0, sizeof tty);
