@@ -43,3 +43,44 @@ CMake projects should use: "-DCMAKE_TOOLCHAIN_FILE=C:/Users/User/git/vcpkg/scrip
 
 vcpkg install openssl:x86-windows
 vcpkg.exe install pthreads
+
+## RPi
+
+sudo apt-get install libssl-dev cmake
+
+```bash
+cd build
+cmake ../
+
+```
+
+## errors
+
+```bash
+........save 9 ctrl 09
+--- update header ad
+........save 9 ctrl 09
+--- update header aa
+........save 9 ctrl 0a
+--- update header ab
+........save 9 ctrl 0a
+--- update header a8
+........not save 9 ctrl 0b
+........not save 9 ctrl 0b
+........save 9 ctrl 0c
+--- update header be
+......save 7 ctrl 00
+........save 9 ctrl 0c
+--- update header a4
+........not save 9 ctrl 0d
+........not save 9 ctrl 0d
+........save 9 ctrl 0e
+--- update header a3
+........save 9 ctrl 0e
+--- update header a0
+........save 9 ctrl 0f
+--- update header a1
+........save 9 ctrl 0f
+--- update header bc
+........save 9 ctrl 01
+```

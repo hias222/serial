@@ -11,6 +11,7 @@ int dataInit()
 #ifdef _WIN32
     startListen();
 #endif
+startListen();
 
     return 0;
 }
