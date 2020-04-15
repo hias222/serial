@@ -49,9 +49,9 @@ bool read(string port)
     tty.c_lflag &= ~ECHOE;                                                       // Disable erasure
     tty.c_lflag &= ~ECHONL;                                                      // Disable new-line echo
     tty.c_lflag &= ~ISIG;                                                        // Disable interpretation of INTR, QUIT and SUSP
-    //tty.c_iflag &= ~(IXON | IXOFF | IXANY);                                      // Turn off s/w flow ctrl
-    //tty.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL); // Disable any special handling of received bytes
-    tty.c_iflag &= IGNPAR | ICRNL;
+    tty.c_iflag &= ~(IXON | IXOFF | IXANY);                                      // Turn off s/w flow ctrl
+    tty.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL); // Disable any special handling of received bytes
+    //tty.c_iflag &= IGNPAR | ICRNL;
 
     tty.c_oflag &= ~OPOST; // Prevent special interpretation of output bytes (e.g. newline chars)
     tty.c_oflag &= ~ONLCR; // Prevent conversion of newline to carriage return/line feed
@@ -66,11 +66,11 @@ bool read(string port)
     cfsetospeed(&tty, B9600);
 
     // Save tty settings, also checking for error
-    if (tcsetattr(serial_port, TCSANOW, &tty) != 0)
-    {
-        printf("Error %i from tcsetattr: %s\n", errno, strerror(errno));
-        return false;
-    }
+    //if (tcsetattr(serial_port, TCSANOW, &tty) != 0)
+   // {
+   //     printf("Error %i from tcsetattr: %s\n", errno, strerror(errno));
+   //     return false;
+   // }
 
     // Allocate memory for read buffer, set size according to your needs
     //uint8_t read_buf[256];
