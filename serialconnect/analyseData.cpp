@@ -43,7 +43,7 @@ int putReadData(uint8_t ReadData)
         {
             if (in_count == colorado_channel_length[colorado_control_channel])
             {
-                printf ("save %d ctrl %02x", in_count , colorado_control_channel);
+                printf ("save %d ctrl %02x \n", in_count , colorado_control_channel);
 
                 for (j = 1; j < colorado_channel_length[colorado_control_channel]; j++)
                 {
