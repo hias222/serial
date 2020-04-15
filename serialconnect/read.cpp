@@ -20,10 +20,7 @@ bool read(string port)
     // MAC dev/cu.usbserial-FTBTCOC2
     int serial_port = open("/dev/cu.usbserial-FTBTCOC2", O_RDWR);
 #endif
-#ifdef __arm__
-    // RPI und Linux "/dev/ttyUSB0"
-    int serial_port = open("/dev/ttyUSB0", O_RDWR);
-#endif
+
 #ifdef __linux__
     // RPI und Linux "/dev/ttyUSB0"
     int serial_port = open("/dev/ttyUSB0", O_RDWR);
