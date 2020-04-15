@@ -26,7 +26,6 @@ bool read(string port)
     int serial_port = open("/dev/ttyUSB0", O_RDWR);
 #endif
 
-
     // Create new termios struc, we call it 'tty' for convention
     struct termios tty;
     memset(&tty, 0, sizeof tty);
@@ -66,11 +65,11 @@ bool read(string port)
     cfsetospeed(&tty, B9600);
 
     // Save tty settings, also checking for error
-    //if (tcsetattr(serial_port, TCSANOW, &tty) != 0)
-   // {
-   //     printf("Error %i from tcsetattr: %s\n", errno, strerror(errno));
-   //     return false;
-   // }
+    if (tcsetattr(serial_port, TCSANOW, &tty) != 0)
+    {
+        printf("Error %i from tcsetattr: %s\n", errno, strerror(errno));
+        return false;
+    }
 
     // Allocate memory for read buffer, set size according to your needs
     //uint8_t read_buf[256];
@@ -84,8 +83,7 @@ bool read(string port)
     do
     {
         num_bytes = read(serial_port, &ReadData, sizeof(ReadData));
-        //ReadFile(hComm, &ReadData, sizeof(ReadData), &NoBytesRead, NULL);
-        //printf("incoming %02x", ReadData  );
+        printf("%02x (%d)", ReadData,  num_bytes );
         putReadData(ReadData);
         ++loop;
     } while (num_bytes > 0);
