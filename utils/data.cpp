@@ -6,12 +6,12 @@
 
 int dataInit()
 {
-
+    initReadData();
     mqtt_connect();
 #ifdef _WIN32
     startListen();
 #endif
-    initReadData();
+
     return 0;
 }
 int dataClean()
