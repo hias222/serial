@@ -47,19 +47,6 @@ int mqtt_connect()
 int mqtt_send(char message[MQTT_LONG_LENGTH])
 {
     int rc;
-    int *msgid;
-
-    printf("mqtt_send \n");
-    printf("%s %d \n", message, strlen(message));
-/*
-    char mqttmessage[50];
-    snprintf(mqttmessage, 50, "%s", "Hello World");
-
-    //char mqttmessage[MQTT_LONG_LENGTH + 1];
-    //snprintf(mqttmessage, strlen(message) + 1, "%s", message);
-
-    //snprintf(mqttmessage, strlen(message) + 1, "%s", message);
-
     if (mosq)
     {
 
@@ -73,10 +60,10 @@ int mqtt_send(char message[MQTT_LONG_LENGTH])
         }
 
         rc = mosquitto_publish(mosq,
-                               msgid,
+                               0,
                                "raw",
-                               strlen(mqttmessage),
-                               mqttmessage,
+                               strlen(message),
+                               message,
                                0,
                                0);
 
@@ -90,7 +77,7 @@ int mqtt_send(char message[MQTT_LONG_LENGTH])
     } else {
         printf ("no mqtt connection \n");
     }
-    */
+    
 
     return 0;
 }

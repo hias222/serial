@@ -23,9 +23,30 @@ char COLORADO_HEADER_DATA[MQTT_LONG_LENGTH];
 char COLORADO_HEAT_DATA[DISPLAY_LANE_COUNT][MQTT_MESSAGE_LENGTH];
 char COLORADO_PLACE_DATA[DISPLAY_LANE_COUNT][2];
 
+//char mydata[MQTT_LONG_LENGTH];
+char *mydata;
+
 int noworking;
 bool running, stopping, pending;
 uint8_t new_race_started;
+
+
+int initanalyseData()
+{
+    printf("initReadData");
+    //char *str;
+    //str = (char *)malloc(sizeof(*str) * COLORADO_CHANNELS);
+
+    int i;
+
+    mydata = (char *)malloc(sizeof(char) * MQTT_LONG_LENGTH);
+    for (i = 0; i < MQTT_LONG_LENGTH; i++)
+    {
+        mydata[i] = '0';
+    }
+    return 0;
+}
+
 
 bool analyseActiveData(uint8_t channel, uint8_t data[32])
 {
@@ -48,7 +69,7 @@ bool analyseActiveData(uint8_t channel, uint8_t data[32])
 
 int getTime(int lane, uint8_t data[])
 {
-    char mydata[MQTT_LONG_LENGTH];
+    //char mydata[MQTT_LONG_LENGTH];
     char shortdata[MQTT_MESSAGE_LENGTH] = "0000000";
     char log[MQTT_MESSAGE_LENGTH];
     char place[2];

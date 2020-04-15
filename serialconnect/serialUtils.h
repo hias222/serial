@@ -6,3 +6,4 @@ void getHeader(uint8_t data[]);
 int8_t checkBitValue(int8_t data);
 bool checknotnull(uint8_t data[]);
 bool checkStartStop(uint8_t data[]);
+int initanalyseData();

@@ -16,18 +16,50 @@
 // for the message to broker
 #define MQTT_LONG_LENGTH 25
 
-
 uint8_t colorado_start_detected;
 uint8_t buf[9];
 uint8_t colorado_control_update;
-uint8_t colorado_data[COLORADO_CHANNELS][COLORADO_ROWS];
+uint8_t **colorado_data;
+//uint8_t colorado_data[COLORADO_CHANNELS][COLORADO_ROWS];
 uint8_t colorado_control_channel;
 uint8_t colorado_control_bit;
 uint8_t in_count;
 uint8_t colorado_digit_no;
 
+
 const uint8_t colorado_channel_length[COLORADO_CHANNELS] = {7, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 0, 9, 0, 9, 9, 0, 9, 9, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 int loop;
+
+int initReadData()
+{
+    printf("initReadData");
+    //char *str;
+    //str = (char *)malloc(sizeof(*str) * COLORADO_CHANNELS);
+
+    int i, o, ncolumns = 2, nrows = 3;
+
+    colorado_data = (uint8_t **)malloc(sizeof(uint8_t *) * 32);
+    for (i = 0; i < 32; i++)
+    {
+        colorado_data[i] = (uint8_t*)malloc(sizeof(uint8_t) * 16);
+    }
+
+    for (o = 0; o < 32; o++)
+    {
+        for (i = 0; i < 16; i++)
+        {
+            colorado_data[o][i] = 0x01;
+        }
+    }
+
+    // more inits
+
+    initanalyseData();
+
+    //colorado_data[COLORADO_CHANNELS][COLORADO_ROWS];
+    //colorado_control_channel, colorado_data[colorado_control_channel]
+    return 0;
+}
 
 int putReadData(uint8_t ReadData)
 {
@@ -43,7 +75,7 @@ int putReadData(uint8_t ReadData)
         {
             if (in_count == colorado_channel_length[colorado_control_channel])
             {
-                printf ("save %d ctrl %02x \n", in_count , colorado_control_channel);
+                printf("save %d ctrl %02x \n", in_count, colorado_control_channel);
 
                 for (j = 1; j < colorado_channel_length[colorado_control_channel]; j++)
                 {
@@ -87,8 +119,10 @@ int putReadData(uint8_t ReadData)
 #endif
                     getHeader(colorado_data[colorado_control_channel]);
                 }
-            } else {
-                 printf ("not save %d ctrl %02x \n", in_count , colorado_control_channel);
+            }
+            else
+            {
+                printf("not save %d ctrl %02x \n", in_count, colorado_control_channel);
             }
         }
         in_count = 1;
@@ -121,4 +155,3 @@ int putReadData(uint8_t ReadData)
 
     return true;
 }
-

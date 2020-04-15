@@ -79,7 +79,7 @@ int main()
     }
 
     //lane
-    for (int i = 0; i < 120; i++)
+    for (int i = 0; i < 10; i++)
     {
         putReadData(0xb0);
         printf("lane data\n");
