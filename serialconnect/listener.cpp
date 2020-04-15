@@ -20,7 +20,6 @@ using namespace std;
 
 #include "info.h"
 
-
 bool checkPort()
 {
     bool check;
@@ -65,10 +64,15 @@ int startListen()
 {
     printf("Serial loop start!\n");
     //ToDo Loop
-    for (int i = 0; i< 5;i++){
+    for (int i = 0; i < 5; i++)
+    {
         printf("Serial loop start! %d\n", i);
         start();
+#ifdef _WIN32
+        Sleep(5);
+#else
         sleep(5);
+#endif
     }
 
     return 0;
