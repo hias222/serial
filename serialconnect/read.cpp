@@ -83,7 +83,7 @@ bool read(string port)
     do
     {
         num_bytes = read(serial_port, &ReadData, sizeof(ReadData));
-        printf("%02x (%d)", ReadData,  num_bytes );
+        printf("%02x (x)", ReadData );
         //putReadData(ReadData);
         ++loop;
     } while (num_bytes > 0);
