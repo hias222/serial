@@ -18,6 +18,7 @@ static int run = 1;
 struct mosquitto *mosq;
 char clientid[24];
 uint8_t reconnect;
+bool error_state = false;
 
 int mqtt_connect()
 {
@@ -49,13 +50,18 @@ int mqtt_send(char message[MQTT_LONG_LENGTH])
     int rc;
     if (mosq)
     {
+        if(error_state){
+            error_state=false;
+            printf("Reconnect \n");
+            mosquitto_reconnect(mosq);
+        }
 
         rc = mosquitto_connect(mosq, mqtt_host, mqtt_port, 60);
 
         if (rc)
         {
             printf("Error: %s\n", mosquitto_strerror(rc));
-            mosquitto_lib_cleanup();
+            error_state = true;
             return rc;
         }
 
@@ -70,7 +76,7 @@ int mqtt_send(char message[MQTT_LONG_LENGTH])
         if (rc)
         {
             printf("Error: %s\n", mosquitto_strerror(rc));
-            mqtt_clean();
+            error_state = true;
             return rc;
         }
         //mosquitto_destroy(mosq);

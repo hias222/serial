@@ -49,6 +49,7 @@ int initanalyseData()
 
 int cleananalyseData(){
     free(mydata);
+    mqtt_clean();
     return 0;
 }
 
@@ -124,7 +125,9 @@ int getTime(int lane, uint8_t data[])
     if (!array_match)
     {
         //publish->publish(mydata);
-        mqtt_send(mydata);
+        if (mqtt_send(mydata)) {
+            printf("Error sending \n");
+        } 
 
         for (int i = 0; i < MQTT_MESSAGE_LENGTH; i++)
         {
