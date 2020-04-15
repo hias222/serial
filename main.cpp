@@ -5,7 +5,7 @@
 int main(int, char **)
 {
     dataInit();
-    dataStart();
+    //dataStart();
     dataClean();
 }
 
