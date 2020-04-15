@@ -151,6 +151,7 @@ bool read(string portname)
                 do
                 {
                     Status = ReadFile(hComm, &ReadData, sizeof(ReadData), &NoBytesRead, NULL);
+                    printf("%02x (x)", ReadData );
                     putReadData(ReadData);
                     ++loop;
                 } while (NoBytesRead > 0);
