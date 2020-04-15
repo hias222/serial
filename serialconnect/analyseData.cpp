@@ -55,9 +55,13 @@ int initReadData()
     // more inits
 
     initanalyseData();
+    return 0;
+}
 
-    //colorado_data[COLORADO_CHANNELS][COLORADO_ROWS];
-    //colorado_control_channel, colorado_data[colorado_control_channel]
+int cleanReadData()
+{
+    cleananalyseData();
+    free(colorado_data);
     return 0;
 }
 

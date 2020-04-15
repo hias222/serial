@@ -47,6 +47,10 @@ int initanalyseData()
     return 0;
 }
 
+int cleananalyseData(){
+    free(mydata);
+    return 0;
+}
 
 bool analyseActiveData(uint8_t channel, uint8_t data[32])
 {

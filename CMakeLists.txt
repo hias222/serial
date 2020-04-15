@@ -21,6 +21,7 @@ enable_testing()
 add_subdirectory(mqtt)
 add_subdirectory(serialconnect)
 add_subdirectory(mosquitto-1.6.9)
+add_subdirectory(utils)
 
 
 if(BUILD_TESTING)
@@ -33,12 +34,14 @@ target_link_libraries(serial PUBLIC
                             serialconnect
                             mqtt
                             libmosquitto
+                            utils
                             )
 
 target_include_directories(serial PUBLIC
                           "${PROJECT_BINARY_DIR}"
                           "${PROJECT_SOURCE_DIR}/serialconnect"
                           "${PROJECT_SOURCE_DIR}/mqtt"
+                          "${PROJECT_SOURCE_DIR}/utils"
                           "${PROJECT_SOURCE_DIR}/mosquitto-1.6.9/lib"
                           )
 
