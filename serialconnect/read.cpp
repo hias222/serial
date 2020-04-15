@@ -16,12 +16,14 @@ bool read(string port)
     //init mem
 
     unsigned char loop = 0;
-
+#ifdef __APPLE__
+    // MAC dev/cu.usbserial-FTBTCOC2
     int serial_port = open("/dev/cu.usbserial-FTBTCOC2", O_RDWR);
-    //"/dev/ttyUSB0"
-    ///dev/tty.usbserial
-    ///dev/cu.usbserial-FTBTCOC2
-
+#endif
+#ifdef __arm__
+    // RPI und Linux "/dev/ttyUSB0"
+    int serial_port = open("/dev/ttyUSB0", O_RDWR);
+#endif
     // Create new termios struc, we call it 'tty' for convention
     struct termios tty;
     memset(&tty, 0, sizeof tty);
