@@ -145,7 +145,7 @@ bool read(string port)
             printf("\n");
         }
 
-        printf("%02x (x)", ReadData);
+        printf("%02x ", ReadData);
         //putReadData(ReadData);
         ++loop;
     } while (num_bytes > 0);
