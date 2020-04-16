@@ -4,9 +4,23 @@ serial connect test
 
 ## serial tools
 
+### windows
+
 com0com
 
 https://www.com-port-monitoring.com/downloads.html
+
+### Linux
+
+Copy port 
+socat -d -d pty,raw,echo=0 pty,raw,echo=0
+
+Receive data 
+sudo minicom -D /dev/ttyS0
+
+protocol
+
+https://www.cmrr.umn.edu/~strupp/serial.html
 
 ## mqtt
 
@@ -85,6 +99,8 @@ cmake ../
 ........save 9 ctrl 01
 ```
 
-)4d (1)5d (1)6f (1)7f (1)55 (1)d8 (1)ec (1)d9 (1)4d (1)5d (1)6f (1)7f (1)55 (1)d8 (1)ec (1)d9 (1)4d (1)5d (1)6f (1)7f (1)55 (1)d8 (1)ec (1)d9 (1)4d (1)5d (1)6f (1)7f (1)55 (1)d8 (1)ec (1)d9 (1)4d (1)5d (1)6f (1)7f (1)55 (1)d8 (1)ec (1)d9 (1)4d (1)5d (1)6f (1)7f (1)55 (1)d8 (1)ec (1)d9 (1)4d (1)5d (1)6f (1)7f (1)55 (1)d8 (1)ec (1)d9 (1)4d (1)5d (1)6f (1)7f (1)55 (1)d8 (1)ec (1)d9 (1)4d (1)5d (1)6f (1)7f (1)55 (1)d8 (1)ec (1)d9 (1)4d (1)5d (1)6f (1)7f (1)55 (1)d8 (1)ec (1)d9 (1)4d (1)5d (1)6f (1)7f (1)55 (1)d8 (1)ec (1)d9 (1)4d (1)5d (1)6f (1)7f (1)55 (1)d8 (1)ec (1)d9 (1)4d (1)5d (1)6f (1)7f (1)55 (1)d8 (1)ec (1)d9 (1)4d (1)5d (1)6f (1)7f (1)55 (1)d8 (1)ec (1)d9 (1)4d (1)5d (1)6f (1)7f (1)55 (1)d8 (1)ec (1)d9 (1)4d (1)5d (1)6f (1)7f (1)55 (1)d8 (1)ec (1)d9 (1)4d (1)5d (1)6f (1)7f (1)55 (1)d8 (1)ec (1)d9 (1)4d (1)5d (1)6f (1)7f (1)55 (1)d8 (1)ec (1)d9 (1)4d (1)5d (1)6f (1)7f (1)55 (1)d8 (1)ec (1)d9 (1)4d (1)5d (1)6f (1)7f (1)55 (1)d8 (1)ec (1)d9 (1)4d (1)5d (1)6f (1)7f (1)55 (1)d8 (1)ec (1)d9 (1)4d (1)5d (1)6f (1)7f (1)55 (1)d8 (1)ec (1)d9 (1)4d (1)5d (1)6f (1)7f (1)55 (1)d8 (1)ec (1)d9 (1)4d^C
+Linux
+9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d
 
+Windows
 be (x)70 (x)6f (x)5f (x)40 (x)30 (x)20 (x)a1 (x)0d (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)bc (x)0e (x)1e (x)20 (x)30 (x)4d (x)5d (x)6a (x)7e (x)bd (x)0d (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)ba (x)0d (x)1a (x)20 (x)30 (x)4c (x)59 (x)66 (x)77 (x)bb (x)0d (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)b8 (x)0c (x)19 (x)20 (x)30 (x)4b (x)5f (x)6e (x)79 (x)b9 (x)0d (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)b6 (x)0b (x)18 (x)20 (x)30 (x)4b (x)5c (x)6d (x)77 (x)b7 (x)0d (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)be (x)70 (x)6f (x)5f (x)40 (x)30 (x)20 (x)b4 (x)0a (x)17 (x)20 (x)30 (x)4a (x)5d (x)6f (x)78 (x)b5 (x)0d (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)b2 (x)09 (x)1d (x)20 (x)30 (x)4d (x)58 (x)68 (x)7b (x)b3 (x)0d (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)b0 (x)08 (x)1c (x)20 (x)30 (x)4c (x)5f (x)6c (x)79 (x)b1 (x)0d (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)ae (x)07 (x)1b (x)20 (x)30 (x)4c (x)5c (x)6b (x)7d (x)af (x)0d (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)7f (x)
