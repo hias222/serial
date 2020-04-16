@@ -91,7 +91,8 @@ bool read(string port)
     //tty.c_oflag &= ~OPOST; // Prevent special interpretation of output bytes (e.g. newline chars)
     //tty.c_oflag &= ~ONLCR; // Prevent conversion of newline to carriage return/line feed
 
-    tty.c_oflag &= ~OPOST; //0
+    //tty.c_oflag &= ~OPOST; //0
+    tty.c_oflag &= 0;
     tty.c_lflag &= ICANON;
     // tty.c_oflag &= ~OXTABS; // Prevent conversion of tabs to spaces (NOT PRESENT ON LINUX)
     // tty.c_oflag &= ~ONOEOT; // Prevent removal of C-d chars (0x004) in output (NOT PRESENT ON LINUX)
