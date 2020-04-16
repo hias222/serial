@@ -15,6 +15,8 @@ https://www.com-port-monitoring.com/downloads.html
 Copy port 
 socat -d -d pty,raw,echo=0 pty,raw,echo=0
 
+echo -ne '\xbe\x70\x6f\x5f\x40\x30\x20\xa1\x0d\x1f\x2f\x3f' > /dev/ttys005
+
 Receive data 
 sudo minicom -D /dev/ttyS0
 
@@ -104,3 +106,8 @@ Linux
 
 Windows
 be (x)70 (x)6f (x)5f (x)40 (x)30 (x)20 (x)a1 (x)0d (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)bc (x)0e (x)1e (x)20 (x)30 (x)4d (x)5d (x)6a (x)7e (x)bd (x)0d (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)ba (x)0d (x)1a (x)20 (x)30 (x)4c (x)59 (x)66 (x)77 (x)bb (x)0d (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)b8 (x)0c (x)19 (x)20 (x)30 (x)4b (x)5f (x)6e (x)79 (x)b9 (x)0d (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)b6 (x)0b (x)18 (x)20 (x)30 (x)4b (x)5c (x)6d (x)77 (x)b7 (x)0d (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)be (x)70 (x)6f (x)5f (x)40 (x)30 (x)20 (x)b4 (x)0a (x)17 (x)20 (x)30 (x)4a (x)5d (x)6f (x)78 (x)b5 (x)0d (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)b2 (x)09 (x)1d (x)20 (x)30 (x)4d (x)58 (x)68 (x)7b (x)b3 (x)0d (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)b0 (x)08 (x)1c (x)20 (x)30 (x)4c (x)5f (x)6c (x)79 (x)b1 (x)0d (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)ae (x)07 (x)1b (x)20 (x)30 (x)4c (x)5c (x)6b (x)7d (x)af (x)0d (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)7f (x)
+
+\xbe\x70\x6f\x5f\x40\x30\x20\xa1\x0d\x1f\x2f\x3f
+
+
+\xbe\x70\x6f\x5f\x40\x30\x20\xa1\x0d\x1f\x2f\x3f\x4d\x5d\x6f\x7f\xbc\x0e\x1e\x20\x30\x4d\x5d\x6a\x7e\xbd\x0d\x1f\x2f\x3f\x4d\x5d\x6f\x7f\xba\x0d\x1a\x20\x30\x4c\x59\x66\x77\xbb\x0d\x1f\x2f\x3f\x4d\x5d\x6f\x7f\xb8\x0c\x19\x20\x30\x4b\x5f\x6e\x79\xb9\x0d\x1f\x2f\x3f\x4d\x5d\x6f\x7f\xb6\x0b\x18\x20\x30\x4b\x5c\x6d\x77\xb7\x0d\x1f\x2f\x3f\x4d\x5d\x6f\x7f\xbe\x70\x6f\x5f\x40\x30\x20\xb4\x0a\x17\x20\x30\x4a\x5d\x6f\x78\xb5\x0d\x1f\x2f\x3f\x4d\x5d\x6f\x7f\xb2\x09\x1d\x20\x30\x4d\x58\x68\x7b\xb3\x0d\x1f\x2f\x3f\x4d\x5d\x6f\x7f\xb0\x08\x1c\x20\x30\x4c\x5f\x6c\x79\xb1\x0d\x1f\x2f\x3f\x4d\x5d\x6f\x7f\xae\x07\x1b\x20\x30\x4c\x5c\x6b\x7d\xaf\x0d\x1f\x2f\x3f\x4d\x5d\x6f\x7f\x7f

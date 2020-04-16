@@ -4,7 +4,7 @@
 
 #include "analyseData.h"
 #include "serialUtils.h"
-#define debug_incoming
+//#define debug_incoming
 #define debug_lane
 #define COLORADO_CHANNELS 32
 #define COLORADO_ADDRESS_WORD_MASK 0x80

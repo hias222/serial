@@ -113,8 +113,8 @@ bool read(string port)
     /* set input mode (non-canonical, no echo,...) */
     newtio.c_lflag = 0;
 
-    newtio.c_cc[VTIME] = 100; /* inter-character timer unused 0 */
-    newtio.c_cc[VMIN] = 0;  /* blocking read until 5 chars received 5 */
+    newtio.c_cc[VTIME] = 10; /* inter-character timer unused 0 */
+    newtio.c_cc[VMIN] = 5;  /* blocking read until 5 chars received 5 */
 
     tcflush(serial_port, TCIFLUSH);
 
@@ -138,8 +138,8 @@ bool read(string port)
     do
     {
         num_bytes = read(serial_port, &ReadData, sizeof(ReadData));
-        printf("%02x (x)", ReadData);
-        //putReadData(ReadData);
+        //printf("%02x (x)", ReadData);
+        putReadData(ReadData);
         ++loop;
     } while (num_bytes > 0);
     --loop; //Get Actual length of received data
