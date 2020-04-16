@@ -114,7 +114,7 @@ bool read(string port)
     newtio.c_lflag = 0;
 
     newtio.c_cc[VTIME] = 0; /* inter-character timer unused 0 */
-    newtio.c_cc[VMIN] = 1;  /* blocking read until 5 chars received 5 */
+    newtio.c_cc[VMIN] = 0;  /* blocking read until 5 chars received 5 */
 
     tcflush(serial_port, TCIFLUSH);
 
