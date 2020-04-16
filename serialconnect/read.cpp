@@ -11,6 +11,8 @@
 
 #define BAUDRATE B9600
 
+#define COLORADO_ADDRESS_WORD_MASK 0x80
+
 using namespace std;
 
 bool read(string port)
@@ -138,8 +140,13 @@ bool read(string port)
     do
     {
         num_bytes = read(serial_port, &ReadData, sizeof(ReadData));
+        if ((ReadData & COLORADO_ADDRESS_WORD_MASK) == COLORADO_ADDRESS_WORD_MASK)
+        {
+            printf("\n");
+        }
+
         printf("%02x (x)", ReadData);
-        putReadData(ReadData);
+        //putReadData(ReadData);
         ++loop;
     } while (num_bytes > 0);
     --loop; //Get Actual length of received data
