@@ -106,7 +106,7 @@ bool read(string port)
 
     //new ...
     bzero(&newtio, sizeof(newtio));
-    newtio.c_cflag = BAUDRATE | CRTSCTS | CS8 |  CREAD; //CLOCAL |
+    newtio.c_cflag = BAUDRATE | CRTSCTS | CS8 | CLOCAL | CREAD; //CLOCAL |
     newtio.c_iflag = IGNPAR;
     newtio.c_oflag = 0;
 
