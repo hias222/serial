@@ -23,8 +23,8 @@ bool read(string port)
 #ifdef __APPLE__
     // MAC dev/cu.usbserial-FTBTCOC2
     // socat /dev/ttys003
-    //int serial_port = open("/dev/cu.usbserial-FTBTCOC2", O_RDWR);
-    int serial_port = open("/dev/ttys003", O_RDWR);
+    int serial_port = open("/dev/cu.usbserial-FTBTCOC2", O_RDWR);
+    //int serial_port = open("/dev/ttys005", O_RDWR);
 #endif
 
 #ifdef __linux__
@@ -91,8 +91,7 @@ bool read(string port)
     //tty.c_oflag &= ~OPOST; // Prevent special interpretation of output bytes (e.g. newline chars)
     //tty.c_oflag &= ~ONLCR; // Prevent conversion of newline to carriage return/line feed
 
-    //tty.c_oflag &= ~OPOST; //0
-    tty.c_oflag &= 0;
+    tty.c_oflag &= ~OPOST; //0
     tty.c_lflag &= ICANON;
     // tty.c_oflag &= ~OXTABS; // Prevent conversion of tabs to spaces (NOT PRESENT ON LINUX)
     // tty.c_oflag &= ~ONOEOT; // Prevent removal of C-d chars (0x004) in output (NOT PRESENT ON LINUX)
@@ -109,9 +108,12 @@ bool read(string port)
 
     //new ...
     bzero(&newtio, sizeof(newtio));
-    newtio.c_cflag = BAUDRATE | CRTSCTS | CS8 | CLOCAL | CREAD;
+    newtio.c_cflag = CRTSCTS | CS8 | CLOCAL | CREAD;
     newtio.c_iflag = IGNPAR;
     newtio.c_oflag = 0;
+
+    cfsetispeed(&newtio, B4800);
+    cfsetospeed(&newtio, B4800);
 
     /* set input mode (non-canonical, no echo,...) */
     newtio.c_lflag = 0;
