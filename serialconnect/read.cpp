@@ -106,15 +106,15 @@ bool read(string port)
 
     //new ...
     bzero(&newtio, sizeof(newtio));
-    newtio.c_cflag = BAUDRATE | CRTSCTS | CS8 | CLOCAL | CREAD; //CLOCAL |
+    newtio.c_cflag = BAUDRATE | CRTSCTS | CS8 | CLOCAL | CREAD;
     newtio.c_iflag = IGNPAR;
     newtio.c_oflag = 0;
 
     /* set input mode (non-canonical, no echo,...) */
     newtio.c_lflag = 0;
 
-    newtio.c_cc[VTIME] = 0; /* inter-character timer unused 0 */
-    newtio.c_cc[VMIN] = 1;  /* blocking read until 5 chars received 5 */
+    newtio.c_cc[VTIME] = 10; /* inter-character timer unused 0 */
+    newtio.c_cc[VMIN] = 5;  /* blocking read until 5 chars received 5 */
 
     tcflush(serial_port, TCIFLUSH);
 
