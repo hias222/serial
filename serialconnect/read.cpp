@@ -19,11 +19,14 @@ bool read(string port)
 {
     //init mem
 
+    char buf[255];
+
     unsigned char loop = 0;
 #ifdef __APPLE__
     // MAC dev/cu.usbserial-FTBTCOC2
     // socat /dev/ttys003
-    int serial_port = open("/dev/cu.usbserial-FTBTCOC2", O_RDWR);
+    //int serial_port = open("/dev/cu.usbserial-FTBTCOC2", O_RDWR);
+    int serial_port = open("/dev/cu.usbserial-14610", O_RDWR);
     //int serial_port = open("/dev/ttys005", O_RDWR);
 #endif
 
@@ -38,7 +41,7 @@ bool read(string port)
     memset(&newtio, 0, sizeof newtio);
 
     // Read in existing settings, and handle any error
-    if (tcgetattr(serial_port, &tty) != 0)
+    if (tcgetattr(serial_port, &newtio) != 0)
     {
         printf("Error %i from tcgetattr: %s\n", errno, strerror(errno));
         return false;
@@ -99,27 +102,55 @@ bool read(string port)
     tty.c_cc[VTIME] = 10; // Wait for up to 1s (10 deciseconds), returning as soon as any data is received.
     tty.c_cc[VMIN] = 0;
 
-    /* set input mode (non-canonical, no echo,...) */
-    newtio.c_lflag = 0;
-
     // Set in/out baud rate to be 9600
     cfsetispeed(&tty, B9600);
     cfsetospeed(&tty, B9600);
 
+    //newtio.c_cflag &= ~PARENB;
+    //newtio.c_cflag &= ~CSTOPB;
+    //newtio.c_cflag |= CS8;
+    //newtio.c_cflag &= ~CRTSCTS;
+    //newtio.c_cflag |= CREAD | CLOCAL;
+
     //new ...
     bzero(&newtio, sizeof(newtio));
-    newtio.c_cflag = CRTSCTS | CS8 | CLOCAL | CREAD;
+    newtio.c_cflag = ~CRTSCTS & ~PARENB & ~CSTOPB;
+    newtio.c_cflag |= CS8 | CLOCAL | CREAD;
     newtio.c_iflag = IGNPAR;
+
     newtio.c_oflag = 0;
 
     cfsetispeed(&newtio, B4800);
     cfsetospeed(&newtio, B4800);
 
     /* set input mode (non-canonical, no echo,...) */
-    newtio.c_lflag = 0;
+    //newtio.c_lflag = ~ICANON;
+    newtio.c_lflag = ~ICANON;
+    newtio.c_lflag &= ~ECHO;
+    newtio.c_lflag &= ~ECHOE;
+    newtio.c_lflag &= ~ECHONL;
+    newtio.c_lflag &= ~ISIG;                                                        // Disable interpretation of INTR, QUIT and SUSP
+    newtio.c_iflag &= ~(IXON | IXOFF | IXANY);                                      // Turn off s/w flow ctrl
+    newtio.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL); // Disable any special handling of received bytes
+    newtio.c_iflag &= IGNPAR | ICRNL;
 
-    newtio.c_cc[VTIME] = 10; /* inter-character timer unused 0 */
-    newtio.c_cc[VMIN] = 5;  /* blocking read until 5 chars received 5 */
+    newtio.c_cc[VINTR] = 0;    /* Ctrl-c */
+    newtio.c_cc[VQUIT] = 0;    /* Ctrl-\ */
+    newtio.c_cc[VERASE] = 0;   /* del */
+    newtio.c_cc[VKILL] = 0;    /* @ */
+    newtio.c_cc[VEOF] = 4;     /* Ctrl-d */
+    newtio.c_cc[VTIME] = 0;    /* inter-character timer unused */
+    newtio.c_cc[VMIN] = 1;     /* blocking read until 1 character arrives */
+    //newtio.c_cc[VSWTC] = 0;    /* '\0' */
+    newtio.c_cc[VSTART] = 0;   /* Ctrl-q */
+    newtio.c_cc[VSTOP] = 0;    /* Ctrl-s */
+    newtio.c_cc[VSUSP] = 0;    /* Ctrl-z */
+    newtio.c_cc[VEOL] = 0;     /* '\0' */
+    newtio.c_cc[VREPRINT] = 0; /* Ctrl-r */
+    newtio.c_cc[VDISCARD] = 0; /* Ctrl-u */
+    newtio.c_cc[VWERASE] = 0;  /* Ctrl-w */
+    newtio.c_cc[VLNEXT] = 0;   /* Ctrl-v */
+    newtio.c_cc[VEOL2] = 0;    /* '\0' */
 
     tcflush(serial_port, TCIFLUSH);
 
@@ -147,6 +178,8 @@ bool read(string port)
         {
             printf("\n");
         }
+
+        printf("%02x ", ReadData);
 
         printf("%02x ", ReadData);
         //putReadData(ReadData);

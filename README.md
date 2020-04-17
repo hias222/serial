@@ -102,10 +102,44 @@ cmake ../
 ```
 
 Linux
-(x)5d (x)6f (x)78 (x)b5 (x)0d (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)56 (x)50 (x)08 (x)06 (x)4d (x)58 (x)68 (x)7b (x)b3 (x)0d (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)b0 (x)08 (x)1c (x)20 (x)30 (x)4c (x)5f (x)6c (x)79 (x)35 (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)ae (x)07 (x)1b (x)20 (x)30 (x)4c (x)5c (x)6b (x)7d (x)55 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)05 (x)7b (x)5f (x)40 (x)30 (x)20 (x)a1 (x)0d (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)bc (x)0e (x)1e (x)20 (x)30 (x)4d (x)5d (x)6a (x)7e (x)35 (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)ba (x)0d (x)1a (x)20 (x)30 (x)4c (x)59 (x)66 (x)77 (x)57 (x)d8 (x)ec (x)d9 (x)4d (x)5d (x)6f (x)7f (x)31 (x)19 (x)20 (x)30 (x)4b (x)5f (x)6e (x)79 (x)b9 (x)0d (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)b6 (x)0b (x)18 (x)20 (x)30 (x)4b (x)5c (x)6d (x)77 (x)35 (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)05 (x)7b (x)5f (x)40 (x)30 (x)20 (x)2b (x)41 (x)21 (x)06 (x)4a (x)5d (x)6f (x)78 (x)b5 (x)0d (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)56
+
+05 7b 5f 40 30 20 
+a1 0d 1f 2f 3f 4d 5d 6f 7f 
+bc 0e 1e 20 30 4d 5d 6a 7e 35 1f 2f 3f 4d 5d 6f 7f 
+ba 0d 1a 20 30 4c 59 66 77 57 
+d8 
+ec 
+d9 4d 5d 6f 7f 31 19 20 30 4b 5f 6e 79 
+b9 0d 1f 2f 3f 4d 5d 6f 7f 
+b6 0b 18 20 30 4b 5c 6d 77 35 1f 2f 3f 4d 5d 6f 7f 05 7b 5f 40 30 20 2b 41 21 06 4a 5d 6f 78 
+b5 0d 1f 2f 3f 4d 5d 6f 7f 56 50 08 06 4d 58 68 7b 
+b3 0d 1f 2f 3f 4d 5d 6f 7f 
+b0 08 1c 20 30 4c 5f 6c 79 35 1f 2f 3f 4d 5d 6f 7f 
+ae 07 1b 20 30 4c 5c 6b 7d 55 
+d8 
+ec 
 
 Windows
-be (x)70 (x)6f (x)5f (x)40 (x)30 (x)20 (x)a1 (x)0d (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)bc (x)0e (x)1e (x)20 (x)30 (x)4d (x)5d (x)6a (x)7e (x)bd (x)0d (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)ba (x)0d (x)1a (x)20 (x)30 (x)4c (x)59 (x)66 (x)77 (x)bb (x)0d (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)b8 (x)0c (x)19 (x)20 (x)30 (x)4b (x)5f (x)6e (x)79 (x)b9 (x)0d (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)b6 (x)0b (x)18 (x)20 (x)30 (x)4b (x)5c (x)6d (x)77 (x)b7 (x)0d (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)be (x)70 (x)6f (x)5f (x)40 (x)30 (x)20 (x)b4 (x)0a (x)17 (x)20 (x)30 (x)4a (x)5d (x)6f (x)78 (x)b5 (x)0d (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)b2 (x)09 (x)1d (x)20 (x)30 (x)4d (x)58 (x)68 (x)7b (x)b3 (x)0d (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)b0 (x)08 (x)1c (x)20 (x)30 (x)4c (x)5f (x)6c (x)79 (x)b1 (x)0d (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)ae (x)07 (x)1b (x)20 (x)30 (x)4c (x)5c (x)6b (x)7d (x)af (x)0d (x)1f (x)2f (x)3f (x)4d (x)5d (x)6f (x)7f (x)7f (x)
+
+be 70 6f 5f 40 30 20
+a1 0d 1f 2f 3f 4d 5d 6f 7f
+bc 0e 1e 20 30 4d 5d 6a 7e
+bd 0d 1f 2f 3f 4d 5d 6f 7f
+ba 0d 1a 20 30 4c 59 66 77
+bb 0d 1f 2f 3f 4d 5d 6f 7f
+b8 0c 19 20 30 4b 5f 6e 79
+b9 0d 1f 2f 3f 4d 5d 6f 7f
+b6 0b 18 20 30 4b 5c 6d 77
+b7 0d 1f 2f 3f 4d 5d 6f 7f
+be 70 6f 5f 40 30 20
+b4 0a 17 20 30 4a 5d 6f 78
+b5 0d 1f 2f 3f 4d 5d 6f 7f
+b2 09 1d 20 30 4d 58 68 7b
+b3 0d 1f 2f 3f 4d 5d 6f 7f
+b0 08 1c 20 30 4c 5f 6c 79
+b1 0d 1f 2f 3f 4d 5d 6f 7f
+ae 07 1b 20 30 4c 5c 6b 7d
+af 0d 1f 2f 3f 4d 5d 6f 7f 7f
 
 \xbe\x70\x6f\x5f\x40\x30\x20\xa1\x0d\x1f\x2f\x3f
 
