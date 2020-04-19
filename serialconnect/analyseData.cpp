@@ -5,7 +5,7 @@
 #include "analyseData.h"
 #include "serialUtils.h"
 //#define debug_incoming
-#define debug_lane
+//#define debug_lane
 #define COLORADO_CHANNELS 32
 #define COLORADO_ADDRESS_WORD_MASK 0x80
 #define COLORADO_ROWS 16
@@ -26,7 +26,6 @@ uint8_t colorado_control_bit;
 uint8_t in_count;
 uint8_t colorado_digit_no;
 
-
 const uint8_t colorado_channel_length[COLORADO_CHANNELS] = {7, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 0, 9, 0, 9, 9, 0, 9, 9, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 int loop;
 
@@ -41,7 +40,7 @@ int initReadData()
     colorado_data = (uint8_t **)malloc(sizeof(uint8_t *) * 32);
     for (i = 0; i < 32; i++)
     {
-        colorado_data[i] = (uint8_t*)malloc(sizeof(uint8_t) * 16);
+        colorado_data[i] = (uint8_t *)malloc(sizeof(uint8_t) * 16);
     }
 
     for (o = 0; o < 32; o++)
@@ -113,8 +112,6 @@ int putReadData(uint8_t ReadData)
                         printf("--- time %02x \n", ReadData);
                         loop = 0;
                     }
-
-                    //checkStartStop(colorado_data[colorado_control_channel]);
                 }
                 else
                 {
@@ -124,10 +121,12 @@ int putReadData(uint8_t ReadData)
                     getHeader(colorado_data[colorado_control_channel]);
                 }
             }
+#ifdef debug_incoming
             else
             {
                 printf("not save %d ctrl %02x \n", in_count, colorado_control_channel);
             }
+#endif
         }
         in_count = 1;
         colorado_start_detected = 0x01;
@@ -144,7 +143,6 @@ int putReadData(uint8_t ReadData)
     {
         if (0x01 == colorado_start_detected)
         { // wir hatten ein Adress Word erkannt => Daten speichern
-            printf(".");
             buf[in_count] = ReadData;
             in_count++;
             //printf("store %02x  \n", ReadData);
@@ -152,7 +150,9 @@ int putReadData(uint8_t ReadData)
             if (in_count > 9)
             { // Ups... Da ist was schief gelaufen. Mehr als 8 Bytes bis zum nächsten Adress Word
                 colorado_start_detected = 0x00;
+#ifdef debug_incoming
                 printf("uups %02x in_count too large \n", ReadData);
+#endif
             }
         }
     }

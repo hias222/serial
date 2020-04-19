@@ -124,7 +124,6 @@ int getTime(int lane, uint8_t data[])
 
     if (!array_match)
     {
-        //publish->publish(mydata);
         if (mqtt_send(mydata)) {
             printf("Error sending \n");
         } 
