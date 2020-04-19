@@ -62,6 +62,8 @@ vcpkg.exe install pthreads
 
 ## Linux
 
+sudo apt-get install libssl-dev cmake
+
 Repair the serail port with - this helps!
 jpnevulator --ascii --timing-print --tty /dev/ttyUSB1:SB9600d --read
 

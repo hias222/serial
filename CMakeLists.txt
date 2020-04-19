@@ -7,7 +7,6 @@ if(APPLE)
 endif()
 
 if(WIN32)
-  #  set(ENV{OPENSSL_ROOT_DIR} "C:\Users\User\git\vcpkg\installed\x86-windows\lib")
     set(ENV{OPENSSL_ROOT_DIR} "C:/Users/User/git/vcpkg/installed/x86-windows")
 endif()
 
