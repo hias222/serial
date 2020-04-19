@@ -95,10 +95,10 @@ bool read(string port)
     do
     {
         num_bytes = read(serial_port, &ReadData, sizeof(ReadData));
-        if ((ReadData & COLORADO_ADDRESS_WORD_MASK) == COLORADO_ADDRESS_WORD_MASK)
-        {
-            printf("\n");
-        }
+//        if ((ReadData & COLORADO_ADDRESS_WORD_MASK) == COLORADO_ADDRESS_WORD_MASK)
+//        {
+//            printf("\n");
+//        }
         putReadData(ReadData);
         ++loop;
     } while (num_bytes > 0);

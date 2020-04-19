@@ -157,7 +157,7 @@ void getHeader(uint8_t data[])
 
     sprintf(mydata, "header %d%d%d %d%d%d", checkBitValue(data[0]), checkBitValue(data[2]), checkBitValue(data[4]), checkBitValue(data[10]), checkBitValue(data[12]), checkBitValue(data[14]));
 
-    mqtt_send(mydata);
+    //mqtt_send(mydata);
 
     if (strcmp(mydata, "header 000 000") == 0)
     {
