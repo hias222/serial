@@ -42,6 +42,7 @@ target_link_libraries(serial PUBLIC
                             mqtt
                             libmosquitto
                             utils
+                            receiver
                             )
 
 target_include_directories(serial PUBLIC

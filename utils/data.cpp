@@ -10,9 +10,12 @@ int dataInit(volatile int *running)
 {
     initReadData();
     mqtt_connect();
+    char myText[] = "HEllo";
+    mqtt_send(myText);
     startListen(running);
     return 0;
 }
+
 int dataClean()
 {
     cleanReadData();

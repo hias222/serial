@@ -12,12 +12,12 @@ add_library(serialconnect
             )
 
 
-target_link_libraries(serialconnect
-                    libmosquitto
-                    mqtt
-                    utils
-                    receiver
-                   )
+#target_link_libraries(serialconnect
+#                    libmosquitto
+#                    mqtt
+#                    utils
+#                    receiver
+#                   )
         #  ${LIBRARIES}
 
 target_include_directories(serialconnect PUBLIC

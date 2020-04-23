@@ -32,8 +32,6 @@ int loop;
 int initReadData()
 {
     printf("initReadData\n");
-    //char *str;
-    //str = (char *)malloc(sizeof(*str) * COLORADO_CHANNELS);
 
     int i, o, ncolumns = 2, nrows = 3;
 

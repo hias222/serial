@@ -33,7 +33,7 @@ uint8_t new_race_started;
 
 int initanalyseData()
 {
-    printf("initReadData");
+    printf("initanalyseData\n");
     //char *str;
     //str = (char *)malloc(sizeof(*str) * COLORADO_CHANNELS);
 

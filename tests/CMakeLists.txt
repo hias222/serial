@@ -1,6 +1,12 @@
 ADD_EXECUTABLE( 01-test-serial 01-test-serial.cpp )
 
-target_link_libraries(01-test-serial PUBLIC utils serialconnect receiver)
+target_link_libraries(01-test-serial PUBLIC serialconnect
+mqtt
+libmosquitto
+utils
+receiver)
+
+
 target_include_directories(01-test-serial PUBLIC
                           "${PROJECT_BINARY_DIR}"
                           "${PROJECT_BINARY_DIR}/utils"
@@ -10,7 +16,12 @@ target_include_directories(01-test-serial PUBLIC
 
 ADD_EXECUTABLE( 01-test-data 01-test-data.cpp )
 
-target_link_libraries(01-test-data PUBLIC utils mqtt serialconnect receiver)
+target_link_libraries(01-test-data PUBLIC serialconnect
+mqtt
+libmosquitto
+utils
+receiver)
+
 target_include_directories(01-test-data PUBLIC
                           "${PROJECT_BINARY_DIR}"
                           "${PROJECT_BINARY_DIR}/utils"

@@ -60,6 +60,7 @@ int mqtt_send(char message[MQTT_LONG_LENGTH])
 
         if (rc)
         {
+            printf("mosquitto_connect \n");
             printf("Error: %s\n", mosquitto_strerror(rc));
             error_state = true;
             return rc;
@@ -83,8 +84,6 @@ int mqtt_send(char message[MQTT_LONG_LENGTH])
     } else {
         printf ("no mqtt connection \n");
     }
-    
-
     return 0;
 }
 
