@@ -24,6 +24,14 @@ protocol
 
 https://www.cmrr.umn.edu/~strupp/serial.html
 
+
+### Rspberry
+
+sudo apt-get install libssl-dev cmake
+
+Repair the serail port with - this helps!
+jpnevulator --ascii --timing-print --tty /dev/ttyUSB1:SB9600d --read
+
 ## mqtt
 
 add
@@ -60,16 +68,16 @@ CMake projects should use: "-DCMAKE_TOOLCHAIN_FILE=C:/Users/User/git/vcpkg/scrip
 vcpkg install openssl:x86-windows
 vcpkg.exe install pthreads
 
-## Linux
-
-sudo apt-get install libssl-dev cmake
-
-Repair the serail port with - this helps!
-jpnevulator --ascii --timing-print --tty /dev/ttyUSB1:SB9600d --read
 
 ## RPi
 
 sudo apt-get install libssl-dev cmake
+
+### serial
+
+sudo raspi-config
+Select option 5, Interfacing options, then option P6, Serial, and select No. Exit raspi-config.
+
 
 ## install
 
