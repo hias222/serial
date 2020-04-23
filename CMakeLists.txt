@@ -42,7 +42,6 @@ target_link_libraries(serial PUBLIC
                             mqtt
                             libmosquitto
                             utils
-                            receiver
                             )
 
 target_include_directories(serial PUBLIC
@@ -70,8 +69,6 @@ if(WIN32)
     file(COPY C:/Users/User/git/vcpkg/installed/x86-windows/bin/pthreadVC3.dll
     DESTINATION ${PROJECT_BINARY_DIR})
 endif()
-
-
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
