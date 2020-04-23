@@ -1,10 +1,16 @@
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
-if (RASPBERRYPI)
-    message(STATUS "receiver RASPBERRY")
-else()
-    message(STATUS "receiver no RASPBERRY")
-endif()
+if (WIN32)
+    set(RASPBERRYPI 0)
+    message(STATUS "no RASPBERRY")
+else
+    execute_process(COMMAND bash ${CMAKE_HOME_DIRECTORY}/onapi RESULT_VARIABLE RASPBERRYPI)
+    if (RASPBERRYPI)
+        message(STATUS "receiver RASPBERRY")
+    else(RASPBERRYPI)
+        message(STATUS "receiver no RASPBERRY")
+    endif(RASPBERRYPI)
+endif(WIN32)
 
 if(RASPBERRYPI)
 
