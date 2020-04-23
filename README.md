@@ -71,6 +71,16 @@ jpnevulator --ascii --timing-print --tty /dev/ttyUSB1:SB9600d --read
 
 sudo apt-get install libssl-dev cmake
 
+## install
+
+```
+wget https://github.com/joan2937/pigpio/archive/master.zip
+unzip master.zip
+cd pigpio-master
+make
+sudo make install
+```
+
 ```bash
 cd build
 cmake ../
