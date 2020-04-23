@@ -79,7 +79,7 @@ sudo raspi-config
 Select option 5, Interfacing options, then option P6, Serial, and select No. Exit raspi-config.
 
 
-## install
+### install
 
 ```
 wget https://github.com/joan2937/pigpio/archive/master.zip

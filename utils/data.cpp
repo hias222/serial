@@ -10,7 +10,7 @@ int dataInit(volatile int *running)
 {
     initReadData();
     mqtt_connect();
-    char myText[] = "HEllo";
+    char myText[] = "header 1 1";
     mqtt_send(myText);
     startListen(running);
     return 0;
