@@ -3,6 +3,7 @@
 #include "listener.h"
 #include "analyseData.h"
 #include "mqttUtils.h"
+#include "data.h"
 
 static volatile int *keepRunning;
 
