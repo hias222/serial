@@ -64,10 +64,19 @@ set (OTHER_SRC readGPIO.cpp )
 endif()
 
 add_library(receiver
-                analyseData.cpp
                 ${OTHER_SRC}
             )
+
+target_link_libraries(receiver
+            serialconnect
+           )
+           
 if(RASPBERRYPI)
     target_link_libraries(receiver PUBLIC pigpio)
 endif ()
 
+target_include_directories(serialconnect PUBLIC
+                            "${PROJECT_BINARY_DIR}"
+                            "${PROJECT_SOURCE_DIR}/serialconnect"
+                            "${PROJECT_SOURCE_DIR}/mqtt"
+                          )
