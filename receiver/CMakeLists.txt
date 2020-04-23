@@ -66,14 +66,12 @@ endif()
 add_library(receiver
                 ${OTHER_SRC}
             )
-
-target_link_libraries(receiver
-            serialconnect
-           )
            
 if(RASPBERRYPI)
-    target_link_libraries(receiver PUBLIC pigpio)
-endif ()
+    target_link_libraries(receiver serialconnect pigpio)
+else(RASPBERRYPI)
+    target_link_libraries(receiver serialconnect)
+endif(RASPBERRYPI)
 
 target_include_directories(serialconnect PUBLIC
                             "${PROJECT_BINARY_DIR}"
