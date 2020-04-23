@@ -7,6 +7,7 @@ add_library(utils  ${C_SRC} )
 
 target_link_libraries(utils 
                             serialconnect
+                            mqtt
                             )
 
 target_include_directories(mqtt PUBLIC
