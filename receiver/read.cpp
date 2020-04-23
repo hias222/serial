@@ -12,9 +12,7 @@
 
 // Linux headers
 #include <errno.h> // Error integer and strerror() function
-
 #include <unistd.h>
-
 #include "analyseData.h"
 
 #define BAUDRATE B38400

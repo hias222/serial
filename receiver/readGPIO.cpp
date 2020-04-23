@@ -10,6 +10,7 @@
 #include <ctype.h>
 
 #include "pigpio.h"
+#include "analyseData.h"
 
 #define CE0 5
 #define CE1 6
@@ -77,6 +78,7 @@ int read(char *portname, volatile int *running)
                     order = 0;
                 }
                 printf("%d: %02x ", order, text[i]);
+                putReadData(text[i]);
                 order++;
             }
             //printf("Text: %s", text);
