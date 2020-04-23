@@ -4,15 +4,11 @@
 #include "analyseData.h"
 #include "mqttUtils.h"
 
-int dataInit()
+int dataInit(int volatile running)
 {
     initReadData();
     mqtt_connect();
-#ifdef _WIN32
-    startListen();
-#endif
-startListen();
-
+    startListen(running);
     return 0;
 }
 int dataClean()

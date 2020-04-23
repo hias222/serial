@@ -2,9 +2,18 @@
 
 #include "data.h"
 
+static volatile int keepRunning;
+
+void intHandler(int dummy) {
+    keepRunning = 0;
+}
+
 int main(int, char **)
 {
-    dataInit();
+    keepRunning = 1;
+    signal(SIGINT, intHandler);
+
+    dataInit(keepRunning);
     //dataStart();
     dataClean();
 }

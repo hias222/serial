@@ -13,10 +13,11 @@
 
 #include "data.h"
 
+static volatile int keepRunning;
 
 int main()
 {
-    dataInit();
+    dataInit(keepRunning);
     dataStart();
     dataClean();
 

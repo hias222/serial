@@ -20,10 +20,10 @@
 
 using namespace std;
 
-bool read(string portname)
+int read(char *portname, int volatile running)
 {
     //int port = atoi(portname);
-    int port = 3;
+    int comport_number = 2;
     //HANDLE Cport[RS232_PORTNR];
     const char *comports[RS232_PORTNR] = {"\\\\.\\COM1", "\\\\.\\COM2", "\\\\.\\COM3", "\\\\.\\COM4",
                                           "\\\\.\\COM5", "\\\\.\\COM6", "\\\\.\\COM7", "\\\\.\\COM8",
@@ -35,7 +35,6 @@ bool read(string portname)
                                           "\\\\.\\COM29", "\\\\.\\COM30", "\\\\.\\COM31", "\\\\.\\COM32"};
 
     //char mode_str[128];
-    int comport_number = 2;
     HANDLE hComm; // Handle to the Serial port
     BOOL Status;  // Status
     OVERLAPPED o;
@@ -62,7 +61,7 @@ bool read(string portname)
         if (hComm == INVALID_HANDLE_VALUE)
         {
             printf_s("\n Port can't be opened\n\n");
-            return false;
+            return 1;
         }
 
         //Setting the Parameters for the SerialPort
@@ -72,7 +71,7 @@ bool read(string portname)
         if (Status == FALSE)
         {
             printf_s("\nError to Get the Com state\n\n");
-            return false;
+            return 1;
         }
 
         dcbSerialParams.BaudRate = CBR_9600;   //BaudRate = 9600
@@ -85,7 +84,7 @@ bool read(string portname)
         if (Status == FALSE)
         {
             printf_s("\nError to Setting DCB Structure\n\n");
-            return false;
+            return 1;
         }
 
         //Setting Timeouts
@@ -98,7 +97,7 @@ bool read(string portname)
         if (SetCommTimeouts(hComm, &timeouts) == FALSE)
         {
             printf_s("\nError to Setting Time outs");
-            return false;
+            return 1;
         }
 
         //Setting Receive Mask
@@ -106,7 +105,7 @@ bool read(string portname)
         if (Status == FALSE)
         {
             printf_s("\nError to in Setting CommMask\n\n");
-            return false;
+            return 1;
         }
 
         /*
@@ -141,6 +140,8 @@ bool read(string portname)
 
         bool connectsuccess = true;
 
+        printf("  Serial port = %s\n",comports[comport_number]);
+
         do 
         {
         if (WaitCommEvent(hComm, &dwEventMask, &o))
@@ -151,7 +152,7 @@ bool read(string portname)
                 do
                 {
                     Status = ReadFile(hComm, &ReadData, sizeof(ReadData), &NoBytesRead, NULL);
-                    //printf("%02x (x)", ReadData );
+            
                     putReadData(ReadData);
                     ++loop;
                 } while (NoBytesRead > 0);
@@ -185,8 +186,8 @@ bool read(string portname)
     catch (...)
     {
         printf("Exception occurred");
-        return false;
+        return 1;
     }
     printf("end \n");
-    return true;
+    return 0;
 }

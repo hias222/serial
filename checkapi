@@ -1,0 +1,18 @@
+#!/bin/bash
+
+echo search for PI
+
+grep -q BCM2708 /proc/cpuinfo
+if [ $? = 0 ]; then
+  echo Pi
+  exit 1
+fi
+
+grep -q BCM2835 /proc/cpuinfo
+if [ $? = 0 ]; then
+  echo Pi
+  exit 1
+fi
+
+
+exit 0

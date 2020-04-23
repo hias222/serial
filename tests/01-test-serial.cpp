@@ -14,6 +14,7 @@
 //#include "Base.hh"
 #endif
 
+static volatile int keepRunning;
 
 bool testBasic()
 {
@@ -26,7 +27,7 @@ bool testBasic()
 void testAdvanced()
 {
     // a more advanced test
-    bool check = start();
+    bool check = start(keepRunning);
     //TEST_ASSERT_THROW(check);
 }
 

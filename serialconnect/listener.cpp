@@ -5,17 +5,14 @@
 #include "listener.h"
 
 using namespace std;
+#include "read.h"
 
 #ifdef _WIN32
-#include "serialwin.h"
-#include "readwin.h"
 #include <process.h>
 #include <Windows.h>
 #include <iostream>
 #else
 #include <unistd.h>
-#include "read.h"
-#include "serial.h"
 #endif
 
 #include "info.h"
@@ -27,28 +24,18 @@ bool checkPort()
 
     printf("Start listener ..\n");
     printf("%s\n", getInfo().c_str());
-
-    check = open(1);
-
-    if (check)
-    {
-        printf("success");
-    }
-    else
-    {
-        printf("open failure");
-    }
-
+    
     return check;
 }
 
-bool start()
+bool start(int volatile running)
 {
     bool check = false;
     printf("Serial ...\n");
+    char portname[] = "myport";
     try
     {
-        read("2");
+        read(portname, running);
         check = true;
         printf("Read success\n");
     }
@@ -60,14 +47,14 @@ bool start()
     return check;
 }
 
-int startListen()
+int startListen(int volatile running)
 {
     printf("Serial loop start!\n");
     //ToDo Loop
     for (int i = 0; i < 5; i++)
     {
         printf("Serial loop start! %d\n", i);
-        start();
+        start(running);
 #ifdef _WIN32
         Sleep(5);
 #else
