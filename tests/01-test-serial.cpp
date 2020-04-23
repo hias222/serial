@@ -14,7 +14,7 @@
 //#include "Base.hh"
 #endif
 
-static volatile int keepRunning;
+static volatile int *keepRunning;
 
 bool testBasic()
 {

@@ -28,32 +28,30 @@ bool checkPort()
     return check;
 }
 
-bool start(int volatile running)
+bool start(volatile int * running)
 {
     bool check = false;
-    printf("Serial ...\n");
     char portname[] = "myport";
     try
     {
         read(portname, running);
         check = true;
-        printf("Read success\n");
     }
     catch (...)
     {
         printf("Read exception");
     }
-    printf("... Serial\n");
     return check;
 }
 
-int startListen(int volatile running)
+int startListen(volatile int *running)
 {
     printf("Serial loop start!\n");
     //ToDo Loop
-    for (int i = 0; i < 5; i++)
+    //for (int i = 0; i < 5; i++)
+    while(*running)
     {
-        printf("Serial loop start! %d\n", i);
+        printf("\n");
         start(running);
 #ifdef _WIN32
         Sleep(5);

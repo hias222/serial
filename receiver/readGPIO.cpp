@@ -23,7 +23,7 @@
 
 using namespace std;
 
-int read(char *portname, int volatile running)
+int read(char *portname, volatile int *running)
 {
 
     int USBHandle, b, e;
@@ -50,7 +50,7 @@ int read(char *portname, int volatile running)
 
     printf("   Serial port = %s\n", MODEMDEVICE);
 
-    while (true)
+    while (*running)
     {
         b = 0;
         while (b == 0)

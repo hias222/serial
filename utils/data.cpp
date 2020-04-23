@@ -4,7 +4,9 @@
 #include "analyseData.h"
 #include "mqttUtils.h"
 
-int dataInit(int volatile running)
+static volatile int *keepRunning;
+
+int dataInit(volatile int *running)
 {
     initReadData();
     mqtt_connect();

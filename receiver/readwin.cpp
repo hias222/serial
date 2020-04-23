@@ -20,7 +20,7 @@
 
 using namespace std;
 
-int read(char *portname, int volatile running)
+int read(char *portname, volatile int *running)
 {
     //int port = atoi(portname);
     int comport_number = 2;
@@ -178,7 +178,7 @@ int read(char *portname, int volatile running)
                 printf("Wait failed with error %d.\n", GetLastError());
         }
         printf("wait ... \n");
-        } while (connectsuccess);
+        } while (*running);
 
         CloseHandle(hComm); //Closing the Serial Port
         printf("closing \n");

@@ -13,7 +13,7 @@
 
 #include "data.h"
 
-static volatile int keepRunning;
+static volatile int *keepRunning;
 
 int main()
 {

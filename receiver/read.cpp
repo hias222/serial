@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 #define COLORADO_ADDRESS_WORD_MASK 0x80
+#define BUFFER_LENGTH 32
 
 #include <string.h>
 #include <string>
@@ -28,11 +29,11 @@ volatile int STOP = FALSE;
 
 using namespace std;
 
-int read(char *portname, int volatile running)
+int read(char *portname, volatile int *running)
 {
     int fd, c, res;
     struct termios oldtio, newtio;
-    unsigned char buf[255];
+    unsigned char buf[BUFFER_LENGTH];
 
     fd = open(MODEMDEVICE, O_RDONLY);
     if (fd < 0)
@@ -67,12 +68,20 @@ int read(char *portname, int volatile running)
     printf("\n");
 
     int g = 0;
+    /*
+    while (*running)
+    {
+        if (*running == 0)
+        {
+            printf("end");
+        }
+    }
+    */
 
-    while(running)
-    {                             /* loop for input */
-        res = read(fd, buf, 255); /* returns after 5 chars have been input */
+    while (*running)
+    {
+        res = read(fd, buf, BUFFER_LENGTH);        /* returns after 5 chars have been input */
         buf[res] = 0;
-        /* so we can printf... */
 
         for (int i = 0; i < res; i++)
         {
@@ -85,9 +94,13 @@ int read(char *portname, int volatile running)
             putReadData(buf[i]);
             g++;
         }
+        if (!*running){
+            printf("\n\nexit\n");
+        }
         fflush(stdout);
+
         //if (buf[0] == 'z')
-          //  STOP = TRUE;
+        //  STOP = TRUE;
     }
     tcsetattr(fd, TCSANOW, &oldtio);
     return 1;

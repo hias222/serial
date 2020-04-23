@@ -1,3 +1,3 @@
-int startListen(int volatile running);
+int startListen(volatile int *running);
 bool checkPort();
-bool start(int volatile running);
+bool start(volatile int *running);

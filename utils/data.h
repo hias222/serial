@@ -1,4 +1,4 @@
 
 int dataStart();
-int dataInit(int volatile running);
+int dataInit(volatile int *running);
 int dataClean();
