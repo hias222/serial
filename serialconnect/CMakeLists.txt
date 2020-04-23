@@ -15,6 +15,7 @@ add_library(serialconnect
 target_link_libraries(serialconnect
                     libmosquitto
                     mqtt
+                    utils
                     receiver
                    )
         #  ${LIBRARIES}
