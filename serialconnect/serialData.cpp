@@ -26,7 +26,7 @@ serialData::serialData()
   new_race_started = 0x00;
   noworking = 0;
   pending = false;
-  publish = new mqttpublisher("test", "localhost", "raw", 1883);
+  publish = new mqttpublisher("test", "localhost", "rawdata", 1883);
   publish->connect();
 
   for (int i; i < DISPLAY_LANE_COUNT; i++)

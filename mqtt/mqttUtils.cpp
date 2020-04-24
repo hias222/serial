@@ -68,7 +68,7 @@ int mqtt_send(char message[MQTT_LONG_LENGTH])
 
         rc = mosquitto_publish(mosq,
                                0,
-                               "raw",
+                               "rawdata",
                                strlen(message),
                                message,
                                0,
