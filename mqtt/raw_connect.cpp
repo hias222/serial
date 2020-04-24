@@ -46,7 +46,7 @@ int raw_connect()
 
 	rc = mosquitto_publish(mosq,
 						   msgid,
-						   "raw",
+						   "rawdata",
 						   strlen(buf),
 						   buf,
 						   0,
