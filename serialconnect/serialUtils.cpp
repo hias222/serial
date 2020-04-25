@@ -5,13 +5,15 @@
 #include "serialUtils.h"
 #include "mqttUtils.h"
 
+#define debug_header
+//#define debug_lane
+#define debug_start
+
 #ifdef _WIN32
 #include <process.h>
 #else
 #include <unistd.h>
 #endif
-
-//#include "commonData.h"
 
 #define DISPLAY_LANE_COUNT 8
 
@@ -23,13 +25,11 @@ char COLORADO_HEADER_DATA[MQTT_LONG_LENGTH];
 char COLORADO_HEAT_DATA[DISPLAY_LANE_COUNT][MQTT_MESSAGE_LENGTH];
 char COLORADO_PLACE_DATA[DISPLAY_LANE_COUNT][2];
 
-//char mydata[MQTT_LONG_LENGTH];
 char *mydata;
 
 int noworking;
 bool running, stopping, pending;
 uint8_t new_race_started;
-
 
 int initanalyseData()
 {
@@ -47,7 +47,8 @@ int initanalyseData()
     return 0;
 }
 
-int cleananalyseData(){
+int cleananalyseData()
+{
     free(mydata);
     mqtt_clean();
     return 0;
@@ -58,15 +59,12 @@ bool analyseActiveData(uint8_t channel, uint8_t data[32])
     //MQTT_LONG_LENGTH
     char mydata[64];
 
-#ifdef debug_incoming
-    printf("data: 0: %#02x  1: %#02x  2: %#02x 3: %#02x 4: %#02x 5: %#02x 6: %#02x 7: %#02x 8: %#02x \n", buf[0], buf[1], buf[2], buf[3], buf[4], buf[5], buf[6], buf[7], buf[8]);
+#ifdef debug_lane
     sprintf(mydata, "channel: %d: 2: %d 4: %d 6: %d 8: %d 10: %d 12: %d 14: %d", channel, checkBitValue(data[2]), checkBitValue(data[4]), checkBitValue(data[6]), checkBitValue(data[8]), data[10], data[12], data[14]);
     printf("result: %s \n", mydata);
 #endif
 
     sprintf(mydata, "%d: %d %d%d %d%d %d%d", channel, checkBitValue(data[2]), checkBitValue(data[4]), checkBitValue(data[6]), checkBitValue(data[8]), data[10], data[12], data[14]);
-    printf("%s \n", mydata);
-
     getTime(channel, data);
 
     return true;
@@ -87,7 +85,9 @@ int getTime(int lane, uint8_t data[])
     sprintf(mydata, "lane %d %d%d:%d%d,%d%d %d", lane, checkBitValue(data[4]), checkBitValue(data[6]), checkBitValue(data[8]), checkBitValue(data[10]), checkBitValue(data[12]), checkBitValue(data[14]), checkBitValue(data[2]));
     sprintf(place, "%d", checkBitValue(data[2]));
 
+#ifdef debug_lane
     printf("gettime: %s \n ", mydata);
+#endif
 
     if (strcmp(shortdata, COLORADO_HEAT_DATA[lane - 1]) == 0)
     {
@@ -95,7 +95,6 @@ int getTime(int lane, uint8_t data[])
 
         if (strcmp(place, COLORADO_PLACE_DATA[lane - 1]) != 0)
         {
-
             //der platz ist ungleich
             if (strcmp(place, "0") != 0)
             {
@@ -106,7 +105,6 @@ int getTime(int lane, uint8_t data[])
     }
     else
     {
-
         if (strcmp(shortdata, "000000") == 0)
         {
             array_match = true;
@@ -124,9 +122,10 @@ int getTime(int lane, uint8_t data[])
 
     if (!array_match)
     {
-        if (mqtt_send(mydata)) {
+        if (mqtt_send(mydata))
+        {
             printf("Error sending \n");
-        } 
+        }
 
         for (int i = 0; i < MQTT_MESSAGE_LENGTH; i++)
         {
@@ -157,7 +156,10 @@ void getHeader(uint8_t data[])
 
     sprintf(mydata, "header %d%d%d %d%d%d", checkBitValue(data[0]), checkBitValue(data[2]), checkBitValue(data[4]), checkBitValue(data[10]), checkBitValue(data[12]), checkBitValue(data[14]));
 
-    //mqtt_send(mydata);
+#ifdef debug_header
+    printf("%02x %02x %02x %02x %02x %02x %02x %02x\n", data[0], data[2], data[4], data[6], data[8], data[10], data[12], data[14]);
+    printf("Header: %s\n", mydata);
+#endif
 
     if (strcmp(mydata, "header 000 000") == 0)
     {
@@ -174,10 +176,8 @@ void getHeader(uint8_t data[])
 
         //TODO clean Lane Data
         //nein es werden immer alle Zeiten bis zum erbrechen geschickt ...
-
         for (int clearnr = 0; clearnr < DISPLAY_LANE_COUNT; clearnr++)
         {
-
             sprintf(COLORADO_HEAT_DATA[clearnr], "000000");
             /* 
         COLORADO_HEAT_DATA[clearnr] = shortdata;
@@ -232,14 +232,18 @@ bool checkStartStop(uint8_t data[])
     {
         if (running)
         {
-            //coloradoraw.publish("start");
+#ifdef debug_start
+            printf("start\n");
+#endif
             sprintf(mydata, "start");
             mqtt_send(mydata);
             new_race_started = 0x01;
         }
         else
         {
-            //coloradoraw.publish("stop");
+#ifdef debug_start
+            printf("stop\n");
+#endif
             sprintf(mydata, "stop");
             mqtt_send(mydata);
         }

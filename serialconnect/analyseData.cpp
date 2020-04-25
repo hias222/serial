@@ -6,6 +6,7 @@
 #include "serialUtils.h"
 //#define debug_incoming
 //#define debug_lane
+#define debug_header
 #define COLORADO_CHANNELS 32
 #define COLORADO_ADDRESS_WORD_MASK 0x80
 #define COLORADO_ROWS 16
@@ -76,8 +77,9 @@ int putReadData(uint8_t ReadData)
         {
             if (in_count == colorado_channel_length[colorado_control_channel])
             {
+#ifdef debug_incoming
                 printf("save %d ctrl %02x \n", in_count, colorado_control_channel);
-
+#endif
                 for (j = 1; j < colorado_channel_length[colorado_control_channel]; j++)
                 {
                     colorado_digit_no = (buf[j] >> 4) & 0x07;
@@ -90,7 +92,6 @@ int putReadData(uint8_t ReadData)
 #ifdef debug_incoming
                 printf("\n ");
 #endif
-
                 if (colorado_control_channel != 0x00 && colorado_control_channel < (DISPLAY_LANE_COUNT + 1))
                 {
 #ifdef debug_lane
@@ -111,10 +112,13 @@ int putReadData(uint8_t ReadData)
                         loop = 0;
                     }
                 }
-                else
+                else if (colorado_control_channel == 0x0c)
                 {
-#ifdef debug_lane
-                    printf("--- update header %02x \n", ReadData);
+#ifdef debug_header
+                    // https://www.coloradotime.com/manuals/System_6_Swimming_Manual_F890.pdf
+                    //0c
+                    // 0c oder 0a
+                    printf("--- update header %02x \n", colorado_control_channel);
 #endif
                     getHeader(colorado_data[colorado_control_channel]);
                 }
@@ -143,8 +147,6 @@ int putReadData(uint8_t ReadData)
         { // wir hatten ein Adress Word erkannt => Daten speichern
             buf[in_count] = ReadData;
             in_count++;
-            //printf("store %02x  \n", ReadData);
-
             if (in_count > 9)
             { // Ups... Da ist was schief gelaufen. Mehr als 8 Bytes bis zum nächsten Adress Word
                 colorado_start_detected = 0x00;

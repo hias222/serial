@@ -10,6 +10,8 @@
 #include <string.h>
 #include <string>
 
+//#define debug_incoming
+
 // Linux headers
 #include <errno.h> // Error integer and strerror() function
 #include <unistd.h>
@@ -53,10 +55,10 @@ int read(char *portname, volatile int *running)
     newtio.c_oflag = 0;
 
     /* set input mode (non-canonical, no echo,...) */
-    newtio.c_lflag = 0;
+    newtio.c_lflag &= ~ICANON; // 0
 
-    newtio.c_cc[VTIME] = 0; /* inter-character timer unused */
-    newtio.c_cc[VMIN] = 1;  /* blocking read until 5 chars received */
+    newtio.c_cc[VTIME] = 10; /* inter-character timer unused */
+    newtio.c_cc[VMIN] = 0;  /* blocking read until 5 chars received */
 
     tcflush(fd, TCIFLUSH);
     tcsetattr(fd, TCSANOW, &newtio);
@@ -66,15 +68,6 @@ int read(char *portname, volatile int *running)
     printf("\n");
 
     int g = 0;
-    /*
-    while (*running)
-    {
-        if (*running == 0)
-        {
-            printf("end");
-        }
-    }
-    */
 
     while (*running)
     {
@@ -85,10 +78,14 @@ int read(char *portname, volatile int *running)
         {
             if ((buf[i] & COLORADO_ADDRESS_WORD_MASK) == COLORADO_ADDRESS_WORD_MASK)
             {
+#ifdef debug_incoming
                 printf("\n");
+#endif
                 g = 0;
             }
+#ifdef debug_incoming
             printf("%d: %02x ", g, buf[i]);
+#endif
             putReadData(buf[i]);
             g++;
         }
