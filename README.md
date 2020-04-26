@@ -63,10 +63,20 @@ remove projects except lib and src
 
 https://github.com/Microsoft/vcpkg
 
+```bash
+git clone https://github.com/Microsoft/vcpkg.git
+PS> .\bootstrap-vcpkg.bat
+
+```
+
 CMake projects should use: "-DCMAKE_TOOLCHAIN_FILE=C:/Users/User/git/vcpkg/scripts/buildsystems/vcpkg.cmake"
 
 vcpkg install openssl:x86-windows
 vcpkg.exe install pthreads
+
+c++ compiler
+https://docs.microsoft.com/de-de/cpp/build/building-on-the-command-line?view=vs-2019
+--> Build Tools
 
 
 ## RPi
