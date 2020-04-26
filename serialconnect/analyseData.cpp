@@ -6,7 +6,7 @@
 #include "serialUtils.h"
 //#define debug_incoming
 //#define debug_lane
-#define debug_header
+//#define debug_header
 #define COLORADO_CHANNELS 32
 #define COLORADO_ADDRESS_WORD_MASK 0x80
 #define COLORADO_ROWS 16
@@ -118,7 +118,7 @@ int putReadData(uint8_t ReadData)
                     // https://www.coloradotime.com/manuals/System_6_Swimming_Manual_F890.pdf
                     //0c
                     // 0c oder 0a
-                    printf("--- update header %02x \n", colorado_control_channel);
+                    printf("\n--- update header %02x \n", colorado_control_channel);
 #endif
                     getHeader(colorado_data[colorado_control_channel]);
                 }
