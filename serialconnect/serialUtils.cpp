@@ -157,7 +157,7 @@ void getHeader(uint8_t data[])
     sprintf(mydata, "header %d%d%d %d%d%d", checkBitValue(data[0]), checkBitValue(data[2]), checkBitValue(data[4]), checkBitValue(data[10]), checkBitValue(data[12]), checkBitValue(data[14]));
 
 #ifdef debug_header
-    printf("%02x %02x %02x %02x %02x %02x %02x %02x\n", data[0], data[2], data[4], data[6], data[8], data[10], data[12], data[14]);
+    printf("\n %02x %02x %02x %02x %02x %02x %02x %02x\n", data[0], data[2], data[4], data[6], data[8], data[10], data[12], data[14]);
     printf("Header: %s\n", mydata);
 #endif
 
