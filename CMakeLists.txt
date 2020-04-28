@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(serial VERSION 0.1.0)
+string(TIMESTAMP TODAY "%Y%m%d")
+project(serial VERSION 0.1.${TODAY})
+
+configure_file(SerialConfig.h.in SerialConfig.h)
 
 execute_process(COMMAND bash ${CMAKE_HOME_DIRECTORY}/checkapi RESULT_VARIABLE RASPBERRYPI)
 
@@ -15,7 +18,10 @@ if(APPLE)
 endif()
 
 if(WIN32)
-    set(ENV{OPENSSL_ROOT_DIR} "C:/Users/User/git/vcpkg/installed/x86-windows")
+    set(USER_HOME_DIR "C:/Users/Matthias/git")
+    set(THREAD_HOME_DIR "C:\\Users\\Matthias\\git\\vcpkg\\installed\\x86-windows")
+    # set(ENV{OPENSSL_ROOT_DIR} "C:/Users/User/git/vcpkg/installed/x86-windows")
+    set(ENV{OPENSSL_ROOT_DIR} "${USER_HOME_DIR}/vcpkg/installed/x86-windows")
 endif()
 
 
@@ -58,16 +64,16 @@ if(WIN32)
     set(LIBRARY_OUTPUT_PATH "${PROJECT_BINARY_DIR}")
     set(EXECUTABLE_OUTPUT_PATH "${PROJECT_BINARY_DIR}")
 
-    file(COPY ${PROJECT_BINARY_DIR}/mosquitto-1.6.9/lib/mosquitto.dll
+    file(COPY ${PROJECT_BINARY_DIR}/mosquitto-1.6.9/lib/Debug/mosquitto.dll
                             DESTINATION ${PROJECT_BINARY_DIR})
 
-    file(COPY C:/Users/User/git/vcpkg/installed/x86-windows/bin/libssl-1_1.dll
+    file(COPY ${USER_HOME_DIR}/vcpkg/installed/x86-windows/bin/libssl-1_1.dll
                             DESTINATION ${PROJECT_BINARY_DIR})
 
-    file(COPY C:/Users/User/git/vcpkg/installed/x86-windows/bin/libcrypto-1_1.dll
+    file(COPY ${USER_HOME_DIR}/vcpkg/installed/x86-windows/bin/libcrypto-1_1.dll
     DESTINATION ${PROJECT_BINARY_DIR})
 
-    file(COPY C:/Users/User/git/vcpkg/installed/x86-windows/bin/pthreadVC3.dll
+    file(COPY ${USER_HOME_DIR}/vcpkg/installed/x86-windows/bin/pthreadVC3.dll
     DESTINATION ${PROJECT_BINARY_DIR})
 endif()
 
