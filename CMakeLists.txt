@@ -2,19 +2,20 @@ cmake_minimum_required(VERSION 3.0.0)
 string(TIMESTAMP TODAY "%Y%m%d")
 project(serial VERSION 0.1.${TODAY})
 
-configure_file(SerialConfig.h.in SerialConfig.h)
-
 execute_process(COMMAND bash ${CMAKE_HOME_DIRECTORY}/checkapi RESULT_VARIABLE RASPBERRYPI)
 
 if (RASPBERRYPI)
     message(STATUS "RASPBERRY")
+    set(PORTNAME "/dev/Serial0")
 else()
     message(STATUS "no RASPBERRY")
+    set(PORTNAME "/dev/ttyUSB0")
 endif()
 
 if(APPLE)
     set(ENV{OPENSSL_ROOT_DIR} "/usr/local/opt/openssl@1.1")
     set(ENV{OPENSSL_LIBRARIES} "/usr/local/opt/openssl@1.1/lib")
+    set(PORTNAME "/dev/applename")
 endif()
 
 if(WIN32)
@@ -22,7 +23,10 @@ if(WIN32)
     set(THREAD_HOME_DIR "C:\\Users\\Matthias\\git\\vcpkg\\installed\\x86-windows")
     # set(ENV{OPENSSL_ROOT_DIR} "C:/Users/User/git/vcpkg/installed/x86-windows")
     set(ENV{OPENSSL_ROOT_DIR} "${USER_HOME_DIR}/vcpkg/installed/x86-windows")
+    set(PORTNAME "com1")
 endif()
+
+configure_file(SerialConfig.h.in SerialConfig.h)
 
 
 #[cmake]   system variable OPENSSL_ROOT_DIR (missing: OPENSSL_CRYPTO_LIBRARY

@@ -17,7 +17,9 @@ static volatile int *keepRunning;
 
 int main()
 {
-    dataInit(keepRunning);
+    char portname[] = "com1";
+
+    dataInit(keepRunning, portname);
     dataStart();
     dataClean();
 

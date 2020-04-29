@@ -19,7 +19,7 @@
 
 #define BAUDRATE B38400
 //#define MODEMDEVICE "/dev/ttys002"
-#define MODEMDEVICE "/dev/ttyUSB0"
+//#define MODEMDEVICE "/dev/ttyUSB0"
 //#define MODEMDEVICE "/dev/cu.usbserial-14610"
 #define _POSIX_SOURCE 1 /* POSIX compliant source */
 #define FALSE 0
@@ -35,10 +35,12 @@ int read(char *portname, volatile int *running)
     struct termios oldtio, newtio;
     unsigned char buf[BUFFER_LENGTH];
 
-    fd = open(MODEMDEVICE, O_RDONLY);
+    printf ("    port = %s\n", portname);
+
+    fd = open(portname, O_RDONLY);
     if (fd < 0)
     {
-        perror(MODEMDEVICE);
+        perror(portname);
         return 1;
     }
 
@@ -64,7 +66,7 @@ int read(char *portname, volatile int *running)
     tcsetattr(fd, TCSANOW, &newtio);
 
     printf("\n");
-    printf("   Serial port = %s\n", MODEMDEVICE);
+    printf("   Serial port = %s\n", portname);
     printf("\n");
 
     int g = 0;

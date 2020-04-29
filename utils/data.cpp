@@ -7,13 +7,13 @@
 
 static volatile int *keepRunning;
 
-int dataInit(volatile int *running)
+int dataInit(volatile int *running, char *portname)
 {
     initReadData();
     mqtt_connect();
     char myText[] = "header 1 1";
     mqtt_send(myText);
-    startListen(running);
+    startListen(running, portname);
     return 0;
 }
 

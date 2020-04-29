@@ -24,17 +24,18 @@ bool testBasic()
     return check;
 }
 
-void testAdvanced()
+void testAdvanced(char *portname)
 {
     // a more advanced test
-    bool check = start(keepRunning);
+    bool check = start(keepRunning, portname);
     //TEST_ASSERT_THROW(check);
 }
 
 int main(int, char **)
 {
+    char portname[] = "com1";
     if (testBasic())
     {
-        testAdvanced();
+        testAdvanced(portname);
     }
 }
