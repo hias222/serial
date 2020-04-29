@@ -6,7 +6,7 @@ execute_process(COMMAND bash ${CMAKE_HOME_DIRECTORY}/checkapi RESULT_VARIABLE RA
 
 if (RASPBERRYPI)
     message(STATUS "RASPBERRY")
-    set(PORTNAME "/dev/Serial0")
+    set(PORTNAME "/dev/serial0")
 else()
     message(STATUS "no RASPBERRY")
     set(PORTNAME "/dev/ttyUSB0")

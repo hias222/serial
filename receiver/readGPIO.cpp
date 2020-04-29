@@ -20,7 +20,7 @@
 
 #define COLORADO_ADDRESS_WORD_MASK 0x80
 
-#define MODEMDEVICE "/dev/serial0"
+//#define MODEMDEVICE "/dev/serial0"
 
 using namespace std;
 
@@ -41,7 +41,7 @@ int read(char *portname, volatile int *running)
     //bbSPIOpen(CE0, MISO, MOSI, SCLK, 10000, 0); // MCP4251 DAC
     //bbSPIOpen(CE1, MISO, MOSI, SCLK, 20000, 3); // MCP3008 ADC
 
-    USBHandle = serOpen(MODEMDEVICE, 9600, 0);
+    USBHandle = serOpen(portname, 9600, 0);
 
     if (USBHandle < 0)
     {
@@ -49,7 +49,7 @@ int read(char *portname, volatile int *running)
         return 1;
     }
 
-    printf("   Serial port = %s\n", MODEMDEVICE);
+    printf("   Serial port = %s\n", portname);
 
     while (*running)
     {
