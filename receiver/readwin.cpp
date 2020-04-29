@@ -22,8 +22,11 @@ using namespace std;
 
 int read(char *portname, volatile int *running)
 {
-    //int port = atoi(portname);
-    int comport_number = 2;
+    //printf("port %s\n", portname);
+    char subbuff[2];
+    memcpy(subbuff, &portname[3], 2);
+    int portnumber = atoi(subbuff);
+    int comport_number = portnumber - 1;
     //HANDLE Cport[RS232_PORTNR];
     const char *comports[RS232_PORTNR] = {"\\\\.\\COM1", "\\\\.\\COM2", "\\\\.\\COM3", "\\\\.\\COM4",
                                           "\\\\.\\COM5", "\\\\.\\COM6", "\\\\.\\COM7", "\\\\.\\COM8",
@@ -140,44 +143,44 @@ int read(char *portname, volatile int *running)
 
         bool connectsuccess = true;
 
-        printf("  Serial port = %s\n",comports[comport_number]);
+        printf("  Serial port = %s\n", comports[comport_number]);
 
-        do 
+        do
         {
-        if (WaitCommEvent(hComm, &dwEventMask, &o))
-        {
-            
-            if (dwEventMask & EV_RXCHAR)
+            if (WaitCommEvent(hComm, &dwEventMask, &o))
             {
-                do
+
+                if (dwEventMask & EV_RXCHAR)
                 {
-                    Status = ReadFile(hComm, &ReadData, sizeof(ReadData), &NoBytesRead, NULL);
-            
-                    putReadData(ReadData);
-                    ++loop;
-                } while (NoBytesRead > 0);
-                --loop; //Get Actual length of received data
-                printf_s("\nNumber of bytes received = %d\n\n", loop);
-            }
-            else
-            {
-                printf("start with %d \n", dwEventMask);
-            }
-        }
-        else
-        {
-            connectsuccess = false;
-            DWORD dwRet = GetLastError();
-            if (ERROR_IO_PENDING == dwRet)
-            {
-                printf("I/O is pending...\n");
+                    do
+                    {
+                        Status = ReadFile(hComm, &ReadData, sizeof(ReadData), &NoBytesRead, NULL);
 
-                // To do.
+                        putReadData(ReadData);
+                        ++loop;
+                    } while (NoBytesRead > 0);
+                    --loop; //Get Actual length of received data
+                    printf_s("\nNumber of bytes received = %d\n\n", loop);
+                }
+                else
+                {
+                    printf("start with %d \n", dwEventMask);
+                }
             }
             else
-                printf("Wait failed with error %d.\n", GetLastError());
-        }
-        printf("wait ... \n");
+            {
+                connectsuccess = false;
+                DWORD dwRet = GetLastError();
+                if (ERROR_IO_PENDING == dwRet)
+                {
+                    printf("I/O is pending...\n");
+
+                    // To do.
+                }
+                else
+                    printf("Wait failed with error %d.\n", GetLastError());
+            }
+            printf("wait ... \n");
         } while (*running);
 
         CloseHandle(hComm); //Closing the Serial Port

@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
             switch ((int)argv[n][1]) /* Check for option character. */
             {
             case 's':
-                printf("we getting source \n");
+                //printf("we getting source \n");
                 if (argc > n)
                 {
                     portname = argv[n + 1];
