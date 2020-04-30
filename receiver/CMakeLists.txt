@@ -77,6 +77,7 @@ target_include_directories(serialconnect PUBLIC
                             "${PROJECT_BINARY_DIR}"
                             "${PROJECT_SOURCE_DIR}/serialconnect"
                             "${PROJECT_SOURCE_DIR}/mqtt"
+                            "${PROJECT_SOURCE_DIR}/sender"
                             "${PROJECT_SOURCE_DIR}/receiver"
                             "${PROJECT_SOURCE_DIR}/utils"
                           )

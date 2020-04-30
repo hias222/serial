@@ -4,9 +4,12 @@ project(serial VERSION 0.1.${TODAY})
 
 execute_process(COMMAND bash ${CMAKE_HOME_DIRECTORY}/checkapi RESULT_VARIABLE RASPBERRYPI)
 
+set(SENDMODE false)
+
 if (RASPBERRYPI)
     message(STATUS "RASPBERRY")
     set(PORTNAME "/dev/serial0")
+    set(SENDMODE true)
 else()
     message(STATUS "no RASPBERRY")
     set(PORTNAME "/dev/ttyUSB0")
@@ -15,7 +18,8 @@ endif()
 if(APPLE)
     set(ENV{OPENSSL_ROOT_DIR} "/usr/local/opt/openssl@1.1")
     set(ENV{OPENSSL_LIBRARIES} "/usr/local/opt/openssl@1.1/lib")
-    set(PORTNAME "/dev/applename")
+    set(PORTNAME "/dev/ttys005")
+    set(SENDMODE true)
 endif()
 
 if(WIN32)
@@ -28,7 +32,6 @@ endif()
 
 configure_file(SerialConfig.h.in SerialConfig.h)
 
-
 #[cmake]   system variable OPENSSL_ROOT_DIR (missing: OPENSSL_CRYPTO_LIBRARY
 #[cmake]   OPENSSL_INCLUDE_DIR)
 
@@ -40,6 +43,7 @@ add_subdirectory(serialconnect)
 add_subdirectory(mosquitto-1.6.9)
 add_subdirectory(utils)
 add_subdirectory(receiver)
+add_subdirectory(sender)
 
 if(BUILD_TESTING)
     add_subdirectory(tests)
@@ -53,6 +57,7 @@ target_link_libraries(serial PUBLIC
                             libmosquitto
                             utils
                             receiver
+                            sender
                             )
 
 target_include_directories(serial PUBLIC
@@ -61,6 +66,7 @@ target_include_directories(serial PUBLIC
                           "${PROJECT_SOURCE_DIR}/mqtt"
                           "${PROJECT_SOURCE_DIR}/utils"
                           "${PROJECT_SOURCE_DIR}/receiver"
+                          "${PROJECT_SOURCE_DIR}/sender"
                           "${PROJECT_SOURCE_DIR}/mosquitto-1.6.9/lib"
                           )
 

@@ -27,6 +27,7 @@
 
 volatile int STOP = FALSE;
 
+
 using namespace std;
 
 int read(char *portname, volatile int *running)
@@ -34,8 +35,6 @@ int read(char *portname, volatile int *running)
     int fd, c, res;
     struct termios oldtio, newtio;
     unsigned char buf[BUFFER_LENGTH];
-
-    printf ("    port = %s\n", portname);
 
     fd = open(portname, O_RDONLY);
     if (fd < 0)
@@ -60,20 +59,20 @@ int read(char *portname, volatile int *running)
     newtio.c_lflag &= ~ICANON; // 0
 
     newtio.c_cc[VTIME] = 10; /* inter-character timer unused */
-    newtio.c_cc[VMIN] = 0;  /* blocking read until 5 chars received */
+    newtio.c_cc[VMIN] = 0;   /* blocking read until 5 chars received */
 
     tcflush(fd, TCIFLUSH);
     tcsetattr(fd, TCSANOW, &newtio);
 
     printf("\n");
-    printf("   Serial port = %s\n", portname);
+    printf("    port in = %s\n", portname);
     printf("\n");
 
     int g = 0;
 
     while (*running)
     {
-        res = read(fd, buf, BUFFER_LENGTH);        /* returns after 5 chars have been input */
+        res = read(fd, buf, BUFFER_LENGTH); /* returns after 5 chars have been input */
         buf[res] = 0;
 
         for (int i = 0; i < res; i++)
@@ -91,7 +90,8 @@ int read(char *portname, volatile int *running)
             putReadData(buf[i]);
             g++;
         }
-        if (!*running){
+        if (!*running)
+        {
             printf("\n\nexit\n");
         }
         fflush(stdout);

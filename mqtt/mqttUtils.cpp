@@ -20,9 +20,14 @@ char clientid[24];
 uint8_t reconnect;
 bool error_state = false;
 
-int mqtt_connect()
+bool remotesender;
+
+#include "send.h"
+
+int mqtt_connect(bool remoteserial)
 {
     reconnect = true;
+    remotesender = true;
     int rc = 0;
 
     mosquitto_lib_init();
@@ -48,10 +53,18 @@ int mqtt_connect()
 int mqtt_send(char message[MQTT_LONG_LENGTH])
 {
     int rc;
+    char *remotechar = (char* ) malloc(strlen(message));
+    if (remotesender)
+    {
+        sprintf(remotechar,"%s",message);
+        send(remotechar);
+    }
+
     if (mosq)
     {
-        if(error_state){
-            error_state=false;
+        if (error_state)
+        {
+            error_state = false;
             printf("Reconnect \n");
             mosquitto_reconnect(mosq);
         }
@@ -81,8 +94,10 @@ int mqtt_send(char message[MQTT_LONG_LENGTH])
             return rc;
         }
         //mosquitto_destroy(mosq);
-    } else {
-        printf ("no mqtt connection \n");
+    }
+    else
+    {
+        printf("no mqtt connection \n");
     }
     return 0;
 }

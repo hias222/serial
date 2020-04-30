@@ -10,6 +10,10 @@
 #include <windows.h>
 #endif
 
+#ifdef SEND_MODE
+#include "send.h"
+#endif
+
 static volatile int keepRunning;
 static volatile int *ptrRunning;
 
@@ -26,8 +30,15 @@ void usage(char *prog)
 
 int main(int argc, char *argv[])
 {
+
     printf("serial %d.%d.%d \n", SERIAL_VERSION_MAJOR, SERIAL_VERSION_MINOR, SERIAL_VERSION_PATCH);
     char *portname = (char *)malloc(50);
+    bool send_mode = false;
+    if (SEND_MODE)
+    {
+        printf("SENDMODE\n");
+        send_mode = true;
+    }
 
     // out of SerialConfig
     sprintf(portname, "%s", BASIC_PORTNAME);
@@ -69,9 +80,23 @@ int main(int argc, char *argv[])
     ptrRunning = &keepRunning;
     signal(SIGINT, intHandler);
 
-    dataInit(ptrRunning, portname);
+    if (send_mode)
+    {
+        char device_sender[] = "/dev/ttys010"; 
+        init_send(device_sender);
+        dataInit(ptrRunning, portname, true);
+    }
+    else
+    {
+        dataInit(ptrRunning, portname, false);
+    }
+
     //dataStart();
     dataClean();
+    if (send_mode)
+    {
+        close_send();
+    }
 
     free(portname);
 }

@@ -7,10 +7,10 @@
 
 static volatile int *keepRunning;
 
-int dataInit(volatile int *running, char *portname)
+int dataInit(volatile int *running, char *portname, bool sendmode)
 {
     initReadData();
-    mqtt_connect();
+    mqtt_connect(sendmode);
     char myText[] = "header 1 1";
     mqtt_send(myText);
     startListen(running, portname);
