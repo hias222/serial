@@ -76,6 +76,7 @@ int mqtt_send(char message[MQTT_LONG_LENGTH])
             printf("mosquitto_connect \n");
             printf("Error: %s\n", mosquitto_strerror(rc));
             error_state = true;
+            free(remotechar);
             return rc;
         }
 
@@ -91,6 +92,7 @@ int mqtt_send(char message[MQTT_LONG_LENGTH])
         {
             printf("Error: %s\n", mosquitto_strerror(rc));
             error_state = true;
+            free(remotechar);
             return rc;
         }
         //mosquitto_destroy(mosq);
