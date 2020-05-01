@@ -90,6 +90,8 @@ int terminalread(char *portname, volatile int *running)
 
     int g = 0;
 
+    char outgoing[BUFFER_LENGTH + 2];
+
     while (*running)
     {
         res = read(fd, buf, BUFFER_LENGTH); /* returns after 5 chars have been input */
@@ -97,9 +99,21 @@ int terminalread(char *portname, volatile int *running)
 
         if (res > 0)
         {
-
-            printf("Terminal in: %s", buf);
-            mqtt_send(buf);
+            for (int i = 0; i < res; i++)
+            {
+                if (buf[i] == 0x01 || g > 24)
+                {
+                    g = 0;
+                    printf("Terminal in: %s", outgoing);
+                    mqtt_send(outgoing);
+                    //clear it
+                }
+                else
+                {
+                    outgoing[g] = buf[i];
+                    g++;
+                }
+            }
         }
 
         if (!*running)

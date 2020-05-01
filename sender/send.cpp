@@ -80,7 +80,7 @@ int send(char *SendByte)
     int res;
 
     printf("    %s\n", SendByte);
-    char endstring[2] = ";";
+    char endstring[1] = {0x01};
 
     res = write(fd, SendByte, strlen(SendByte));
 
