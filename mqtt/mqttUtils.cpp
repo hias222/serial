@@ -27,7 +27,7 @@ bool remotesender;
 int mqtt_connect(bool remoteserial)
 {
     reconnect = true;
-    remotesender = true;
+    remotesender = remoteserial;
     int rc = 0;
 
     mosquitto_lib_init();

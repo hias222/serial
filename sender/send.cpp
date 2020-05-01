@@ -96,7 +96,7 @@ int send(char *SendByte)
     //char buf[] = "\x80";
 
     //res = write(fd, buff, strlen(buf));
-    printf("write %d bytes\n", res);
+    //printf("write %d bytes\n", res);
 
     return 1;
 }
