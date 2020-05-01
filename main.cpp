@@ -38,13 +38,15 @@ int main(int argc, char *argv[])
 
     if (SEND_MODE)
     {
-        printf("SENDMODE\n");
+        printf("turn on SENDMODE\n");
         send_mode = true;
     }
 
     // out of SerialConfig
     sprintf(portname, "%s", BASIC_PORTNAME);
-    sprintf(destinationportname, "%s", BASIC_PORTNAME);
+    sprintf(destinationportname, "%s", DESTINATION_PORTNAME);
+
+    printf("init portnames\n");
 
     bool cmd_line_failure = true;
 
