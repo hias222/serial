@@ -80,13 +80,11 @@ int send(char *SendByte)
     int res;
 
     printf("    %s\n", SendByte);
+    char endstring[2] = ";";
 
-    char myMessage[BUFFER_LENGTH];
+    res = write(fd, SendByte, strlen(SendByte));
 
-    sprintf(myMessage,"%s",SendByte);
-
-    //res = write(fd, SendByte, strlen(SendByte));
-     res = write(fd, myMessage, strlen(myMessage));
+    res = write(fd, endstring, strlen(endstring));
 
     if (res < 0 ){
         printf("error write\n");
