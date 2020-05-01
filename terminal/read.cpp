@@ -99,9 +99,11 @@ int terminalread(char *portname, volatile int *running)
 
         if (res > 0)
         {
+            printf("%s \n", buf);
             for (int i = 0; i < res; i++)
             {
-                if (buf[i] == 0x01 || g > 24)
+                
+                if (buf[i] == 0x3B || g > 24)
                 {
                     g = 0;
                     printf("Terminal in: %s", outgoing);
