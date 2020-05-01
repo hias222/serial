@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 {
 
     printf("serial %d.%d.%d \n", SERIAL_VERSION_MAJOR, SERIAL_VERSION_MINOR, SERIAL_VERSION_PATCH);
-    char *portname = (char *)malloc(50);
+    char *portname, *destinationportname = (char *)malloc(50);
     bool send_mode = false;
     bool repeat_mode = false;
 
@@ -44,6 +44,7 @@ int main(int argc, char *argv[])
 
     // out of SerialConfig
     sprintf(portname, "%s", BASIC_PORTNAME);
+    sprintf(destinationportname, "%s", BASIC_PORTNAME);
 
     bool cmd_line_failure = true;
 
@@ -69,6 +70,13 @@ int main(int argc, char *argv[])
                     cmd_line_failure = false;
                 }
                 break;
+            case 'd':
+                if (argc > n)
+                {
+                    destinationportname = argv[n + 1];
+                    cmd_line_failure = false;
+                }
+                break;
             default:
                 usage(argv[0]);
                 return 0;
@@ -91,8 +99,8 @@ int main(int argc, char *argv[])
 
     if (send_mode)
     {
-        char device_sender[] = "/dev/ttys010"; 
-        init_send(device_sender);
+
+        init_send(destinationportname);
         dataInit(ptrRunning, portname, true);
     }
     else if (repeat_mode)
