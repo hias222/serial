@@ -32,7 +32,8 @@ int main(int argc, char *argv[])
 {
 
     printf("serial %d.%d.%d \n", SERIAL_VERSION_MAJOR, SERIAL_VERSION_MINOR, SERIAL_VERSION_PATCH);
-    char *portname, *destinationportname = (char *)malloc(50);
+    char *portname = (char *)malloc(50);
+    char *destinationportname = (char *)malloc(50);
     bool send_mode = false;
     bool repeat_mode = false;
 
@@ -123,4 +124,5 @@ int main(int argc, char *argv[])
     }
 
     free(portname);
+    free(destinationportname);
 }
