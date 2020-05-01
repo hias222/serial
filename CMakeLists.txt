@@ -44,6 +44,7 @@ add_subdirectory(mosquitto-1.6.9)
 add_subdirectory(utils)
 add_subdirectory(receiver)
 add_subdirectory(sender)
+add_subdirectory(terminal)
 
 if(BUILD_TESTING)
     add_subdirectory(tests)
@@ -67,6 +68,7 @@ target_include_directories(serial PUBLIC
                           "${PROJECT_SOURCE_DIR}/utils"
                           "${PROJECT_SOURCE_DIR}/receiver"
                           "${PROJECT_SOURCE_DIR}/sender"
+                          "${PROJECT_SOURCE_DIR}/terminal"
                           "${PROJECT_SOURCE_DIR}/mosquitto-1.6.9/lib"
                           )
 

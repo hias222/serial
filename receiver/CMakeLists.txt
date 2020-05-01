@@ -73,7 +73,7 @@ else(RASPBERRYPI)
     target_link_libraries(receiver serialconnect)
 endif(RASPBERRYPI)
 
-target_include_directories(serialconnect PUBLIC
+target_include_directories(receiver PUBLIC
                             "${PROJECT_BINARY_DIR}"
                             "${PROJECT_SOURCE_DIR}/serialconnect"
                             "${PROJECT_SOURCE_DIR}/mqtt"

@@ -34,6 +34,8 @@ int main(int argc, char *argv[])
     printf("serial %d.%d.%d \n", SERIAL_VERSION_MAJOR, SERIAL_VERSION_MINOR, SERIAL_VERSION_PATCH);
     char *portname = (char *)malloc(50);
     bool send_mode = false;
+    bool repeat_mode = false;
+
     if (SEND_MODE)
     {
         printf("SENDMODE\n");
@@ -57,6 +59,13 @@ int main(int argc, char *argv[])
                 if (argc > n)
                 {
                     portname = argv[n + 1];
+                    cmd_line_failure = false;
+                }
+                break;
+            case 'r':
+                if (argc > n)
+                {
+                    repeat_mode = true;
                     cmd_line_failure = false;
                 }
                 break;
@@ -86,13 +95,18 @@ int main(int argc, char *argv[])
         init_send(device_sender);
         dataInit(ptrRunning, portname, true);
     }
-    else
+    else if (repeat_mode)
+    {
+        printf ("repeat\n");
+        terminalInit(ptrRunning, portname);
+
+    } else
     {
         dataInit(ptrRunning, portname, false);
     }
 
-    //dataStart();
     dataClean();
+
     if (send_mode)
     {
         close_send();

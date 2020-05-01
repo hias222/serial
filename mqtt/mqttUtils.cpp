@@ -99,6 +99,8 @@ int mqtt_send(char message[MQTT_LONG_LENGTH])
     {
         printf("no mqtt connection \n");
     }
+
+    free(remotechar);
     return 0;
 }
 

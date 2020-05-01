@@ -77,7 +77,7 @@ int send(char *SendByte)
 {
     int res;
 
-    printf("1 : %s\n", SendByte);
+    printf("    %s\n", SendByte);
 
     res = write(fd, SendByte, strlen(SendByte));
 
