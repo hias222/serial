@@ -22,6 +22,8 @@
 int fd;
 struct termios oldtio;
 
+#define BUFFER_LENGTH 25
+
 int init_send(char *portname)
 {
 
@@ -79,7 +81,12 @@ int send(char *SendByte)
 
     printf("    %s\n", SendByte);
 
-    res = write(fd, SendByte, strlen(SendByte));
+    char myMessage[BUFFER_LENGTH];
+
+    sprintf(myMessage,"%s",SendByte);
+
+    //res = write(fd, SendByte, strlen(SendByte));
+     res = write(fd, myMessage, strlen(myMessage));
 
     if (res < 0 ){
         printf("error write\n");

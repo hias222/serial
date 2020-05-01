@@ -24,8 +24,6 @@
 //#define MODEMDEVICE "/dev/ttyUSB0"
 //#define MODEMDEVICE "/dev/cu.usbserial-14610"
 
-
-
 using namespace std;
 
 int startTerminal(volatile int *running, char *portname)
@@ -55,7 +53,7 @@ int terminalread(char *portname, volatile int *running)
 {
     int fd, c, res;
     struct termios oldtio, newtio;
-    //unsigned 
+    //unsigned
     char buf[BUFFER_LENGTH];
 
     fd = open(portname, O_RDONLY);
@@ -97,8 +95,12 @@ int terminalread(char *portname, volatile int *running)
         res = read(fd, buf, BUFFER_LENGTH); /* returns after 5 chars have been input */
         buf[res] = 0;
 
-        printf("Terminal in: %s", buf);
-        mqtt_send(buf);
+        if (res > 0)
+        {
+
+            printf("Terminal in: %s", buf);
+            mqtt_send(buf);
+        }
 
         if (!*running)
         {
