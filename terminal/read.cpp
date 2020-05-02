@@ -129,5 +129,6 @@ int terminalread(char *portname, volatile int *running)
         //  STOP = TRUE;
     }
     tcsetattr(fd, TCSANOW, &oldtio);
+    free(outgoing);
     return 1;
 }

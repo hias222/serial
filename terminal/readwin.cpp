@@ -13,7 +13,8 @@
 #include <assert.h>
 #endif
 
-#include "analyseData.h"
+#include "terminalread.h"
+#include "mqttUtils.h"
 
 #define RS232_PORTNR 32
 #define COLORADO_ADDRESS_WORD_MASK 0x80
@@ -138,6 +139,7 @@ int terminalread(char *portname, volatile int *running)
         o.InternalHigh = 0;
         o.Offset = 0;
         o.OffsetHigh = 0;
+        int g = 0;
 
         assert(o.hEvent);
 
@@ -145,6 +147,8 @@ int terminalread(char *portname, volatile int *running)
 
         printf("  Serial port = %s\n", comports[comport_number]);
 
+        char outgoing[BUFFER_LENGTH + 2];
+        memset(&outgoing[0], 0, sizeof(outgoing));
         do
         {
             if (WaitCommEvent(hComm, &dwEventMask, &o))
@@ -157,6 +161,19 @@ int terminalread(char *portname, volatile int *running)
                         Status = ReadFile(hComm, &ReadData, sizeof(ReadData), &NoBytesRead, NULL);
 
                         printf("terminal %s", ReadData);
+                        if (ReadData == 0x3B || g > 24)
+                        {
+                            g = 0;
+                            printf("Terminal in: %s\n", outgoing);
+                            mqtt_send(outgoing);
+                            memset(&outgoing[0], 0, sizeof(outgoing));
+                        }
+                        else
+                        {
+                            outgoing[g] = ReadData;
+                            g++;
+                        }
+
                         ++loop;
                     } while (NoBytesRead > 0);
                     --loop; //Get Actual length of received data
@@ -182,7 +199,7 @@ int terminalread(char *portname, volatile int *running)
             }
             printf("wait ... \n");
         } while (*running);
-
+        free(outgoing);
         CloseHandle(hComm); //Closing the Serial Port
         printf("closing \n");
     }
