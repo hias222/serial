@@ -18,6 +18,7 @@
 
 #define RS232_PORTNR 32
 #define COLORADO_ADDRESS_WORD_MASK 0x80
+#define BUFFER_LENGTH 25
 
 using namespace std;
 
@@ -160,7 +161,7 @@ int terminalread(char *portname, volatile int *running)
                     {
                         Status = ReadFile(hComm, &ReadData, sizeof(ReadData), &NoBytesRead, NULL);
 
-                        printf("terminal %s", ReadData);
+                        printf("terminal %x02", ReadData);
                         if (ReadData == 0x3B || g > 24)
                         {
                             g = 0;
