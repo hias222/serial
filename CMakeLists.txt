@@ -81,8 +81,8 @@ if(WIN32)
     set(LIBRARY_OUTPUT_PATH "${PROJECT_BINARY_DIR}")
     set(EXECUTABLE_OUTPUT_PATH "${PROJECT_BINARY_DIR}")
 
-    file(COPY ${PROJECT_BINARY_DIR}/mosquitto-1.6.9/lib/mosquitto.dll
-                            DESTINATION ${PROJECT_BINARY_DIR})
+ #   file(COPY ${PROJECT_BINARY_DIR}/mosquitto-1.6.9/lib/mosquitto.dll
+  #                          DESTINATION ${PROJECT_BINARY_DIR})
 
     file(COPY ${USER_HOME_DIR}/vcpkg/installed/x86-windows/bin/libssl-1_1.dll
                             DESTINATION ${PROJECT_BINARY_DIR})
