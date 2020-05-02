@@ -26,6 +26,12 @@ void intHandler(int dummy)
 void usage(char *prog)
 {
     printf("usage %s [-s %s] \n", prog, BASIC_PORTNAME);
+    printf("  -s portname      source port name %s \n", BASIC_PORTNAME);
+    printf("                   for both raw and repeater mode");
+    printf("  -r               only behind RPI \n");
+    printf("  -d portname      destination port name like %s \n", DESTINATION_PORTNAME);
+    printf("                   only for raw mode");
+
 }
 
 int main(int argc, char *argv[])
@@ -36,12 +42,6 @@ int main(int argc, char *argv[])
     char *destinationportname = (char *)malloc(50);
     bool send_mode = false;
     bool repeat_mode = false;
-
-    if (SEND_MODE)
-    {
-        printf("turn on SENDMODE\n");
-        send_mode = true;
-    }
 
     // out of SerialConfig
     sprintf(portname, "%s", BASIC_PORTNAME);
@@ -70,6 +70,7 @@ int main(int argc, char *argv[])
                 if (argc > n)
                 {
                     repeat_mode = true;
+                    send_mode = false;
                     cmd_line_failure = false;
                 }
                 break;
@@ -96,22 +97,27 @@ int main(int argc, char *argv[])
         }
     }
 
+    if (SEND_MODE)
+    {
+        printf("turn on SENDMODE\n");
+        send_mode = true;
+    }
+
     keepRunning = 1;
     ptrRunning = &keepRunning;
     signal(SIGINT, intHandler);
 
     if (send_mode)
     {
-
         init_send(destinationportname);
         dataInit(ptrRunning, portname, true);
     }
     else if (repeat_mode)
     {
-        printf ("repeat\n");
+        printf("repeat\n");
         terminalInit(ptrRunning, portname);
-
-    } else
+    }
+    else
     {
         dataInit(ptrRunning, portname, false);
     }
