@@ -71,8 +71,8 @@ int terminalread(char *portname, volatile int *running)
     COMMTIMEOUTS timeouts = {0}; //Initializing timeouts structure
     DWORD BytesWritten = 0;      // No of bytes written to the port
     DWORD dwEventMask;           // Event mask to trigger
-    char ReadData;               //temperory Character
-    //uint8_t ReadData;
+    //char ReadData;               //temperory Character
+    uint8_t ReadData;
     DWORD NoBytesRead; // Bytes read by ReadFile()
     unsigned char loop = 0;
     wchar_t pszPortName[10] = {0}; //com port id
@@ -186,7 +186,7 @@ int terminalread(char *portname, volatile int *running)
                     {
                         Status = ReadFile(hComm, &ReadData, sizeof(ReadData), &NoBytesRead, NULL);
 
-                        printf("%02x ", ReadData);
+                        printf("%02x ", (int)ReadData);
                         if (ReadData == 0x3B || g > 24)
                         {
                             g = 0;
