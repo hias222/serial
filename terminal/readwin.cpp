@@ -203,7 +203,7 @@ int terminalread(char *portname, volatile int *running)
                         ++loop;
                     } while (NoBytesRead > 0);
                     --loop; //Get Actual length of received data
-                    printf_s("\nNumber of bytes received = %d\n\n", loop);
+                    printf_s("\nNumber of bytes received = %d - %s\n\n", loop, outgoing);
                 }
                 else
                 {
