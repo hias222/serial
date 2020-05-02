@@ -81,7 +81,9 @@ https://docs.microsoft.com/de-de/cpp/build/building-on-the-command-line?view=vs-
 --> Build Tools
 --> English language pack
 
-without compiler install vc_redistx86.exe
+without compiler install 
+* vc_redistx86.exe - included in binaries
+* on pre windows 10 - windows 10 universal c runtime
 
 
 ## RPi
