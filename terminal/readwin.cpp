@@ -186,7 +186,7 @@ int terminalread(char *portname, volatile int *running)
                     {
                         Status = ReadFile(hComm, &ReadData, sizeof(ReadData), &NoBytesRead, NULL);
 
-                        printf("%02x ", ReadData);
+                        printf("%s ", ReadData);
                         if (ReadData == 0x3B || g > 24)
                         {
                             g = 0;

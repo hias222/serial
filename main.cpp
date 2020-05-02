@@ -29,6 +29,7 @@ void usage(char *prog)
     printf("  -s portname      source port name %s \n", BASIC_PORTNAME);
     printf("                   for both raw and repeater mode\n");
     printf("  -r               only behind RPI \n");
+    printf("  -x               raw mode \n");
     printf("  -d portname      destination port name like %s \n", DESTINATION_PORTNAME);
     printf("                   only for raw mode\n");
 
@@ -71,6 +72,14 @@ int main(int argc, char *argv[])
                 {
                     repeat_mode = true;
                     send_mode = false;
+                    cmd_line_failure = false;
+                }
+                break;
+            case 'x':
+                if (argc > n)
+                {
+                    repeat_mode = false;
+                    send_mode = true;
                     cmd_line_failure = false;
                 }
                 break;
