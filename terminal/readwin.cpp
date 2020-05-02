@@ -22,6 +22,29 @@
 
 using namespace std;
 
+int startTerminal(volatile int *running, char *portname)
+{
+    printf("Terminal start ...\n");
+
+    while (*running)
+    {
+        try
+        {
+            terminalread(portname, running);
+        }
+        catch (...)
+        {
+            printf("Read exception");
+        }
+#ifdef _WIN32
+        Sleep(5);
+#else
+        sleep(5);
+#endif
+    }
+    return 0;
+}
+
 int terminalread(char *portname, volatile int *running)
 {
     //printf("port %s\n", portname);
