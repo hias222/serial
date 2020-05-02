@@ -27,10 +27,10 @@ void usage(char *prog)
 {
     printf("usage %s [-s %s] \n", prog, BASIC_PORTNAME);
     printf("  -s portname      source port name %s \n", BASIC_PORTNAME);
-    printf("                   for both raw and repeater mode");
+    printf("                   for both raw and repeater mode\n");
     printf("  -r               only behind RPI \n");
     printf("  -d portname      destination port name like %s \n", DESTINATION_PORTNAME);
-    printf("                   only for raw mode");
+    printf("                   only for raw mode\n");
 
 }
 
