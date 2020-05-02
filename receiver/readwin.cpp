@@ -184,7 +184,7 @@ int read(char *portname, volatile int *running)
         } while (*running);
 
         CloseHandle(hComm); //Closing the Serial Port
-        printf("closing \n");
+        printf("serial closing \n");
     }
     catch (...)
     {

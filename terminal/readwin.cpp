@@ -38,6 +38,7 @@ int startTerminal(volatile int *running, char *portname)
         }
 #ifdef _WIN32
         Sleep(5);
+        printf(".");
 #else
         sleep(5);
 #endif
@@ -173,6 +174,7 @@ int terminalread(char *portname, volatile int *running)
 
         char outgoing[BUFFER_LENGTH + 2];
         memset(&outgoing[0], 0, sizeof(outgoing));
+
         do
         {
             if (WaitCommEvent(hComm, &dwEventMask, &o))
@@ -225,13 +227,13 @@ int terminalread(char *portname, volatile int *running)
         } while (*running);
         free(outgoing);
         CloseHandle(hComm); //Closing the Serial Port
-        printf("closing \n");
+        printf("terminal closing \n");
     }
     catch (...)
     {
         printf("Exception occurred");
         return 1;
     }
-    printf("end \n");
+    printf("terminal end \n");
     return 0;
 }

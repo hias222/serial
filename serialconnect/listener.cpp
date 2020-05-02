@@ -55,6 +55,7 @@ int startListen(volatile int *running, char * portname)
         start(running, portname);
 #ifdef _WIN32
         Sleep(5);
+        printf(".");
 #else
         sleep(5);
 #endif
