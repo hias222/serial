@@ -8,3 +8,4 @@ bool checknotnull(uint8_t data[]);
 bool checkStartStop(uint8_t data[]);
 int initanalyseData();
 int cleananalyseData();
+bool getTime(uint8_t data[]);

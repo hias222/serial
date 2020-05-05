@@ -96,8 +96,6 @@ int read(char *portname, volatile int *running)
         }
         fflush(stdout);
 
-        //if (buf[0] == 'z')
-        //  STOP = TRUE;
     }
     tcsetattr(fd, TCSANOW, &oldtio);
     return 1;

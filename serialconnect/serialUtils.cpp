@@ -7,7 +7,8 @@
 
 #define debug_header
 //#define debug_lane
-#define debug_start
+//#define debug_start
+//#define debug_time
 
 #ifdef _WIN32
 #include <process.h>
@@ -249,5 +250,19 @@ bool checkStartStop(uint8_t data[])
         }
     }
     stopping = running;
+    return true;
+};
+
+bool getTime(uint8_t data[])
+{
+    running = checknotnull(data);
+    char mydata[MQTT_LONG_LENGTH];
+
+    sprintf(mydata, "time %d%d:%d%d,%d", checkBitValue(data[4]), checkBitValue(data[6]), checkBitValue(data[8]), checkBitValue(data[10]), checkBitValue(data[12]));
+
+    mqtt_send(mydata);
+#ifdef debug_time
+    printf("%s\n", mydata);
+#endif
     return true;
 };

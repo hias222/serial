@@ -6,7 +6,7 @@
 #include "serialUtils.h"
 //#define debug_incoming
 //#define debug_lane
-//#define debug_header
+#define debug_header
 #define COLORADO_CHANNELS 32
 #define COLORADO_ADDRESS_WORD_MASK 0x80
 #define COLORADO_ROWS 16
@@ -16,9 +16,10 @@
 #define MQTT_MESSAGE_LENGTH 8
 // for the message to broker
 #define MQTT_LONG_LENGTH 25
+#define BUFFER_LENGTH 9
 
 uint8_t colorado_start_detected;
-uint8_t buf[9];
+uint8_t buf[BUFFER_LENGTH];
 uint8_t colorado_control_update;
 uint8_t **colorado_data;
 //uint8_t colorado_data[COLORADO_CHANNELS][COLORADO_ROWS];
@@ -77,6 +78,7 @@ int putReadData(uint8_t ReadData)
         {
             if (in_count == colorado_channel_length[colorado_control_channel])
             {
+
 #ifdef debug_incoming
                 printf("save %d ctrl %02x \n", in_count, colorado_control_channel);
 #endif
@@ -95,7 +97,7 @@ int putReadData(uint8_t ReadData)
                 if (colorado_control_channel != 0x00 && colorado_control_channel < (DISPLAY_LANE_COUNT + 1))
                 {
 #ifdef debug_lane
-                    printf("--- lane %02x \n", ReadData);
+                    outPutBuffer(colorado_control_channel, buf);
 #endif
                     analyseActiveData(colorado_control_channel, colorado_data[colorado_control_channel]);
                 }
@@ -105,10 +107,13 @@ int putReadData(uint8_t ReadData)
                     loop++;
 #ifdef debug_incoming
                     printf("--- time %02x \n", ReadData);
+                    outPutBuffer(colorado_control_channel, colorado_data[colorado_control_channel]);
+
 #endif
-                    if (loop > 100)
+                    if (loop > 50)
                     {
-                        printf("--- time %02x \n", ReadData);
+                        getTime(colorado_data[colorado_control_channel]);
+
                         loop = 0;
                     }
                 }
@@ -118,7 +123,7 @@ int putReadData(uint8_t ReadData)
                     // https://www.coloradotime.com/manuals/System_6_Swimming_Manual_F890.pdf
                     //0c
                     // 0c oder 0a
-                    printf("\n--- update header %02x \n", colorado_control_channel);
+                    outPutBuffer(colorado_control_channel, buf);
 #endif
                     getHeader(colorado_data[colorado_control_channel]);
                 }
@@ -158,4 +163,18 @@ int putReadData(uint8_t ReadData)
     }
 
     return true;
+}
+
+int outPutBuffer(int code, uint8_t data[])
+{
+    printf("Buffer ");
+    printf("%02x: ", code);
+    for (int i = 0; i < BUFFER_LENGTH; i++)
+    {
+        //printf("%02x %d ", data[i], data[i]);
+        printf("%02x ", data[i]);
+    }
+    printf("\n");
+
+    return 0;
 }
