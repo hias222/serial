@@ -6,7 +6,7 @@
 #include "serialUtils.h"
 //#define debug_incoming
 //#define debug_lane
-#define debug_header
+//#define debug_header
 #define COLORADO_CHANNELS 32
 #define COLORADO_ADDRESS_WORD_MASK 0x80
 #define COLORADO_ROWS 16
@@ -67,6 +67,9 @@ int cleanReadData()
 int putReadData(uint8_t ReadData)
 {
     uint8_t j;
+#ifdef debug_incoming
+    printf("%02x ", ReadData);
+#endif
 
     if ((ReadData & COLORADO_ADDRESS_WORD_MASK) == COLORADO_ADDRESS_WORD_MASK)
     {
@@ -107,7 +110,7 @@ int putReadData(uint8_t ReadData)
                     loop++;
 #ifdef debug_incoming
                     printf("--- time %02x \n", ReadData);
-                    outPutBuffer(colorado_control_channel, colorado_data[colorado_control_channel]);
+                    outPutBuffer(colorado_control_channel, buf);
 
 #endif
                     if (loop > 50)
@@ -123,6 +126,7 @@ int putReadData(uint8_t ReadData)
                     // https://www.coloradotime.com/manuals/System_6_Swimming_Manual_F890.pdf
                     //0c
                     // 0c oder 0a
+                    // A600102E304050607D
                     outPutBuffer(colorado_control_channel, buf);
 #endif
                     getHeader(colorado_data[colorado_control_channel]);
@@ -137,12 +141,16 @@ int putReadData(uint8_t ReadData)
         }
         in_count = 1;
         colorado_start_detected = 0x01;
+#ifdef debug_incoming
+        printf("last\n");
+        outPutBuffer(colorado_control_channel, buf);
+#endif
         buf[0] = ReadData;
         colorado_control_bit = buf[0] & 0x01;
         colorado_control_channel = (~(buf[0] >> 1)) & 0x1F;
 #ifdef debug_incoming
-        printf("colorado_control_bit: %#02x %#02x  \n", ReadData, colorado_control_bit);
-        printf("colorado_control_channel: %#02x %#02x  \n", ReadData, colorado_control_channel);
+        printf("colorado_control_bit: %02x %#02x  \n", ReadData, colorado_control_bit);
+        printf("colorado_control_channel: %02x %#02x  \n", ReadData, colorado_control_channel);
         printf("we need %d bytes\n", colorado_channel_length[colorado_control_channel]);
 #endif
     }
