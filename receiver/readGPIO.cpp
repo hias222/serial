@@ -29,8 +29,8 @@ int read(char *portname, volatile int *running)
 
     int USBHandle, b, e;
     int order;
-    unsigned char *TEXT;
-    unsigned char text[2048];
+    char *TEXT;
+    char text[2048];
 
     if (gpioInitialise() < 0)
     {
