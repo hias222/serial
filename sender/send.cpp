@@ -89,9 +89,9 @@ int send(unsigned char *SendByte)
 
     //char mySendByte[] = "hello";
 
-    res = write(fd, SendByte, size_t(SendByte));
+    //res = write(fd, SendByte, size_t(SendByte));
 
-    //res = write(fd, mySendByte, strlen(mySendByte));
+    res = write(fd, mySendByte, strlen(mySendByte));
 
     res = write(fd, endstring, strlen(endstring));
 
