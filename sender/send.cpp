@@ -89,14 +89,14 @@ int send(char *SendByte)
 
     //char mySendByte[] = "hello world ;";
 
-    //unsigned char text = "hello";
+    unsigned char text[] = "hello ;";
 
 
-    res = write(fd, SendByte, strlen(SendByte));
+    //res = write(fd, SendByte, strlen(SendByte));
 
-    //res = write(fd, text, strlen(text));
+    res = write(fd, text, size_t(text));
 
-    res = write(fd, endstring, strlen(endstring));
+    //res = write(fd, endstring, strlen(endstring));
 
     if (res < 0 ){
         printf("error write\n");
