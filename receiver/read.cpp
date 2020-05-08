@@ -58,8 +58,8 @@ int read(char *portname, volatile int *running)
     /* set input mode (non-canonical, no echo,...) */
     newtio.c_lflag &= ~ICANON; // 0
 
-    newtio.c_cc[VTIME] = 10; /* inter-character timer unused */
-    newtio.c_cc[VMIN] = 0;   /* blocking read until 5 chars received */
+    newtio.c_cc[VTIME] = 0; /* inter-character timer unused */
+    newtio.c_cc[VMIN] = 5;   /* blocking read until 5 chars received */
 
     tcflush(fd, TCIFLUSH);
     tcsetattr(fd, TCSANOW, &newtio);
