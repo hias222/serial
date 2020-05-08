@@ -87,7 +87,11 @@ int send(unsigned char *SendByte)
     //    printf("%02x ", SendByte[i]);
     //}
 
-    res = write(fd, SendByte, size_t(SendByte));
+    char mySendByte[] = "hello";
+
+    //res = write(fd, mySendByte, size_t(SendByte));
+
+    res = write(fd, mySendByte, strlen(mySendByte));
 
     res = write(fd, endstring, strlen(endstring));
 

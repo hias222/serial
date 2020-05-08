@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
     ptrRunning = &keepRunning;
     signal(SIGINT, intHandler);
 
-    send_mode=true;
+    
     if (send_mode)
     {
         printf("send\n");
