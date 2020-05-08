@@ -31,7 +31,7 @@ int init_send(char *portname)
 
     printf("    port out = %s \n", portname);
 
-    fd = open(portname, O_RDWR | O_NOCTTY);
+    fd = open(portname, O_WRONLY );
     if (fd < 0)
     {
         perror(portname);
@@ -48,8 +48,8 @@ int init_send(char *portname)
 
     //newtio.c_cflag = BAUDRATE | ~CRTSCTS | CS8 | CLOCAL | CREAD;
     newtio.c_iflag = IGNPAR;
-    //newtio.c_oflag = 0 ; //|= ~OPOST;
-    newtio.c_oflag |= ~OPOST;
+    newtio.c_oflag = 0 ; //|= ~OPOST;
+    //newtio.c_oflag |= ~OPOST;
 
     /* set input mode (non-canonical, no echo,...) */
     newtio.c_lflag = 0;
