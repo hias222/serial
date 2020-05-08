@@ -48,8 +48,8 @@ int init_send(char *portname)
 
     //newtio.c_cflag = BAUDRATE | ~CRTSCTS | CS8 | CLOCAL | CREAD;
     newtio.c_iflag = IGNPAR;
-    //newtio.c_oflag = 0 ; //|= ~OPOST;
-    newtio.c_oflag |= ~OPOST;
+    newtio.c_oflag = 0 ; //|= ~OPOST;
+    //newtio.c_oflag |= ~OPOST;
 
     /* set input mode (non-canonical, no echo,...) */
     newtio.c_lflag = 0;
@@ -83,9 +83,9 @@ int send(char *SendByte)
     printf("    %s\n", SendByte);
     char endstring[2] = ";";
 
-//    for (int i = 0; i < strlen(SendByte); i++){
-//        printf("%02x ", SendByte[i]);
-//    }
+    for (int i = 0; i < strlen(SendByte); i++){
+        printf("%02x ", SendByte[i]);
+    }
 
     res = write(fd, SendByte, strlen(SendByte));
 

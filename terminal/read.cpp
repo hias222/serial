@@ -103,6 +103,7 @@ int terminalread(char *portname, volatile int *running)
             printf("%s \n", buf);
             for (int i = 0; i < res; i++)
             {
+                printf("%02x \n", buf[i]);
                 
                 if (buf[i] == 0x3B || g > 24)
                 {
