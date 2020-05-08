@@ -76,7 +76,7 @@ int close_send()
     return 0;
 }
 
-int send(unsigned char *SendByte)
+int send(char *SendByte)
 {
     int res;
 
