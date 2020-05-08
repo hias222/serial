@@ -58,7 +58,7 @@ int init_send(char *portname)
     newtio.c_cc[VMIN] = 1;  /* blocking read until 5 chars received */
 
     tcflush(fd, TCIFLUSH);
-    //tcsetattr(fd, TCSANOW, &newtio);
+    tcsetattr(fd, TCSANOW, &newtio);
 
     if (tcsetattr(fd, TCSANOW, &newtio) < 0)
     {
