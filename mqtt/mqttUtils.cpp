@@ -53,10 +53,14 @@ int mqtt_connect(bool remoteserial)
 int mqtt_send(char message[MQTT_LONG_LENGTH])
 {
     int rc;
-    char *remotechar = (char* ) malloc(strlen(message));
+    unsigned char *remotechar = (unsigned char* ) malloc(strlen(message));
+
+    memset(&remotechar[0], 0, sizeof(remotechar));
+
     if (remotesender)
     {
-        sprintf(remotechar,"%s",message);
+        remotechar[0] = message[0]; 
+        //sprintf(remotechar,"%c",message);
         send(remotechar);
     }
 

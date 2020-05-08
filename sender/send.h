@@ -2,6 +2,6 @@
 
 int init_send(char *portname);
 
-int send(char * SendByte);
+int send(unsigned char *SendByte);
 
 int close_send();

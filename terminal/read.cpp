@@ -53,7 +53,7 @@ int terminalread(char *portname, volatile int *running)
 {
     int fd, c, res;
     struct termios oldtio, newtio;
-    //unsigned
+    //unsigned 
     char buf[BUFFER_LENGTH];
 
     fd = open(portname, O_RDONLY);

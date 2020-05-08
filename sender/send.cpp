@@ -76,18 +76,18 @@ int close_send()
     return 0;
 }
 
-int send(char *SendByte)
+int send(unsigned char *SendByte)
 {
     int res;
 
     printf("    %s\n", SendByte);
     char endstring[2] = ";";
 
-    for (int i = 0; i < strlen(SendByte); i++){
-        printf("%02x ", SendByte[i]);
-    }
+    //for (int i = 0; i < strlen(SendByte); i++){
+    //    printf("%02x ", SendByte[i]);
+    //}
 
-    res = write(fd, SendByte, strlen(SendByte));
+    res = write(fd, SendByte, size_t(SendByte));
 
     res = write(fd, endstring, strlen(endstring));
 
