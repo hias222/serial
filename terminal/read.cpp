@@ -100,7 +100,7 @@ int terminalread(char *portname, volatile int *running)
 
         if (res > 0)
         {
-            //printf("%s \n", buf);
+            printf("%s \n", buf);
             for (int i = 0; i < res; i++)
             {
                 
