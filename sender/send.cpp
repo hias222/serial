@@ -87,13 +87,13 @@ int send(char *SendByte)
     //    printf("%02x ", SendByte[i]);
     //}
 
-    char mySendByte[] = "hello world ;";
+    //char mySendByte[] = "hello world ;";
 
-    //res = write(fd, SendByte, size_t(SendByte));
+    res = write(fd, SendByte, size_t(SendByte));
 
-    res = write(fd, mySendByte, strlen(mySendByte));
+    //res = write(fd, mySendByte, strlen(mySendByte));
 
-    //res = write(fd, endstring, strlen(endstring));
+    res = write(fd, endstring, strlen(endstring));
 
     if (res < 0 ){
         printf("error write\n");
