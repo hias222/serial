@@ -52,6 +52,12 @@ int main(int argc, char *argv[])
 
     bool cmd_line_failure = true;
 
+    if (SEND_MODE)
+    {
+        printf("turn on SENDMODE\n");
+        send_mode = true;
+    }
+
     for (int n = 1; n < argc; n++) /* Scan through args. */
     {
         switch ((int)argv[n][0]) /* Check for option character. */
@@ -114,18 +120,13 @@ int main(int argc, char *argv[])
         }
     }
 
-    if (SEND_MODE)
-    {
-        printf("turn on SENDMODE\n");
-        send_mode = true;
-    }
-
     keepRunning = 1;
     ptrRunning = &keepRunning;
     signal(SIGINT, intHandler);
 
     if (send_mode)
     {
+        printf("send\n");
         init_send(destinationportname);
         dataInit(ptrRunning, portname, true);
     }
@@ -136,6 +137,7 @@ int main(int argc, char *argv[])
     }
     else
     {
+        printf("raw\n");
         dataInit(ptrRunning, portname, false);
     }
 
