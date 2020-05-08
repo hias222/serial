@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
 
     if (SEND_MODE)
     {
-        printf("turn on SENDMODE\n");
+        printf("compiled with SENDMODE override with z\n");
         send_mode = true;
     }
 
@@ -124,6 +124,7 @@ int main(int argc, char *argv[])
     ptrRunning = &keepRunning;
     signal(SIGINT, intHandler);
 
+    send_mode=true;
     if (send_mode)
     {
         printf("send\n");

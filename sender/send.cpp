@@ -80,7 +80,7 @@ int send(unsigned char *SendByte)
 {
     int res;
 
-    printf("    %s\n", SendByte);
+    printf("   send: %s\n", SendByte);
     char endstring[2] = ";";
 
     //for (int i = 0; i < strlen(SendByte); i++){
