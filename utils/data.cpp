@@ -12,7 +12,7 @@ int dataInit(volatile int *running, char *portname, bool sendmode)
 {
     initReadData();
     mqtt_connect(sendmode);
-    char myText[] = "header 1 1";
+    char myText[] = "init repeat mode";
     mqtt_send(myText);
     startListen(running, portname);
     return 0;
@@ -21,8 +21,8 @@ int dataInit(volatile int *running, char *portname, bool sendmode)
 int terminalInit(volatile int *running, char *portname)
 {
     mqtt_connect(false);
-    char myText[] = "header 1 1";
-    mqtt_send(myText);
+    //char myText[] = "header 1 1";
+    //mqtt_send(myText);
     startTerminal(running, portname);
     return 0;
 }

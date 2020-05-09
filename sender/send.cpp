@@ -56,17 +56,15 @@ int close_send()
 int send(char *SendByte)
 {
     int res;
-
-    printf("   send: %s\n", SendByte);
     char endstring[] = ";";
 
     //unsigned 
-    char text[] = "hello ;";
+    //char text[] = "hello ;";
 
-    //res = write(fd, SendByte, strlen(SendByte));
-    res = write(fd, text, strlen(text));
+    res = write(fd, SendByte, strlen(SendByte));
+    //res = write(fd, text, strlen(text));
 
-    //res = write(fd, endstring, strlen(endstring));
+    res = write(fd, endstring, strlen(endstring));
 
     if (res < 0)
     {
@@ -74,6 +72,6 @@ int send(char *SendByte)
         return 1;
     }
 
-    printf ("   send %s\n", text);
+    printf ("   send %s\n", SendByte);
     return 0;
 }
