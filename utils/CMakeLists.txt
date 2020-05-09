@@ -1,6 +1,7 @@
 
 set(C_SRC
 data.cpp
+setInterface.cpp
 )
 
 add_library(utils  ${C_SRC} )

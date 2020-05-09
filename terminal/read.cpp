@@ -19,6 +19,8 @@
 #include "terminalread.h"
 #include "mqttUtils.h"
 
+#include "setInterface.h"
+
 #define BAUDRATE B38400
 //#define MODEMDEVICE "/dev/ttys002"
 //#define MODEMDEVICE "/dev/ttyUSB0"
@@ -52,7 +54,7 @@ int startTerminal(volatile int *running, char *portname)
 int terminalread(char *portname, volatile int *running)
 {
     int fd, c, res;
-    struct termios oldtio, newtio;
+    //struct termios tty;
     //unsigned 
     char buf[BUFFER_LENGTH];
 
@@ -63,28 +65,10 @@ int terminalread(char *portname, volatile int *running)
         return 1;
     }
 
-    tcgetattr(fd, &oldtio); /* save current port settings */
-
-    bzero(&newtio, sizeof(newtio));
-    newtio.c_cflag = ~CRTSCTS & ~PARENB & ~CSTOPB;
-    newtio.c_cflag |= CS8 | CLOCAL | CREAD;
-    cfsetispeed(&newtio, B4800);
-    cfsetospeed(&newtio, B4800);
-
-    //newtio.c_cflag = BAUDRATE | ~CRTSCTS | CS8 | CLOCAL | CREAD;
-    newtio.c_iflag = IGNPAR;
-    //newtio.c_oflag = 0;
-    newtio.c_oflag |= ~OPOST;
-
-
-    /* set input mode (non-canonical, no echo,...) */
-    newtio.c_lflag &= ~ICANON; // 0
-
-    newtio.c_cc[VTIME] = 0; /* inter-character timer unused */
-    newtio.c_cc[VMIN] = 1;   /* blocking read until 5 chars received */
+    //tcgetattr(fd, &tty); /* save current port settings */
+    set_interface_attribs(fd,B9600);
 
     tcflush(fd, TCIFLUSH);
-    tcsetattr(fd, TCSANOW, &newtio);
 
     printf("\n");
     printf("    port in = %s\n", portname);
@@ -105,7 +89,7 @@ int terminalread(char *portname, volatile int *running)
             printf("%s \n", buf);
             for (int i = 0; i < res; i++)
             {
-                printf("%02x \n", buf[i]);
+                //printf("%02x \n", buf[i]);
                 
                 if (buf[i] == 0x3B || g > 24)
                 {
@@ -131,7 +115,7 @@ int terminalread(char *portname, volatile int *running)
         //if (buf[0] == 'z')
         //  STOP = TRUE;
     }
-    tcsetattr(fd, TCSANOW, &oldtio);
+
     free(outgoing);
     return 1;
 }

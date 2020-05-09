@@ -13,66 +13,43 @@
 #include <errno.h> // Error integer and strerror() function
 
 #include <unistd.h>
-
+#include "setInterface.h"
 
 //#define  MODEMDEVICE "/dev/ttyUSB0"
 //#define MODEMDEVICE "/dev/ttys004"
 //#define MODEMDEVICE "/dev/serial0"
 
 int fd;
-struct termios oldtio;
+//struct termios oldtio;
 
 #define BUFFER_LENGTH 25
 
 int init_send(char *portname)
 {
 
-    struct termios newtio;
-
+    //struct termios tty;
     printf("    port out = %s \n", portname);
 
-    fd = open(portname, O_WRONLY );
+    fd = open(portname, O_WRONLY);
     if (fd < 0)
     {
         perror(portname);
         return 1;
     }
 
-    tcgetattr(fd, &oldtio); /* save current port settings */
+    // bzero(&newtio, sizeof(newtio));
 
-    bzero(&newtio, sizeof(newtio));
-    newtio.c_cflag = ~CRTSCTS & ~PARENB & ~CSTOPB;
-    newtio.c_cflag |= CS8 | CLOCAL | CREAD;
-    cfsetispeed(&newtio, B9600);
-    cfsetospeed(&newtio, B9600);
-
-    //newtio.c_cflag = BAUDRATE | ~CRTSCTS | CS8 | CLOCAL | CREAD;
-    newtio.c_iflag = IGNPAR;
-    //newtio.c_oflag = 0 ; //|= ~OPOST;
-    newtio.c_oflag |= ~OPOST;
-
-    /* set input mode (non-canonical, no echo,...) */
-    newtio.c_lflag = 0;
-
-    newtio.c_cc[VTIME] = 0; /* inter-character timer unused */
-    newtio.c_cc[VMIN] = 1;  /* blocking read until 5 chars received */
-
-    tcflush(fd, TCIFLUSH);
-    tcsetattr(fd, TCSANOW, &newtio);
-
-    if (tcsetattr(fd, TCSANOW, &newtio) < 0)
-    {
-        fprintf(stderr, "\n");
-        //explain_tcsetattr
+    if (set_interface_attribs(fd,B9600) > 0) {
         return 1;
     }
 
+    tcflush(fd, TCIFLUSH);
     return 0;
 }
 
 int close_send()
 {
-    tcsetattr(fd, TCSANOW, &oldtio);
+    //tcsetattr(fd, TCSANOW, &oldtio);
     return 0;
 }
 
@@ -81,34 +58,22 @@ int send(char *SendByte)
     int res;
 
     printf("   send: %s\n", SendByte);
-    char endstring[2] = ";";
+    char endstring[] = ";";
 
-    //for (int i = 0; i < strlen(SendByte); i++){
-    //    printf("%02x ", SendByte[i]);
-    //}
-
-    //char mySendByte[] = "hello world ;";
-
-    unsigned char text[] = "hello ;";
-
+    //unsigned 
+    char text[] = "hello ;";
 
     //res = write(fd, SendByte, strlen(SendByte));
-
-    res = write(fd, text, size_t(text));
+    res = write(fd, text, strlen(text));
 
     //res = write(fd, endstring, strlen(endstring));
 
-    if (res < 0 ){
+    if (res < 0)
+    {
         printf("error write\n");
         return 1;
     }
 
-    //unsigned char text = "hello";
-    //char message[] = "\xbe\x70\x6f\x5f\x40\x30\x20\xa1\x0d\x1f\x2f\x3f\x4d\x5d\x6f\x7f\xbc\x0e\x1e\x20\x30\x4d\x5d\x6a\x7e\xbd\x0d\x1f\x2f\x3f\x4d\x5d\x6f\x7f\xba\x0d\x1a\x20\x30\x4c\x59\x66\x77\xbb\x0d\x1f\x2f\x3f\x4d\x5d\x6f\x7f\xb8\x0c\x19\x20\x30\x4b\x5f\x6e\x79\xb9\x0d\x1f\x2f\x3f\x4d\x5d\x6f\x7f\xb6\x0b\x18\x20\x30\x4b\x5c\x6d\x77\xb7\x0d\x1f\x2f\x3f\x4d\x5d\x6f\x7f\xbe\x70\x6f\x5f\x40\x30\x20\xb4\x0a\x17\x20\x30\x4a\x5d\x6f\x78\xb5\x0d\x1f\x2f\x3f\x4d\x5d\x6f\x7f\xb2\x09\x1d\x20\x30\x4d\x58\x68\x7b\xb3\x0d\x1f\x2f\x3f\x4d\x5d\x6f\x7f\xb0\x08\x1c\x20\x30\x4c\x5f\x6c\x79\xb1\x0d\x1f\x2f\x3f\x4d\x5d\x6f\x7f\xae\x07\x1b\x20\x30\x4c\x5c\x6b\x7d\xaf\x0d\x1f\x2f\x3f\x4d\x5d\x6f\x7f\x7f";
-    //char buf[] = "\x80";
-
-    //res = write(fd, buff, strlen(buf));
-    //printf("write %d bytes\n", res);
-
-    return 1;
+    printf ("   send %s\n", text);
+    return 0;
 }

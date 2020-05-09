@@ -12,7 +12,7 @@ add_library(terminal
                 ${OTHER_SRC}
             )
            
-target_link_libraries(terminal mqtt )
+target_link_libraries(terminal mqtt utils )
 
 target_include_directories(terminal PUBLIC
                             "${PROJECT_BINARY_DIR}"

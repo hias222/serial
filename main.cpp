@@ -33,6 +33,7 @@ void usage(char *prog)
     printf("  -z               only raw mode \n");
     printf("  -d portname      destination port name like %s \n", DESTINATION_PORTNAME);
     printf("                   only for raw mode\n");
+    printf("  -h               help \n");
 }
 
 int main(int argc, char *argv[])
@@ -103,6 +104,10 @@ int main(int argc, char *argv[])
                     destinationportname = argv[n + 1];
                     cmd_line_failure = false;
                 }
+                break;
+            case 'h':
+                usage(argv[0]);
+                return 0;
                 break;
             default:
                 usage(argv[0]);

@@ -8,7 +8,12 @@ add_library(sender
                 ${OTHER_SRC}
             )
 
+target_link_libraries(sender
+            utils
+          )
+
 target_include_directories(sender PUBLIC
       "${PROJECT_BINARY_DIR}"
       "${PROJECT_SOURCE_DIR}/sender"
+      "${PROJECT_SOURCE_DIR}/utils"
       )
