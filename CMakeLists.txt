@@ -52,7 +52,7 @@ add_subdirectory(sender)
 add_subdirectory(terminal)
 
 if(BUILD_TESTING)
-    add_subdirectory(tests)
+   add_subdirectory(tests)
 endif()
 
 add_executable(serial main.cpp)

@@ -14,6 +14,7 @@ add_library(serialconnect
 
 target_link_libraries(serialconnect
                     receiver
+                    utils
                   )
 
 target_include_directories(serialconnect PUBLIC
@@ -22,4 +23,5 @@ target_include_directories(serialconnect PUBLIC
       "${PROJECT_SOURCE_DIR}/serialconnect"
       "${PROJECT_SOURCE_DIR}/mqtt"
       "${PROJECT_SOURCE_DIR}/receiver"
+      "${PROJECT_SOURCE_DIR}/utils"
       )
