@@ -5,7 +5,7 @@
 #include "serialUtils.h"
 #include "mqttUtils.h"
 
-#define debug_header
+//#define debug_header
 //#define debug_lane
 //#define debug_start
 //#define debug_time
