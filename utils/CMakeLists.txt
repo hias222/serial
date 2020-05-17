@@ -1,8 +1,10 @@
-
-set(C_SRC
-data.cpp
-setInterface.cpp
-)
+if (WIN32)
+    set (C_SRC data.cpp
+     )
+else ()
+    set (C_SRC data.cpp
+    setInterface.cpp)
+endif (WIN32)
 
 add_library(utils  ${C_SRC} )
 
