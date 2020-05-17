@@ -53,6 +53,8 @@ int read(char *portname, volatile int *running)
     wchar_t PortNo[20] = {0};      //contain friendly name
     try
     {
+        printf("Using serial port = %s\n", comports[comport_number]);
+
         hComm = CreateFileA(comports[comport_number],
                             GENERIC_READ | GENERIC_WRITE,
                             0,    /* no share  */
@@ -63,7 +65,10 @@ int read(char *portname, volatile int *running)
 
         if (hComm == INVALID_HANDLE_VALUE)
         {
-            printf_s("\n Port can't be opened\n\n");
+            printf_s("Port can't be opened\n");
+            printf_s("waiting ...\n");
+            Sleep(5000);
+            printf_s("try again\n\n");
             return 1;
         }
 
