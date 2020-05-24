@@ -182,7 +182,7 @@ int terminalread(char *portname, volatile int *running)
                         {
                             if (g > 3)
                             {
-                                printf("Terminal in: %s\n", outgoing);
+                                printf("in: %s\n", outgoing);
                                 mqtt_send(outgoing);
                                 memset(&outgoing[0], 0, sizeof(outgoing));
                             }
