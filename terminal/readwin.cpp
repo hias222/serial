@@ -181,9 +181,13 @@ int terminalread(char *portname, volatile int *running)
                         if (ReadData == 0x3B || g > 24)
                         {
                             g = 0;
-                            printf("Terminal in: %s\n", outgoing);
-                            mqtt_send(outgoing);
-                            memset(&outgoing[0], 0, sizeof(outgoing));
+                            int length = sizeof(outgoing);
+                            if (length > 3)
+                            {
+                                printf("Terminal in: %s\n", outgoing);
+                                mqtt_send(outgoing);
+                                memset(&outgoing[0], 0, sizeof(outgoing));
+                            }
                         }
                         else
                         {
