@@ -22,7 +22,7 @@ bool error_state = false;
 
 bool remotesender;
 
-#define debug_send
+//#define debug_send
 
 #include "send.h"
 

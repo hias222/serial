@@ -216,7 +216,9 @@ int terminalread(char *portname, volatile int *running)
                 else
                     printf("Wait failed with error %d.\n", GetLastError());
             }
+#ifdef debug_read
             printf("wait ... \n");
+#endif
         } while (*running);
         free(outgoing);
         CloseHandle(hComm); //Closing the Serial Port
