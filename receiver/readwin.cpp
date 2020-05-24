@@ -18,6 +18,8 @@
 #define RS232_PORTNR 32
 #define COLORADO_ADDRESS_WORD_MASK 0x80
 
+//#define debug_read
+
 using namespace std;
 
 int read(char *portname, volatile int *running)
@@ -116,19 +118,7 @@ int read(char *portname, volatile int *running)
             return 1;
         }
 
-        /*
-        //Setting WaitComm() Event
-        Status = WaitCommEvent(hComm, &dwEventMask, NULL); //Wait for the character to be received
-
-        if (Status == FALSE)
-        {
-            printf_s("\nError! in Setting WaitCommEvent()\n\n");
-            return false;
-        }
-        */
-
         //Read data and store in a buffer
-
         // Create an event object for use by WaitCommEvent.
 
         o.hEvent = CreateEvent(
@@ -145,9 +135,7 @@ int read(char *portname, volatile int *running)
         o.OffsetHigh = 0;
 
         assert(o.hEvent);
-
         bool connectsuccess = true;
-
         printf("  Serial port = %s\n", comports[comport_number]);
 
         do
@@ -160,12 +148,13 @@ int read(char *portname, volatile int *running)
                     do
                     {
                         Status = ReadFile(hComm, &ReadData, sizeof(ReadData), &NoBytesRead, NULL);
-
                         putReadData(ReadData);
                         ++loop;
                     } while (NoBytesRead > 0);
                     --loop; //Get Actual length of received data
+#ifdef debug_read
                     printf_s("\nNumber of bytes received = %d\n\n", loop);
+#endif
                 }
                 else
                 {
@@ -185,7 +174,9 @@ int read(char *portname, volatile int *running)
                 else
                     printf("Wait failed with error %d.\n", GetLastError());
             }
+#ifdef debug_read
             printf("wait ... \n");
+#endif
         } while (*running);
 
         CloseHandle(hComm); //Closing the Serial Port
