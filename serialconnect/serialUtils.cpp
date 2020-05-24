@@ -30,7 +30,7 @@ char *mydata;
 
 int noworking;
 bool running, stopping, pending;
-uint8_t new_race_started;
+int hundredth;
 
 int initanalyseData()
 {
@@ -39,6 +39,8 @@ int initanalyseData()
     //str = (char *)malloc(sizeof(*str) * COLORADO_CHANNELS);
 
     int i;
+    hundredth = 0;
+    running = false;
 
     mydata = (char *)malloc(sizeof(char) * MQTT_LONG_LENGTH);
     for (i = 0; i < MQTT_LONG_LENGTH; i++)
@@ -82,7 +84,6 @@ int getTime(int lane, uint8_t data[])
     // Button ZEit
     //Problem ees wird die ZEit aus dem letzten lauf geschickt mit 0 als platz
     sprintf(shortdata, "%d%d%d%d%d%d", checkBitValue(data[4]), checkBitValue(data[14]), checkBitValue(data[12]), checkBitValue(data[10]), checkBitValue(data[8]), checkBitValue(data[6]));
-    //sprintf(shortdata, "%d%d%d%d%d%d", checkBitValue(data[2]), checkBitValue(data[14]), checkBitValue(data[12]), checkBitValue(data[10]), checkBitValue(data[8]), checkBitValue(data[6]));
     sprintf(mydata, "lane %d %d%d:%d%d,%d%d %d", lane, checkBitValue(data[4]), checkBitValue(data[6]), checkBitValue(data[8]), checkBitValue(data[10]), checkBitValue(data[12]), checkBitValue(data[14]), checkBitValue(data[2]));
     sprintf(place, "%d", checkBitValue(data[2]));
 
@@ -93,7 +94,6 @@ int getTime(int lane, uint8_t data[])
     if (strcmp(shortdata, COLORADO_HEAT_DATA[lane - 1]) == 0)
     {
         array_match = true;
-
         if (strcmp(place, COLORADO_PLACE_DATA[lane - 1]) != 0)
         {
             //der platz ist ungleich
@@ -123,9 +123,19 @@ int getTime(int lane, uint8_t data[])
 
     if (!array_match)
     {
-        if (mqtt_send(mydata))
+        // wir schicken nur wenn die uhr läuft
+        if (hundredth > 0)
         {
-            printf("Error sending \n");
+            if (mqtt_send(mydata))
+            {
+                printf("Error sending \n");
+            }
+        }
+        else
+        {
+#ifdef debug_time
+            printf("no data transfer clock : %d\n", hundredth);
+#endif
         }
 
         for (int i = 0; i < MQTT_MESSAGE_LENGTH; i++)
@@ -180,13 +190,6 @@ void getHeader(uint8_t data[])
         for (int clearnr = 0; clearnr < DISPLAY_LANE_COUNT; clearnr++)
         {
             sprintf(COLORADO_HEAT_DATA[clearnr], "000000");
-            /* 
-        COLORADO_HEAT_DATA[clearnr] = shortdata;
-      for (int i = 0; i < MQTT_MESSAGE_LENGTH; i++)
-      {
-        COLORADO_HEAT_DATA[clearnr][i] = 0x00;
-      }
-      */
         }
     }
 
@@ -202,8 +205,8 @@ void getHeader(uint8_t data[])
 
 bool checknotnull(uint8_t data[])
 {
+    // nur jedes 5 mal
     noworking++;
-
     if (noworking > 5)
     {
         noworking = 0;
@@ -238,7 +241,6 @@ bool checkStartStop(uint8_t data[])
 #endif
             sprintf(mydata, "start");
             mqtt_send(mydata);
-            new_race_started = 0x01;
         }
         else
         {
@@ -257,6 +259,7 @@ bool getTime(uint8_t data[])
 {
     running = checknotnull(data);
     char mydata[MQTT_LONG_LENGTH];
+    hundredth = timehundredth(data);
 
     sprintf(mydata, "time %d%d:%d%d,%d", checkBitValue(data[4]), checkBitValue(data[6]), checkBitValue(data[8]), checkBitValue(data[10]), checkBitValue(data[12]));
 
@@ -266,3 +269,24 @@ bool getTime(uint8_t data[])
 #endif
     return true;
 };
+
+int timehundredth(uint8_t data[])
+{
+
+    int minutes;
+    minutes = checkBitValue(data[4]) * 10 + checkBitValue(data[6]);
+
+    int seconds;
+    seconds = checkBitValue(data[8]) * 10 + checkBitValue(data[10]);
+
+    int decent;
+    decent = checkBitValue(data[12]);
+#ifdef debug_time
+    printf("Minutes: %d Seconds: %d Zentel: %d\n", minutes, seconds, decent);
+#endif
+    int timehundredth = (minutes * 60 + seconds) * 100 + decent * 10;
+#ifdef debug_time
+    printf("timehundredth: %d\n", timehundredth);
+#endif
+    return timehundredth;
+}

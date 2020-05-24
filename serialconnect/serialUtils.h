@@ -9,3 +9,4 @@ bool checkStartStop(uint8_t data[]);
 int initanalyseData();
 int cleananalyseData();
 bool getTime(uint8_t data[]);
+int timehundredth(uint8_t data[]);

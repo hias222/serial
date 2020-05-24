@@ -113,10 +113,9 @@ int putReadData(uint8_t ReadData)
                     outPutBuffer(colorado_control_channel, buf);
 
 #endif
-                    if (loop > 20)
+                    if (loop > 10)
                     {
                         getTime(colorado_data[colorado_control_channel]);
-
                         loop = 0;
                     }
                 }
