@@ -17,6 +17,7 @@
 #define MISO 13
 #define MOSI 19
 #define SCLK 12
+//#define debug_read
 
 #define COLORADO_ADDRESS_WORD_MASK 0x80
 
@@ -37,9 +38,6 @@ int read(char *portname, volatile int *running)
         fprintf(stderr, "pigpio initialisation failed.\n");
         return 1;
     }
-
-    //bbSPIOpen(CE0, MISO, MOSI, SCLK, 10000, 0); // MCP4251 DAC
-    //bbSPIOpen(CE1, MISO, MOSI, SCLK, 20000, 3); // MCP3008 ADC
 
     USBHandle = serOpen(portname, 9600, 0);
 
@@ -74,24 +72,21 @@ int read(char *portname, volatile int *running)
             {
                 if ((text[i] & COLORADO_ADDRESS_WORD_MASK) == COLORADO_ADDRESS_WORD_MASK)
                 {
+#ifdef debug_read
                     printf("\n");
+#endif
                     order = 0;
                 }
+#ifdef debug_read
                 printf("%d: %02x ", order, text[i]);
+#endif
                 putReadData(text[i]);
                 order++;
             }
-            //printf("Text: %s", text);
         }
-        //b = serReadByte(h);
-        //b = serRead(USBHandle, text, strlen(TEXT));
     }
 
     serClose(USBHandle);
-
-    //bbSPIClose(CE0);
-    //bbSPIClose(CE1);
-
     gpioTerminate();
 
     return 0;

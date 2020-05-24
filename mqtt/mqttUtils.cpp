@@ -22,6 +22,8 @@ bool error_state = false;
 
 bool remotesender;
 
+#define debug_send
+
 #include "send.h"
 
 int mqtt_connect(bool remoteserial)
@@ -53,19 +55,17 @@ int mqtt_connect(bool remoteserial)
 int mqtt_send(char message[MQTT_LONG_LENGTH])
 {
     int rc;
-    //unsigned 
-    char *remotechar = (char* ) malloc(strlen(message));
+    //unsigned
+    char *remotechar = (char *)malloc(strlen(message));
     memset(&remotechar[0], 0, sizeof(remotechar));
 
+#ifdef debug_send
     printf("mqtt_send = %s\n", message);
+#endif
 
     if (remotesender)
     {
-       // for (int i=0; i<strlen(message); i++){
-       //     remotechar[i] = message[i]; 
-       // }
-        //remotechar[0] = message[0]; 
-        sprintf(remotechar,"%s",message);
+        sprintf(remotechar, "%s", message);
         send(remotechar);
     }
 

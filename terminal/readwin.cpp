@@ -20,6 +20,8 @@
 #define COLORADO_ADDRESS_WORD_MASK 0x80
 #define BUFFER_LENGTH 25
 
+//#define debug_read
+
 using namespace std;
 
 int startTerminal(volatile int *running, char *portname)
@@ -137,19 +139,7 @@ int terminalread(char *portname, volatile int *running)
             return 1;
         }
 
-        /*
-        //Setting WaitComm() Event
-        Status = WaitCommEvent(hComm, &dwEventMask, NULL); //Wait for the character to be received
-
-        if (Status == FALSE)
-        {
-            printf_s("\nError! in Setting WaitCommEvent()\n\n");
-            return false;
-        }
-        */
-
         //Read data and store in a buffer
-
         // Create an event object for use by WaitCommEvent.
 
         o.hEvent = CreateEvent(
@@ -185,8 +175,9 @@ int terminalread(char *portname, volatile int *running)
                     do
                     {
                         Status = ReadFile(hComm, &ReadData, sizeof(ReadData), &NoBytesRead, NULL);
-
+#ifdef debug_read
                         printf("%02x ", (int)ReadData);
+#endif
                         if (ReadData == 0x3B || g > 24)
                         {
                             g = 0;
@@ -203,7 +194,9 @@ int terminalread(char *portname, volatile int *running)
                         ++loop;
                     } while (NoBytesRead > 0);
                     --loop; //Get Actual length of received data
+#ifdef debug_read
                     printf_s("\nNumber of bytes received = %d - %s\n\n", loop, outgoing);
+#endif
                 }
                 else
                 {

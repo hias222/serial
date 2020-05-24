@@ -58,12 +58,7 @@ int send(char *SendByte)
     int res;
     char endstring[] = ";";
 
-    //unsigned 
-    //char text[] = "hello ;";
-
     res = write(fd, SendByte, strlen(SendByte));
-    //res = write(fd, text, strlen(text));
-
     res = write(fd, endstring, strlen(endstring));
 
     if (res < 0)
