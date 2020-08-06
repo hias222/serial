@@ -28,6 +28,7 @@ void usage(char *prog)
     printf("usage %s [-s %s] \n", prog, BASIC_PORTNAME);
     printf("  -s portname      source port name %s \n", BASIC_PORTNAME);
     printf("                   for both raw and repeater mode\n");
+    printf("                   RPI Ubuntu /dev/ttyAMA0 RPI raspian /dev/serial0  Linux /dev/ttyUSB0\n");
     printf("  -r               only behind RPI \n");
     printf("  -x               raw mode and send \n");
     printf("  -z               only raw mode \n");
