@@ -78,12 +78,14 @@ int read(char *portname, volatile int *running)
         }
         else
         {
-            
+
 #ifdef info_read
-            printf(".");
             if (outputnr > 16)
             {
                 outputnr = 0;
+	            time_t now;
+	            time(&now);
+	            printf("%s getting data %d", ctime(&now), order);
                 printf("\n");
             }
 #endif

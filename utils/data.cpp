@@ -12,7 +12,8 @@ int dataInit(volatile int *running, char *portname, bool sendmode)
 {
     initReadData();
     mqtt_connect(sendmode);
-    char myText[] = "init repeat mode";
+    printf("mqtt topic rawdata");
+    char myText[] = "init repeat mode (mqtt rawdata)";
     mqtt_send(myText);
     startListen(running, portname);
     return 0;
