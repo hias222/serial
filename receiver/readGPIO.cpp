@@ -36,7 +36,7 @@ int read(char *portname, volatile int *running)
 
 #ifdef info_read
     int outputnr;
-    outputnr = 0;
+    outputnr = 9999;
 #endif
 
     if (gpioInitialise() < 0)

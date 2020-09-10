@@ -24,11 +24,11 @@ bool checkPort()
 
     printf("Start listener ..\n");
     printf("%s\n", getInfo().c_str());
-    
+
     return check;
 }
 
-bool start(volatile int * running, char * portname)
+bool start(volatile int *running, char *portname)
 {
     bool check = false;
     //char portname[] = "myport";
@@ -44,13 +44,16 @@ bool start(volatile int * running, char * portname)
     return check;
 }
 
-int startListen(volatile int *running, char * portname)
+int startListen(volatile int *running, char *portname)
 {
     printf("Serial start ...\n");
     //ToDo Loop
     //for (int i = 0; i < 5; i++)
-    while(*running)
+    while (*running)
     {
+        time_t now;
+        time(&now);
+        printf("%s running ", ctime(&now));
         printf("\n");
         start(running, portname);
 #ifdef _WIN32
