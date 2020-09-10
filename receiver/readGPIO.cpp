@@ -17,7 +17,8 @@
 #define MISO 13
 #define MOSI 19
 #define SCLK 12
-#define debug_read
+//#define debug_read
+#define info_read
 
 #define COLORADO_ADDRESS_WORD_MASK 0x80
 
@@ -32,6 +33,11 @@ int read(char *portname, volatile int *running)
     int order;
     char *TEXT;
     char text[2048];
+
+#ifdef info_read
+    int outputnr;
+    outputnr = 0;
+#endif
 
     if (gpioInitialise() < 0)
     {
@@ -61,6 +67,10 @@ int read(char *portname, volatile int *running)
 
         order = 0;
 
+#ifdef info_read
+        outputnr++;
+#endif
+
         if (e < 0)
         {
             printf("read failed.\n");
@@ -68,6 +78,15 @@ int read(char *portname, volatile int *running)
         }
         else
         {
+            
+#ifdef info_read
+            printf(".");
+            if (outputnr > 16)
+            {
+                outputnr = 0;
+                printf("\n");
+            }
+#endif
             for (int i = 0; i < b; i++)
             {
                 if ((text[i] & COLORADO_ADDRESS_WORD_MASK) == COLORADO_ADDRESS_WORD_MASK)
