@@ -17,7 +17,7 @@
 #define MISO 13
 #define MOSI 19
 #define SCLK 12
-//#define debug_read
+#define debug_read
 
 #define COLORADO_ADDRESS_WORD_MASK 0x80
 
@@ -47,7 +47,7 @@ int read(char *portname, volatile int *running)
         return 1;
     }
 
-    printf("   Serial port = %s\n", portname);
+    printf("   Serial port (GPIO) = %s\n", portname);
 
     while (*running)
     {
