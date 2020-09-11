@@ -2,6 +2,9 @@
 
 echo search for PI
 
+# to simulato non pgio port
+exit  0
+
 grep -q BCM2708 /proc/cpuinfo
 if [ $? = 0 ]; then
   echo Pi
