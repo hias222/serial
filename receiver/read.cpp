@@ -81,12 +81,12 @@ int read(char *portname, volatile int *running)
         buf[res] = 0;
 
 #ifdef info_read
-        if (outputnr > 512)
+        if (outputnr > 2048)
         {
             outputnr = 0;
             time_t now;
             time(&now);
-            printf("%s getting 512 bytes", ctime(&now));
+            printf("%s getting 2048 bytes", ctime(&now));
             printf("\n");
         }
 #endif
