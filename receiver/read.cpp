@@ -10,7 +10,7 @@
 #include <string.h>
 #include <string>
 
-//#define debug_incoming
+// #define debug_incoming
 
 // Linux headers
 #include <errno.h> // Error integer and strerror() function

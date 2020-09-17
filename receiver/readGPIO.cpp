@@ -17,7 +17,7 @@
 #define MISO 13
 #define MOSI 19
 #define SCLK 12
-//#define debug_read
+#define debug_read
 #define info_read
 
 #define COLORADO_ADDRESS_WORD_MASK 0x80
