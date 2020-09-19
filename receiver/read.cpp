@@ -48,9 +48,11 @@ int read(char *portname, volatile int *running)
         return 1;
     }
 
-    tcgetattr(fd, &oldtio); /* save current port settings */
-
+    tcgetattr(fd, &oldtio); //save current port settings 
     bzero(&newtio, sizeof(newtio));
+
+    /*
+
     newtio.c_cflag = ~CRTSCTS & ~PARENB & ~CSTOPB;
     newtio.c_cflag |= CS8 | CLOCAL | CREAD;
     cfsetispeed(&newtio, B4800);
@@ -60,11 +62,12 @@ int read(char *portname, volatile int *running)
     newtio.c_iflag = IGNPAR;
     newtio.c_oflag = 0;
 
-    /* set input mode (non-canonical, no echo,...) */
+    // set input mode (non-canonical, no echo,...) 
     newtio.c_lflag &= ~ICANON; // 0
 
+    */
     // new
-    /*
+    
     newtio.c_cflag = (tty.c_cflag & ~CSIZE) | CS8;
 	
 	//set into raw, no echo mode
@@ -85,8 +88,7 @@ int read(char *portname, volatile int *running)
 
 	//1 stopbit
 	newtio.c_cflag &= ~CSTOPB;
-    */
-
+    
     newtio.c_cc[VTIME] = 0; // inter-character timer unused 
     newtio.c_cc[VMIN] = 5;  // blocking read until 5 chars received 
 
