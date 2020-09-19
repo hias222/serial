@@ -55,7 +55,7 @@ int read(char *portname, volatile int *running)
     newtio.c_cflag |= CS8 | CLOCAL | CREAD;
     cfsetispeed(&newtio, B4800);
     cfsetospeed(&newtio, B4800);
-    /*
+    
     /// working
     //newtio.c_cflag = BAUDRATE | ~CRTSCTS | CS8 | CLOCAL | CREAD;
     newtio.c_iflag = IGNPAR;
@@ -66,9 +66,10 @@ int read(char *portname, volatile int *running)
 
     newtio.c_cc[VTIME] = 0; // inter-character timer unused 
     newtio.c_cc[VMIN] = 5;  // blocking read until 5 chars received 
-    */
+    
 
     /// new
+    /*
     //set into raw, no echo mode
 	newtio.c_iflag = IGNBRK;
 	newtio.c_lflag = 0;
@@ -88,6 +89,7 @@ int read(char *portname, volatile int *running)
 	//1 stopbit
 	newtio.c_cflag &= ~CSTOPB;
 
+*/
     ///// 
     tcflush(fd, TCIFLUSH);
     tcsetattr(fd, TCSANOW, &newtio);
