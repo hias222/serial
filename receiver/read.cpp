@@ -56,18 +56,41 @@ int read(char *portname, volatile int *running)
     cfsetispeed(&newtio, B4800);
     cfsetospeed(&newtio, B4800);
 
-    /// working
+    
+    
     //newtio.c_cflag = BAUDRATE | ~CRTSCTS | CS8 | CLOCAL | CREAD;
     newtio.c_iflag = IGNPAR;
     newtio.c_oflag = 0;
 
-    /* set input mode (non-canonical, no echo,...) */
+    // set input mode (non-canonical, no echo,...) 
     newtio.c_lflag &= ~ICANON; // 0
 
-    newtio.c_cc[VTIME] = 0; /* inter-character timer unused */
-    newtio.c_cc[VMIN] = 5;  /* blocking read until 5 chars received */
+    // new
+    /*
+    newtio.c_cflag = (tty.c_cflag & ~CSIZE) | CS8;
+	
+	//set into raw, no echo mode
+	newtio.c_iflag = IGNBRK;
+	newtio.c_lflag = 0;
+	newtio.c_oflag = 0;
+	newtio.c_cflag |= CLOCAL | CREAD;
 
-    
+	newtio.c_cflag &= ~CRTSCTS;
+	newtio.c_cc[VMIN] = 1;
+	newtio.c_cc[VTIME] = 5;
+
+	//turn off software control
+	newtio.c_iflag &= ~(IXON | IXOFF | IXANY);
+
+	//no parity
+	newtio.c_cflag &= ~(PARENB | PARODD);
+
+	//1 stopbit
+	newtio.c_cflag &= ~CSTOPB;
+    */
+
+    newtio.c_cc[VTIME] = 0; // inter-character timer unused 
+    newtio.c_cc[VMIN] = 5;  // blocking read until 5 chars received 
 
     tcflush(fd, TCIFLUSH);
     tcsetattr(fd, TCSANOW, &newtio);
@@ -113,6 +136,7 @@ int read(char *portname, volatile int *running)
 #endif
                 g = 0;
             }
+
             putReadData(buf[i]);
             g++;
         }
