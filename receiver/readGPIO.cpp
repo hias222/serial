@@ -17,7 +17,7 @@
 #define MISO 13
 #define MOSI 19
 #define SCLK 12
-#define debug_read
+#define debug_incoming
 #define info_read
 
 #define COLORADO_ADDRESS_WORD_MASK 0x80
@@ -93,13 +93,14 @@ int read(char *portname, volatile int *running)
             {
                 if ((text[i] & COLORADO_ADDRESS_WORD_MASK) == COLORADO_ADDRESS_WORD_MASK)
                 {
-#ifdef debug_read
-                    printf("\n");
+#ifdef debug_incoming
+                    printf("\n %02x \n", COLORADO_ADDRESS_WORD_MASK);
 #endif
                     order = 0;
                 }
-#ifdef debug_read
-                printf("%d: %02x ", order, text[i]);
+#ifdef debug_incoming
+                // printf("%d: %02x ", order, text[i]);
+                printf("%02x ",buf[i]);
 #endif
                 putReadData(text[i]);
                 order++;
