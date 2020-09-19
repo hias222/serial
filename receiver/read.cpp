@@ -56,13 +56,11 @@ int read(char *portname, volatile int *running)
     cfsetispeed(&newtio, B4800);
     cfsetospeed(&newtio, B4800);
 
-    
-    
     //newtio.c_cflag = BAUDRATE | ~CRTSCTS | CS8 | CLOCAL | CREAD;
     newtio.c_iflag = IGNPAR;
     newtio.c_oflag = 0;
 
-    // set input mode (non-canonical, no echo,...) 
+    /* set input mode (non-canonical, no echo,...) */
     newtio.c_lflag &= ~ICANON; // 0
 
     // new
