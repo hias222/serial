@@ -112,6 +112,30 @@ cmake ../
 
 ```
 
+### checks
+
+dmesg | grep tty
+
+Configuartion in CMakeList.txt
+serial console is off:
+
+```bash
+--> port is /dev/ttySO
+
+[    0.000536] printk: console [tty1] enabled
+[    2.812083] fe201000.serial: ttyAMA0 at MMIO 0xfe201000 (irq = 14, base_baud = 0) is a PL011 rev2
+[    2.818171] fe215040.serial: ttyS0 at MMIO 0x0 (irq = 16, base_baud = 62500000) is a 16550
+```
+
+serial console is on:
+
+```bash
+-> port /dev/ttyAMA0
+[    0.000541] printk: console [tty1] enabled
+[    2.441992] fe201000.serial: ttyAMA0 at MMIO 0xfe201000 (irq = 19, base_baud = 0) is a PL011 rev2
+[   19.953410] usb 1-1.3: ch341-uart converter now attached to ttyUSB0
+```
+
 ## output of test data 
 
 ### jpnevulator

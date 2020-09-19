@@ -8,7 +8,7 @@ set(SENDMODE false)
 
 if (RASPBERRYPI)
     message(STATUS "RASPBERRY")
-    set(PORTNAME "/dev/ttyAMA0")
+    set(PORTNAME "/dev/ttySO")
     set(DESTPORTNAME "/dev/ttyUSB0")
     set(SENDMODE true)
 else()
