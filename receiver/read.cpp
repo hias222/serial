@@ -97,6 +97,12 @@ int read(char *portname, volatile int *running)
 #ifdef info_read
             outputnr++;
 #endif
+
+#ifdef debug_incoming
+            // printf("%d: %02x ", g, buf[i]);
+            printf("%02x ",buf[i]);
+#endif
+
             if ((buf[i] & COLORADO_ADDRESS_WORD_MASK) == COLORADO_ADDRESS_WORD_MASK)
             {
 #ifdef debug_incoming
@@ -104,10 +110,6 @@ int read(char *portname, volatile int *running)
 #endif
                 g = 0;
             }
-#ifdef debug_incoming
-            // printf("%d: %02x ", g, buf[i]);
-            printf("%02x ",buf[i]);
-#endif
             putReadData(buf[i]);
             g++;
         }
