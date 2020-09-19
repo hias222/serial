@@ -33,6 +33,7 @@ using namespace std;
 int read(char *portname, volatile int *running)
 {
     int fd, c, res;
+    int flag, baudrate;
     struct termios oldtio, newtio;
     unsigned char buf[BUFFER_LENGTH];
 
@@ -41,7 +42,10 @@ int read(char *portname, volatile int *running)
     outputnr = 9999;
 #endif
 
-    fd = open(portname, O_RDONLY);
+    //fd = open(portname, O_RDONLY);
+    fd = open(portname, O_RDWR | O_NOCTTY | O_NDELAY);
+
+    
     if (fd < 0)
     {
         perror(portname);
@@ -67,7 +71,28 @@ int read(char *portname, volatile int *running)
 
     */
     // new
+    // https://www.linuxquestions.org/questions/programming-9/why-minicom-reads-data-correctly-from-dev-ttyusb0-but-my-program-does-not-904382/
     
+    flag = fcntl(fd, F_GETFL, 0);
+	fcntl(fd, F_SETFL, flag & ~O_NDELAY);
+
+    //set baudrate to 0 and go back to normal
+	printf("set baudrate to 0......\n");
+	tcgetattr(fd, &newtio);
+	tcgetattr(fd, &oldtio);
+	cfsetospeed(&newtio, B0);
+	cfsetispeed(&newtio, B0);
+	tcsetattr(fd, TCSANOW, &newtio);
+	sleep(1);
+	tcsetattr(fd, TCSANOW, &oldtio);
+	printf("baudrate is back to normal......\n");
+
+	tcgetattr(fd, &newtio);
+
+	baudrate = B9600;
+	cfsetospeed(&newtio, baudrate);
+	cfsetispeed(&newtio, baudrate);
+
     newtio.c_cflag = (newtio.c_cflag & ~CSIZE) | CS8;
 	
 	//set into raw, no echo mode
