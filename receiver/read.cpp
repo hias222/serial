@@ -102,8 +102,6 @@ int read(char *portname, volatile int *running)
 	newtio.c_cflag |= CLOCAL | CREAD;
 
 	newtio.c_cflag &= ~CRTSCTS;
-	newtio.c_cc[VMIN] = 1;
-	newtio.c_cc[VTIME] = 5;
 
 	//turn off software control
 	newtio.c_iflag &= ~(IXON | IXOFF | IXANY);
