@@ -100,7 +100,7 @@ int read(char *portname, volatile int *running)
                 }
 #ifdef debug_incoming
                 // printf("%d: %02x ", order, text[i]);
-                printf("%02x ",buf[i]);
+                printf("%02x ",text[i]);
 #endif
                 putReadData(text[i]);
                 order++;
