@@ -83,14 +83,19 @@ int read(char *portname, volatile int *running)
             if (outputnr > 512)
             {
                 outputnr = 0;
-	            time_t now;
-	            time(&now);
-	            printf("%s getting 512 bytes", ctime(&now));
+                time_t now;
+                time(&now);
+                printf("%s getting 512 bytes", ctime(&now));
                 printf("\n");
             }
 #endif
             for (int i = 0; i < b; i++)
             {
+#ifdef debug_incoming
+                // printf("%d: %02x ", order, text[i]);
+                printf("%02x ", text[i]);
+#endif
+
                 if ((text[i] & COLORADO_ADDRESS_WORD_MASK) == COLORADO_ADDRESS_WORD_MASK)
                 {
 #ifdef debug_incoming
@@ -98,10 +103,7 @@ int read(char *portname, volatile int *running)
 #endif
                     order = 0;
                 }
-#ifdef debug_incoming
-                // printf("%d: %02x ", order, text[i]);
-                printf("%02x ",text[i]);
-#endif
+
                 putReadData(text[i]);
                 order++;
             }
