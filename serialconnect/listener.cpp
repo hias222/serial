@@ -60,7 +60,11 @@ int startListen(volatile int *running, char *portname)
         Sleep(5);
         printf(".");
 #else
-        sleep(5);
+        if (*running)
+        {
+            printf("\nchecking\n");
+            sleep(5);
+        }
 #endif
     }
 

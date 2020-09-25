@@ -10,7 +10,7 @@
 #include <string.h>
 #include <string>
 
-#define debug_incoming
+
 
 // Linux headers
 #include <errno.h> // Error integer and strerror() function
@@ -24,7 +24,10 @@
 #define _POSIX_SOURCE 1 /* POSIX compliant source */
 #define FALSE 0
 #define TRUE 1
+
+//  debug
 #define info_read
+// #define debug_incoming
 
 volatile int STOP = FALSE;
 
@@ -55,21 +58,6 @@ int read(char *portname, volatile int *running)
     tcgetattr(fd, &oldtio); //save current port settings 
     bzero(&newtio, sizeof(newtio));
 
-    /*
-
-    newtio.c_cflag = ~CRTSCTS & ~PARENB & ~CSTOPB;
-    newtio.c_cflag |= CS8 | CLOCAL | CREAD;
-    cfsetispeed(&newtio, B4800);
-    cfsetospeed(&newtio, B4800);
-
-    //newtio.c_cflag = BAUDRATE | ~CRTSCTS | CS8 | CLOCAL | CREAD;
-    newtio.c_iflag = IGNPAR;
-    newtio.c_oflag = 0;
-
-    // set input mode (non-canonical, no echo,...) 
-    newtio.c_lflag &= ~ICANON; // 0
-
-    */
     // new
     // https://www.linuxquestions.org/questions/programming-9/why-minicom-reads-data-correctly-from-dev-ttyusb0-but-my-program-does-not-904382/
     
@@ -112,8 +100,8 @@ int read(char *portname, volatile int *running)
 	//1 stopbit
 	newtio.c_cflag &= ~CSTOPB;
     
-    newtio.c_cc[VTIME] = 0; // inter-character timer unused 
-    newtio.c_cc[VMIN] = 5;  // blocking read until 5 chars received 
+    newtio.c_cc[VTIME] = 1; // inter-character timer unused 
+    newtio.c_cc[VMIN] = 0;  // blocking read until 5 chars received 
 
     tcflush(fd, TCIFLUSH);
     tcsetattr(fd, TCSANOW, &newtio);
@@ -130,22 +118,18 @@ int read(char *portname, volatile int *running)
         buf[res] = 0;
 
 #ifdef info_read
+        outputnr++;
         if (outputnr > 2048)
         {
             outputnr = 0;
             time_t now;
             time(&now);
-            printf("%s getting 2048 bytes", ctime(&now));
-            printf("\n");
+            printf("read %s %s" , portname, ctime(&now));
         }
 #endif
 
         for (int i = 0; i < res; i++)
         {
-
-#ifdef info_read
-            outputnr++;
-#endif
 
 #ifdef debug_incoming
             // printf("%d: %02x ", g, buf[i]);

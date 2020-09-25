@@ -21,6 +21,8 @@ void intHandler(int dummy)
 {
     keepRunning = 0;
     ptrRunning = &keepRunning;
+
+    printf("received exit\n");
 }
 
 void usage(char *prog)

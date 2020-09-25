@@ -20,7 +20,7 @@ endif()
 if(APPLE)
     set(ENV{OPENSSL_ROOT_DIR} "/usr/local/opt/openssl@1.1")
     set(ENV{OPENSSL_LIBRARIES} "/usr/local/opt/openssl@1.1/lib")
-    set(PORTNAME "/dev/ttys005")
+    set(PORTNAME "/dev/ttys002")
     set(DESTPORTNAME "/dev/ttys010")
 endif()
 
