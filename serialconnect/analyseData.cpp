@@ -7,7 +7,7 @@
 //#define debug_incoming
 //#define debug_lane
 //#define debug_header
-#define debug_time
+//#define debug_time
 #define COLORADO_CHANNELS 32
 #define COLORADO_ADDRESS_WORD_MASK 0x80
 #define COLORADO_ROWS 16
