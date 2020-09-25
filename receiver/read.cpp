@@ -27,7 +27,7 @@
 
 //  debug
 #define info_read
-// #define debug_incoming
+#define debug_incoming
 
 volatile int STOP = FALSE;
 
