@@ -83,15 +83,14 @@ int read(char *portname, volatile int *running)
 
     //set into raw, no echo mode
     newtio.c_iflag = IGNBRK;
-    //newtio.c_iflag &= BRKINT;
-    //newtio.c_iflag = ICRNL;
+    newtio.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | IXON);
+    
 
     newtio.c_lflag = 0;
     newtio.c_oflag = 0;
     newtio.c_cflag |= CLOCAL | CREAD;
 
-    newtio.c_cflag &= CRTS_IFLOW;
-    //newtio.c_cflag &= ~CRTSCTS;
+    newtio.c_cflag &= ~CRTSCTS;
 
     //CRTS_IFLOW
 
