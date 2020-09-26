@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 #define COLORADO_ADDRESS_WORD_MASK 0x80
+#define COLORADO_ERROR_CR 0x35
 #define BUFFER_LENGTH 32
 
 #include <string.h>
@@ -145,6 +146,11 @@ int read(char *portname, volatile int *running)
                 printf("\n %02x \n", COLORADO_ADDRESS_WORD_MASK);
 #endif
                 g = 0;
+            }
+
+            if (buf[i] == COLORADO_ERROR_CR)
+            {
+                printf("\n %02x b1 0d \n", COLORADO_ERROR_CR);
             }
 
             putReadData(buf[i]);
