@@ -82,8 +82,10 @@ int read(char *portname, volatile int *running)
     newtio.c_cflag = (newtio.c_cflag & ~CSIZE) | CS8;
 
     //set into raw, no echo mode
-    newtio.c_iflag = IGNBRK;
+    //newtio.c_iflag = IGNBRK;
     newtio.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | IXON);
+    //turn off software control
+    //newtio.c_iflag &= ~(IXON | IXOFF | IXANY);
     
 
     newtio.c_lflag = 0;
@@ -94,8 +96,7 @@ int read(char *portname, volatile int *running)
 
     //CRTS_IFLOW
 
-    //turn off software control
-    newtio.c_iflag &= ~(IXON | IXOFF | IXANY);
+
 
     //no parity
     newtio.c_cflag &= ~(PARENB | PARODD);
