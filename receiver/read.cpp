@@ -82,8 +82,8 @@ int read(char *portname, volatile int *running)
     newtio.c_cflag = (newtio.c_cflag & ~CSIZE) | CS8;
 
     //set into raw, no echo mode
-    newtio.c_iflag = ~IGNBRK;
-    newtio.c_iflag &= BRKINT;
+    newtio.c_iflag = IGNBRK;
+    //newtio.c_iflag &= BRKINT;
     //newtio.c_iflag = ICRNL;
 
     newtio.c_lflag = 0;
