@@ -90,7 +90,7 @@ int read(char *portname, volatile int *running)
     newtio.c_oflag = 0;
     newtio.c_cflag |= CLOCAL | CREAD;
 
-    newtio.c_cflag &= CRTSCTS;
+    newtio.c_cflag &= CRTS_IFLOW;
     //newtio.c_cflag &= ~CRTSCTS;
 
     //CRTS_IFLOW
