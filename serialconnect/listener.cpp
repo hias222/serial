@@ -11,6 +11,7 @@ using namespace std;
 #include <process.h>
 #include <Windows.h>
 #include <iostream>
+#include <time.h>
 #else
 #include <unistd.h>
 #endif
