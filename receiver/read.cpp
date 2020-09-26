@@ -135,10 +135,7 @@ int read(char *portname, volatile int *running)
         for (int i = 0; i < res; i++)
         {
 
-#ifdef debug_incoming
-            // printf("%d: %02x ", g, buf[i]);
-            printf("%02x ",buf[i]);
-#endif
+
 
             if ((buf[i] & COLORADO_ADDRESS_WORD_MASK) == COLORADO_ADDRESS_WORD_MASK)
             {
@@ -148,12 +145,21 @@ int read(char *portname, volatile int *running)
                 g = 0;
             }
 
+#ifdef debug_incoming
+            // printf("%d: %02x ", g, buf[i]);
+            printf("%02x ",buf[i]);
+#endif            
+
             if (buf[i] == COLORADO_ERROR_CR)
             {
                 printf("\n %02x b1 0d \n", COLORADO_ERROR_CR);
+                putReadData(0xb1);
+                putReadData(0x0d);
+            } else {
+                putReadData(buf[i]);
             }
 
-            putReadData(buf[i]);
+            
             g++;
         }
         if (!*running)
