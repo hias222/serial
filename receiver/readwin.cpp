@@ -57,6 +57,13 @@ int read(char *portname, volatile int *running, bool verbose)
     {
         printf("Using serial port = %s\n", comports[comport_number]);
 
+        if (verbose)
+        {
+             printf(" -- Verbose mode\n");
+        }else {
+            printf("running normal mode\n");
+        }
+
         hComm = CreateFileA(comports[comport_number],
                             GENERIC_READ | GENERIC_WRITE,
                             0,    /* no share  */
@@ -90,6 +97,8 @@ int read(char *portname, volatile int *running, bool verbose)
         dcbSerialParams.Parity = NOPARITY;     //Parity = None
 
         Status = SetCommState(hComm, &dcbSerialParams);
+
+        
 
         if (Status == FALSE)
         {
@@ -158,7 +167,6 @@ int read(char *portname, volatile int *running, bool verbose)
 #ifdef debug_read
                             printf("\n %02x \n", COLORADO_ADDRESS_WORD_MASK);
 #endif
-                            order = 0;
                         }
 
                         if (verbose)
