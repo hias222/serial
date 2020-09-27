@@ -26,7 +26,7 @@
 
 using namespace std;
 
-int read(char *portname, volatile int *running)
+int read(char *portname, volatile int *running, bool verbose)
 {
 
     int USBHandle, b, e;
@@ -91,20 +91,25 @@ int read(char *portname, volatile int *running)
 #endif
             for (int i = 0; i < b; i++)
             {
-#ifdef debug_incoming
-                // printf("%d: %02x ", order, text[i]);
-                printf("%02x ", text[i]);
-#endif
 
                 if ((text[i] & COLORADO_ADDRESS_WORD_MASK) == COLORADO_ADDRESS_WORD_MASK)
                 {
+                    if (verbose)
+                    {
+                        printf("\n");
+                    }
 #ifdef debug_incoming
                     printf("\n %02x \n", COLORADO_ADDRESS_WORD_MASK);
 #endif
                     order = 0;
                 }
 
+                if (verbose)
+                {
+                    printf("%02x ", text[i]);
+                }
                 putReadData(text[i]);
+
                 order++;
             }
         }

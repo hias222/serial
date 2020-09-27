@@ -29,13 +29,13 @@ bool checkPort()
     return check;
 }
 
-bool start(volatile int *running, char *portname)
+bool start(volatile int *running, char *portname, bool verbose)
 {
     bool check = false;
     //char portname[] = "myport";
     try
     {
-        read(portname, running);
+        read(portname, running, verbose);
         check = true;
     }
     catch (...)
@@ -45,7 +45,7 @@ bool start(volatile int *running, char *portname)
     return check;
 }
 
-int startListen(volatile int *running, char *portname)
+int startListen(volatile int *running, char *portname, bool verbose)
 {
     printf("Serial start ...\n");
     //ToDo Loop
@@ -56,7 +56,7 @@ int startListen(volatile int *running, char *portname)
         time(&now);
         printf("%s running ", ctime(&now));
         printf("\n");
-        start(running, portname);
+        start(running, portname, verbose);
 #ifdef _WIN32
         Sleep(5);
         printf(".");
@@ -68,6 +68,5 @@ int startListen(volatile int *running, char *portname)
         }
 #endif
     }
-
     return 0;
 }

@@ -22,7 +22,7 @@
 
 using namespace std;
 
-int read(char *portname, volatile int *running)
+int read(char *portname, volatile int *running, bool verbose)
 {
     //printf("port %s\n", portname);
     char subbuff[2];
@@ -148,6 +148,23 @@ int read(char *portname, volatile int *running)
                     do
                     {
                         Status = ReadFile(hComm, &ReadData, sizeof(ReadData), &NoBytesRead, NULL);
+
+                        if ((ReadData & COLORADO_ADDRESS_WORD_MASK) == COLORADO_ADDRESS_WORD_MASK)
+                        {
+                            if (verbose)
+                            {
+                                printf("\n");
+                            }
+#ifdef debug_read
+                            printf("\n %02x \n", COLORADO_ADDRESS_WORD_MASK);
+#endif
+                            order = 0;
+                        }
+
+                        if (verbose)
+                        {
+                            printf("%02x ", ReadData);
+                        }
                         putReadData(ReadData);
                         ++loop;
                     } while (NoBytesRead > 0);

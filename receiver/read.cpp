@@ -32,7 +32,7 @@ volatile int STOP = FALSE;
 
 using namespace std;
 
-int read(char *portname, volatile int *running)
+int read(char *portname, volatile int *running, bool verbose)
 {
     int fd, c, res;
     int flag, baudrate;
@@ -86,7 +86,6 @@ int read(char *portname, volatile int *running)
     //newtio.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | IXON);
     //turn off software control
     newtio.c_iflag &= ~(IXON | IXOFF | IXANY);
-    
 
     newtio.c_lflag = 0;
     newtio.c_oflag = 0;
@@ -95,17 +94,14 @@ int read(char *portname, volatile int *running)
     newtio.c_cflag &= ~CRTSCTS;
 
     //CRTS_IFLOW
-
-
-
     //no parity
     newtio.c_cflag &= ~(PARENB | PARODD);
 
     //1 stopbit
     newtio.c_cflag &= ~CSTOPB;
 
-    newtio.c_cc[VTIME] = 0; // inter-character timer unused
-    newtio.c_cc[VMIN] = 8;  // blocking read until 5 chars received
+    newtio.c_cc[VTIME] = 1; // inter-character timer unused
+    newtio.c_cc[VMIN] = 0;  // blocking read until 5 chars received
 
     tcflush(fd, TCIFLUSH);
     tcsetattr(fd, TCSANOW, &newtio);
@@ -137,10 +133,19 @@ int read(char *portname, volatile int *running)
 
             if ((buf[i] & COLORADO_ADDRESS_WORD_MASK) == COLORADO_ADDRESS_WORD_MASK)
             {
+                if (verbose)
+                {
+                    printf("\n");
+                }
 #ifdef debug_incoming
                 printf("\n %02x \n", COLORADO_ADDRESS_WORD_MASK);
 #endif
                 g = 0;
+            }
+
+            if (verbose)
+            {
+                printf("%02x ", buf[i]);
             }
 
             if (buf[i] == COLORADO_ERROR_CR)
@@ -156,10 +161,7 @@ int read(char *portname, volatile int *running)
             else
             {
                 putReadData(buf[i]);
-#ifdef debug_incoming
-                // printf("%d: %02x ", g, buf[i]);
-                printf("%02x ", buf[i]);
-#endif
+
             }
 
             g++;

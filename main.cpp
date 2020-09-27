@@ -34,6 +34,7 @@ void usage(char *prog)
     printf("  -r               only behind RPI \n");
     printf("  -x               raw mode and send \n");
     printf("  -z               only raw mode \n");
+    printf("  -v               verbose output for serial \n");
     printf("  -d portname      destination port name like %s \n", DESTINATION_PORTNAME);
     printf("                   only for raw mode\n");
     printf("  -h               help \n");
@@ -55,6 +56,7 @@ int main(int argc, char *argv[])
     printf("init portnames\n");
 
     bool cmd_line_failure = true;
+    bool cmd_verbose_mode = false;
 
     if (SEND_MODE)
     {
@@ -108,6 +110,9 @@ int main(int argc, char *argv[])
                     cmd_line_failure = false;
                 }
                 break;
+            case 'v':
+                cmd_verbose_mode = true;
+                break;
             case 'h':
                 usage(argv[0]);
                 return 0;
@@ -132,12 +137,11 @@ int main(int argc, char *argv[])
     ptrRunning = &keepRunning;
     signal(SIGINT, intHandler);
 
-    
     if (send_mode)
     {
         printf("send\n");
         init_send(destinationportname);
-        dataInit(ptrRunning, portname, true);
+        dataInit(ptrRunning, portname, true, cmd_verbose_mode);
     }
     else if (repeat_mode)
     {
@@ -147,7 +151,7 @@ int main(int argc, char *argv[])
     else
     {
         printf("raw\n");
-        dataInit(ptrRunning, portname, false);
+        dataInit(ptrRunning, portname, false, cmd_verbose_mode);
     }
 
     dataClean();
