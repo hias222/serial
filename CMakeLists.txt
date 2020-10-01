@@ -3,6 +3,7 @@ string(TIMESTAMP TODAY "%Y%m%d")
 project(serial VERSION 0.1.${TODAY})
 
 execute_process(COMMAND bash ${CMAKE_HOME_DIRECTORY}/checkapi RESULT_VARIABLE RASPBERRYPI)
+execute_process(COMMAND bash ${CMAKE_HOME_DIRECTORY}/checkftdi RESULT_VARIABLE ISFTDI)
 
 set(SENDMODE false)
 
@@ -25,6 +26,7 @@ if(APPLE)
 endif()
 
 if(WIN32)
+    set(RASPBERRYPI "0")
     # set(USER_HOME_DIR "C:/Users/Matthias/git")
     set(USER_HOME_DIR "C:/Users/User/git")
     # set(THREAD_HOME_DIR "C:\\Users\\User\\git\\vcpkg\\installed\\x86-windows")

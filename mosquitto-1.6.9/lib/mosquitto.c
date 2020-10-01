@@ -33,6 +33,7 @@ Contributors:
 #include "packet_mosq.h"
 #include "will_mosq.h"
 
+uint64_t mach_absolute_time();
 
 void mosquitto__destroy(struct mosquitto *mosq);
 
