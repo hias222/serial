@@ -34,6 +34,8 @@ int read(char *portname, volatile int *running, bool verbose)
     char *TEXT;
     char text[2048];
 
+    printf("using gpio RPI \n");
+
 #ifdef info_read
     int outputnr;
     outputnr = 9999;

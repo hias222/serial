@@ -14,94 +14,116 @@
 #include <unistd.h>
 #include "ftd2xx.h"
 
+#include "analyseData.h"
+
+#define COLORADO_ADDRESS_WORD_MASK 0x80
 #define BUF_SIZE 0x10
 
-#define MAX_DEVICES		5
+#define MAX_DEVICES 5
+
+static void dumpBuffer(unsigned char *buffer, int elements)
+{
+	int j;
+	for (j = 0; j < elements; j++)
+	{
+		if ((buffer[j] & COLORADO_ADDRESS_WORD_MASK) == COLORADO_ADDRESS_WORD_MASK)
+		{
+			printf("\n");
+		}
+		printf("0x%02X ", buffer[j]);
+		putReadData(buffer[j]);
+	}
+}
 
 int read(char *portname, volatile int *running, bool verbose)
 {
-	char 	cBufWrite[BUF_SIZE];
-	char * 	pcBufRead = NULL;
-	char * 	pcBufLD[MAX_DEVICES + 1];
-	char 	cBufLD[MAX_DEVICES][64];
-	DWORD	dwRxSize = 0;
-	DWORD 	dwBytesWritten, dwBytesRead;
-	FT_STATUS	ftStatus;
-	FT_HANDLE	ftHandle[MAX_DEVICES];
-	int	iNumDevs = 0;
-	int	i;
-	int	iDevicesOpen;	
-	
-	for(i = 0; i < MAX_DEVICES; i++) {
-		pcBufLD[i] = cBufLD[i];
-	}
-	pcBufLD[MAX_DEVICES] = NULL;
-	
-	ftStatus = FT_ListDevices(pcBufLD, &iNumDevs, FT_LIST_ALL | FT_OPEN_BY_SERIAL_NUMBER);
-	
-	if(ftStatus != FT_OK) {
-		printf("Error: FT_ListDevices returned %d\n", (int)ftStatus);
+	unsigned char *pcBufRead;
+	DWORD dwBytesRead;
+	FILE *fh;
+	FT_HANDLE ftHandle;
+	FT_STATUS ftStatus;
+	int iport;
+
+	iport = 0;
+
+	printf("using ftdi lib\n");
+
+	ftStatus = FT_Open(iport, &ftHandle);
+	if (ftStatus != FT_OK)
+	{
+		/* 
+			This can fail if the ftdi_sio driver is loaded
+		 	use lsmod to check this and rmmod ftdi_sio to remove
+			also rmmod usbserial
+		 */
+		printf("FT_Open(%d) failed\n", iport);
 		return 1;
 	}
-	
-	for(i = 0; ( (i <MAX_DEVICES) && (i < iNumDevs) ); i++) {
-		printf("Device %d Serial Number - %s\n", i, cBufLD[i]);
+
+	pcBufRead = (unsigned char *)malloc(BUF_SIZE);
+
+	FT_ResetDevice(ftHandle);
+	FT_SetBaudRate(ftHandle, 9600);
+
+	ftStatus = FT_SetDataCharacteristics(ftHandle,
+										 FT_BITS_8,
+										 FT_STOP_BITS_1,
+										 FT_PARITY_EVEN);
+
+	/*
+				 Parity -must be FT_PARITY_NONE, FT_PARITY_ODD, FT_PARITY_EVEN, FT_PARITY_MARKor FT_PARITY SPACE
+	*/
+
+	if (ftStatus != FT_OK)
+	{
+		printf("Failure.  FT_SetDataCharacteristics returned %d.\n",
+			   (int)ftStatus);
+		return 1;
 	}
-	
-	
-	for(i = 0; ( (i <MAX_DEVICES) && (i < iNumDevs) ) ; i++) {
-		/* Setup */
-		if((ftStatus = FT_OpenEx(cBufLD[i], FT_OPEN_BY_SERIAL_NUMBER, &ftHandle[i])) != FT_OK){
-			/* 
-				This can fail if the ftdi_sio driver is loaded
-		 		use lsmod to check this and rmmod ftdi_sio to remove
-				also rmmod usbserial
-		 	*/
-			printf("Error: FT_OpenEx returned %d for device %d\n", (int)ftStatus, i);
+	else
+	{
+		printf("set stop bits\n");
+	}
+
+	ftStatus = FT_SetFlowControl(ftHandle, FT_FLOW_NONE , 0x00, 0x00);
+
+	//FT_FLOW_NONE Must be one of FT_FLOW_NONE, FT_FLOW_RTS_CTS, FT_FLOW_DTR_DSRor FT_FLOW_XON_XOFF.uXonCharacter used to signal Xon.  Only u
+
+	if (ftStatus != FT_OK)
+	{
+		printf("Failure.  FT_SetFlowControl FT_FLOW_NONE returned %d.\n",
+			   (int)ftStatus);
+		return 1;
+	}
+	else
+	{
+		printf("set FT_SetFlowControl FT_FLOW_NONE\n");
+	}
+
+	//FT_SetDtr(ftHandle);
+	//FT_SetRts(ftHandle);
+	FT_ClrDtr(ftHandle);
+	FT_ClrRts(ftHandle);
+	FT_SetBreakOff(ftHandle);
+
+	// FT_SetFlowControl(ftHandle, FT_FLOW_RTS_CTS, 0, 0);
+	FT_SetTimeouts(ftHandle, 1, 0); // infinite timeouts
+	//FT_SetBitMode(ftHandle, 0xFF, 0x01);
+
+	while (*running)
+	{
+		ftStatus = FT_Read(ftHandle, pcBufRead, BUF_SIZE, &dwBytesRead);
+
+		if (ftStatus != FT_OK)
+		{
+			printf("Failure.  FT_Read returned %d.\n", (int)ftStatus);
 			return 1;
 		}
-	
-		printf("Opened device %s\n", cBufLD[i]);
 
-		if((ftStatus = FT_SetBaudRate(ftHandle[i], 9600)) != FT_OK) {
-			printf("Error: FT_SetBaudRate returned %d, cBufLD[i] = %s\n", (int)ftStatus, cBufLD[i]);
-			break;
-		}
-		
-		/* Write */
-		if((ftStatus = FT_Write(ftHandle[i], cBufWrite, BUF_SIZE, &dwBytesWritten)) != FT_OK) {
-			printf("Error: FT_Write returned %d\n", (int)ftStatus);
-			break;
-		}
-		sleep(1);
-		
-		/* Read */
-		dwRxSize = 0;			
-		while ((dwRxSize < BUF_SIZE) && (ftStatus == FT_OK)) {
-			ftStatus = FT_GetQueueStatus(ftHandle[i], &dwRxSize);
-		}
-		if(ftStatus == FT_OK) {
-			pcBufRead = (char*)realloc(pcBufRead, dwRxSize);
-			if((ftStatus = FT_Read(ftHandle[i], pcBufRead, dwRxSize, &dwBytesRead)) != FT_OK) {
-				printf("Error: FT_Read returned %d\n", (int)ftStatus);
-			}
-			else {
-				printf("FT_Read read %d bytes\n", (int)dwBytesRead);
-			}
-		}
-		else {
-			printf("Error: FT_GetQueueStatus returned %d\n", (int)ftStatus);	
-		}
+		dumpBuffer(pcBufRead, (int)dwBytesRead);
 	}
+	free(pcBufRead);
+	FT_Close(ftHandle);
 
-	iDevicesOpen = i;
-	/* Cleanup */
-	for(i = 0; i < iDevicesOpen; i++) {
-		FT_Close(ftHandle[i]);
-		printf("Closed device %s\n", cBufLD[i]);
-	}
-	
-	if(pcBufRead)
-		free(pcBufRead);
 	return 0;
 }

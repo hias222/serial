@@ -2,18 +2,11 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 
 if (ISFTDI)
     message(STATUS "search lib libftd2xx.a ")
-    find_library(libftd2xx
-    Names libftd2xx.a
-    HINTS  lib )
-    message(STATUS  ${libftd2xx})
-
     find_library(libftd2
     Names libftd2xx.1.4.16.dylib
     HINTS  lib )
     message(STATUS  ${libftd2})
-
 endif (ISFTDI)
-
 
 if (WIN32)
     set(RASPBERRYPI 0)

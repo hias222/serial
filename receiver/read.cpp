@@ -39,6 +39,8 @@ int read(char *portname, volatile int *running, bool verbose)
     struct termios oldtio, newtio;
     unsigned char buf[BUFFER_LENGTH];
 
+    printf("using serial read linux\n");
+
 #ifdef info_read
     int outputnr;
     outputnr = 9999;
@@ -71,6 +73,7 @@ int read(char *portname, volatile int *running, bool verbose)
     tcsetattr(fd, TCSANOW, &newtio);
     sleep(1);
     tcsetattr(fd, TCSANOW, &oldtio);
+
     printf("baudrate is back to normal......\n");
 
     tcgetattr(fd, &newtio);
@@ -95,7 +98,9 @@ int read(char *portname, volatile int *running, bool verbose)
 
     //CRTS_IFLOW
     //no parity
-    newtio.c_cflag &= ~(PARENB | PARODD);
+    //newtio.c_cflag &= ~(PARENB | PARODD);
+    // we need even!!!
+    newtio.c_cflag &= (PARENB);
 
     //1 stopbit
     newtio.c_cflag &= ~CSTOPB;

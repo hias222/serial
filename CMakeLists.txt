@@ -5,6 +5,10 @@ project(serial VERSION 0.1.${TODAY})
 execute_process(COMMAND bash ${CMAKE_HOME_DIRECTORY}/checkapi RESULT_VARIABLE RASPBERRYPI)
 execute_process(COMMAND bash ${CMAKE_HOME_DIRECTORY}/checkftdi RESULT_VARIABLE ISFTDI)
 
+if (ISFTDI)
+    message(STATUS "ISFTDI")
+endif (ISFTDI)
+
 set(SENDMODE false)
 
 if (RASPBERRYPI)
