@@ -72,7 +72,7 @@ if(RASPBERRYPI)
         pigpio_INCLUDE_DIR pigpio_LIBRARY pigpiod_if_LIBRARY pigpiod_if2_LIBRARY)
 
 
-    set (OTHER_SRC readGPIO.cpp )
+    set (OTHER_SRC readGPIO.cpp readFTDI.cpp)
 endif(RASPBERRYPI)
 
 if (WIN32)
