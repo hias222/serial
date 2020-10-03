@@ -25,8 +25,8 @@
 #define TRUE 1
 
 //  debug
-#define info_read
-#define debug_incoming
+//#define info_read
+//#define debug_incoming
 
 volatile int STOP = FALSE;
 
@@ -94,7 +94,6 @@ int read(char *portname, volatile int *running, bool verbose)
     newtio.c_lflag = 0;
     newtio.c_oflag = 0;
 
-
     newtio.c_cflag |= CLOCAL | CREAD;
     newtio.c_cflag &= ~CRTSCTS;
     //newtio.c_cflag &= CRTSCTS;
@@ -102,7 +101,7 @@ int read(char *portname, volatile int *running, bool verbose)
     //no parity
     newtio.c_cflag &= ~(PARENB | PARODD);
     // we need even!!!
-    
+
     //newtio.c_cflag = PARENB;
 
     //1 stopbit
@@ -145,9 +144,6 @@ int read(char *portname, volatile int *running, bool verbose)
                 {
                     printf("\n");
                 }
-#ifdef debug_incoming
-                printf("\n %02x \n", COLORADO_ADDRESS_WORD_MASK);
-#endif
                 g = 0;
             }
 
@@ -156,21 +152,7 @@ int read(char *portname, volatile int *running, bool verbose)
                 printf("%02x ", buf[i]);
             }
 
-            if (buf[i] == COLORADO_ERROR_CR)
-            {
-                printf("\n %02x b1 0d \n", COLORADO_ERROR_CR);
-                putReadData(0xb1);
-                putReadData(0x0d);
-#ifdef debug_incoming
-                // printf("%d: %02x ", g, buf[i]);
-                printf("b1 0d ");
-#endif
-            }
-            else
-            {
-                putReadData(buf[i]);
-
-            }
+            putReadData(buf[i]);
 
             g++;
         }
