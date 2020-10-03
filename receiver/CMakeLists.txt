@@ -93,7 +93,7 @@ add_library(receiver
 if(RASPBERRYPI)
     target_link_libraries(receiver serialconnect pigpio ${libftd2})
 else(RASPBERRYPI)
-        target_link_libraries(receiver serialconnect ${libftd2})
+    target_link_libraries(receiver serialconnect ${libftd2})
 endif(RASPBERRYPI)
 
 target_include_directories(receiver PUBLIC

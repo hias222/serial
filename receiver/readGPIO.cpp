@@ -17,8 +17,8 @@
 #define MISO 13
 #define MOSI 19
 #define SCLK 12
-#define debug_incoming
-#define info_read
+// #define debug_incoming
+//#define info_read
 
 #define COLORADO_ADDRESS_WORD_MASK 0x80
 
@@ -35,6 +35,10 @@ int read(char *portname, volatile int *running, bool verbose)
     char text[2048];
 
     printf("receiver - using gpio RPI \n");
+    if (verbose)
+    {
+        printf("receiver - debug mode (-d) \n");
+    }
 
 #ifdef info_read
     int outputnr;
