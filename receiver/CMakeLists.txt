@@ -1,21 +1,21 @@
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 if (APPLE)
-    message(STATUS "APPLE search lib libftd2xx.a ")
+    message(STATUS "APPLE search lib libftd2xx.1.4.16.dylib ")
     find_library(libftd2
     Names libftd2xx.1.4.16.dylib
     HINTS  lib )
     message(STATUS  ${libftd2})
 elseif ( ${ARCHITECTURE} STREQUAL "x86_64" )
     ## linux
-    message(STATUS "x86_64 search lib libftd2xx.a ")
+    message(STATUS "x86_64 search lib libftd2xx.so.1.4.8 ")
     find_library(libftd2
-    Names libftd2xx.1.4.16.dylib
-    HINTS  lib )
+    Names libftd2xx.so.1.4.8
+    HINTS  liblinux64 )
     message(STATUS  ${libftd2})
 elseif ( ${ARCHITECTURE} STREQUAL "aarch64" )
     ## linux
-    message(STATUS "others search lib libftd2xx.a ")
+    message(STATUS "others search lib armv8 libftd2xx.so.1.4.8 ")
     find_library(libftd2
     Names libftd2xx.so.1.4.8
     HINTS  libarmv8 )
@@ -24,7 +24,7 @@ else ()
     message(STATUS "others search lib libftd2xx.a ")
     find_library(libftd2
     Names libftd2xx.so.1.4.8
-    HINTS  libarmv8 )
+    HINTS  liblinux64 )
     message(STATUS  ${libftd2})
 endif()
 
