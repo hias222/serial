@@ -39,7 +39,7 @@ int read(char *portname, volatile int *running, bool verbose)
     struct termios oldtio, newtio;
     unsigned char buf[BUFFER_LENGTH];
 
-    printf("using serial read linux\n");
+    printf("receiver - using serial read linux\n");
 
 #ifdef info_read
     int outputnr;
@@ -65,7 +65,7 @@ int read(char *portname, volatile int *running, bool verbose)
     fcntl(fd, F_SETFL, flag & ~O_NDELAY);
 
     //set baudrate to 0 and go back to normal
-    printf("set baudrate to 0......\n");
+    printf("receiver - set baudrate to 0......\n");
     tcgetattr(fd, &newtio);
     tcgetattr(fd, &oldtio);
     cfsetospeed(&newtio, B0);
@@ -74,7 +74,7 @@ int read(char *portname, volatile int *running, bool verbose)
     sleep(1);
     tcsetattr(fd, TCSANOW, &oldtio);
 
-    printf("baudrate is back to normal......\n");
+    printf("receiver - baudrate is back to normal......\n");
 
     tcgetattr(fd, &newtio);
 
@@ -112,7 +112,7 @@ int read(char *portname, volatile int *running, bool verbose)
     tcsetattr(fd, TCSANOW, &newtio);
 
     printf("\n");
-    printf("    port in (USB)= %s\n", portname);
+    printf("    receiver - port in (USB)= %s\n", portname);
     printf("\n");
 
     int g = 0;
@@ -173,7 +173,7 @@ int read(char *portname, volatile int *running, bool verbose)
         }
         if (!*running)
         {
-            printf("\n\nexit\n");
+            printf("\n\nreceiver - exit\n");
         }
         fflush(stdout);
     }

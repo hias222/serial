@@ -31,6 +31,7 @@ void usage(char *prog)
     printf("  -s portname      source port name %s \n", BASIC_PORTNAME);
     printf("                   for both raw and repeater mode\n");
     printf("                   RPI Ubuntu /dev/ttyAMA0 RPI raspian /dev/serial0  Linux /dev/ttyUSB0\n");
+    printf("  -f               using ftdi library no port needed \n");
     printf("  -r               only behind RPI \n");
     printf("  -x               raw mode and send \n");
     printf("  -z               only raw mode \n");
@@ -48,19 +49,18 @@ int main(int argc, char *argv[])
     char *destinationportname = (char *)malloc(50);
     bool send_mode = false;
     bool repeat_mode = false;
+    bool ftdi_mode = false;
 
     // out of SerialConfig
     sprintf(portname, "%s", BASIC_PORTNAME);
     sprintf(destinationportname, "%s", DESTINATION_PORTNAME);
-
-    printf("init portnames\n");
 
     bool cmd_line_failure = true;
     bool cmd_verbose_mode = false;
 
     if (SEND_MODE)
     {
-        printf("compiled with SENDMODE override with z\n");
+        printf("main - compiled with SENDMODE override with z\n");
         send_mode = true;
     }
 
@@ -77,6 +77,13 @@ int main(int argc, char *argv[])
                 {
                     portname = argv[n + 1];
                     cmd_line_failure = false;
+                }
+                break;
+            case 'f':
+                //printf("we getting source \n");
+                if (argc > n)
+                {
+                    ftdi_mode = true;
                 }
                 break;
             case 'r':
@@ -133,25 +140,34 @@ int main(int argc, char *argv[])
         }
     }
 
+    if (ftdi_mode)
+    {
+        printf("main - receive data on ftdi device\n");
+    }
+    else
+    {
+        printf("main - receive colorado data on port %s\n", portname);
+    }
+
     keepRunning = 1;
     ptrRunning = &keepRunning;
     signal(SIGINT, intHandler);
 
     if (send_mode)
     {
-        printf("send\n");
+        printf("main - send - send out to port %s\n", destinationportname);
         init_send(destinationportname);
-        dataInit(ptrRunning, portname, true, cmd_verbose_mode);
+        dataInit(ptrRunning, portname, true, cmd_verbose_mode, ftdi_mode);
     }
     else if (repeat_mode)
     {
-        printf("repeat\n");
+        printf("main - repeat - receive on port %s\n", portname);
         terminalInit(ptrRunning, portname);
     }
     else
     {
-        printf("raw\n");
-        dataInit(ptrRunning, portname, false, cmd_verbose_mode);
+        printf("main - raw local apply to mqttt\n");
+        dataInit(ptrRunning, portname, false, cmd_verbose_mode, ftdi_mode);
     }
 
     dataClean();

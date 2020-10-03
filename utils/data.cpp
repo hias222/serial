@@ -8,14 +8,14 @@
 
 static volatile int *keepRunning;
 
-int dataInit(volatile int *running, char *portname, bool sendmode, bool verbose)
+int dataInit(volatile int *running, char *portname, bool sendmode, bool verbose, bool ftdidevice)
 {
     initReadData();
     mqtt_connect(sendmode);
-    printf("mqtt topic rawdata");
-    char myText[] = "init repeat mode (mqtt rawdata)";
+    printf("utils - mqtt topic rawdata\n");
+    char myText[] = "utils init repeat mode (mqtt rawdata)";
     mqtt_send(myText);
-    startListen(running, portname, verbose);
+    startListen(running, portname, verbose, ftdidevice);
     return 0;
 }
 

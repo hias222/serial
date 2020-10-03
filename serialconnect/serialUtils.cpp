@@ -34,7 +34,7 @@ int hundredth;
 
 int initanalyseData()
 {
-    printf("Load analyse data\n");
+    printf("serialconnect - Load analyse data\n");
     //char *str;
     //str = (char *)malloc(sizeof(*str) * COLORADO_CHANNELS);
 

@@ -1,12 +1,18 @@
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
-if (ISFTDI)
+if (RASPBERRYPI)
+    message(STATUS "search lib libftd2xx.a ")
+    find_library(libftd2
+    Names libftd2xx.1.4.16.dylib
+    HINTS  libarmv8 )
+    message(STATUS  ${libftd2})
+else(RASPBERRYPI)
     message(STATUS "search lib libftd2xx.a ")
     find_library(libftd2
     Names libftd2xx.1.4.16.dylib
     HINTS  lib )
     message(STATUS  ${libftd2})
-endif (ISFTDI)
+endif (RASPBERRYPI)
 
 if (WIN32)
     set(RASPBERRYPI 0)
@@ -60,13 +66,10 @@ endif (WIN32)
 
 if (UNIX)
    if(RASPBERRYPI)
-        set (OTHER_SRC readGPIO.cpp )
+        set (OTHER_SRC readGPIO.cpp readFTDI.cpp)
    else (arm)
-       set (OTHER_SRC read.cpp)
+       set (OTHER_SRC read.cpp readFTDI.cpp)
    endif(RASPBERRYPI)
-   if (ISFTDI)
-        set (OTHER_SRC readFTDI.cpp )
-   endif(ISFTDI)
 endif (UNIX)
 
 if (RASPBERRYPI)
@@ -78,13 +81,9 @@ add_library(receiver
             )
            
 if(RASPBERRYPI)
-    target_link_libraries(receiver serialconnect pigpio)
+    target_link_libraries(receiver serialconnect pigpio ${libftd2})
 else(RASPBERRYPI)
-    if (ISFTDI)
         target_link_libraries(receiver serialconnect ${libftd2})
-    else(ISFTDI)
-        target_link_libraries(receiver serialconnect)
-    endif(ISFTDI)
 endif(RASPBERRYPI)
 
 target_include_directories(receiver PUBLIC

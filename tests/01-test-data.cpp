@@ -19,7 +19,7 @@ int main()
 {
     char portname[] = "com1";
 
-    dataInit(keepRunning, portname, false, true);
+    dataInit(keepRunning, portname, false, true, false);
     dataStart();
     dataClean();
 

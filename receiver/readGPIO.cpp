@@ -34,7 +34,7 @@ int read(char *portname, volatile int *running, bool verbose)
     char *TEXT;
     char text[2048];
 
-    printf("using gpio RPI \n");
+    printf("receiver - using gpio RPI \n");
 
 #ifdef info_read
     int outputnr;
@@ -55,7 +55,7 @@ int read(char *portname, volatile int *running, bool verbose)
         return 1;
     }
 
-    printf("   Serial port (GPIO) = %s\n", portname);
+    printf("   receiver - Serial port (GPIO) = %s\n", portname);
 
     while (*running)
     {

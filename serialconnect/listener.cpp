@@ -6,6 +6,7 @@
 
 using namespace std;
 #include "read.h"
+#include "readftdi.h"
 
 #ifdef _WIN32
 #include <process.h>
@@ -23,7 +24,7 @@ bool checkPort()
     bool check;
     check = false;
 
-    printf("Start listener ..\n");
+    printf("serialconnect - Start listener ..\n");
     printf("%s\n", getInfo().c_str());
 
     return check;
@@ -40,30 +41,51 @@ bool start(volatile int *running, char *portname, bool verbose)
     }
     catch (...)
     {
-        printf("Read exception");
+        printf("serialconnect - Read exception");
     }
     return check;
 }
 
-int startListen(volatile int *running, char *portname, bool verbose)
+bool startftdi(volatile int *running, bool verbose)
 {
-    printf("Serial start ...\n");
+    bool check = false;
+    try
+    {
+        readftdi(running, verbose);
+        check = true;
+    }
+    catch (...)
+    {
+        printf("serialconnect - Read exception");
+    }
+    return check;
+}
+
+int startListen(volatile int *running, char *portname, bool verbose, bool ftdidevice)
+{
+    printf("serialconnect - Serial start ...\n");
     //ToDo Loop
     //for (int i = 0; i < 5; i++)
     while (*running)
     {
         time_t now;
         time(&now);
-        printf("%s running ", ctime(&now));
-        printf("\n");
-        start(running, portname, verbose);
+        printf("%s", ctime(&now));
+        if(ftdidevice){
+            printf("serialconnect - ftdi running\n");
+            startftdi(running,verbose);
+        }else{
+            printf("serialconnect - serial running\n");
+            start(running, portname, verbose);
+        }
+        
 #ifdef _WIN32
         Sleep(5);
         printf(".");
 #else
         if (*running)
         {
-            printf("\nchecking\n");
+            printf("\nserialconnect - checking\n");
             sleep(5);
         }
 #endif

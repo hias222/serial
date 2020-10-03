@@ -61,7 +61,7 @@ int read(char *portname, volatile int *running, bool verbose)
         {
              printf(" -- Verbose mode\n");
         }else {
-            printf("running normal mode\n");
+            printf("receiver running normal mode\n");
         }
 
         hComm = CreateFileA(comports[comport_number],
@@ -145,7 +145,7 @@ int read(char *portname, volatile int *running, bool verbose)
 
         assert(o.hEvent);
         bool connectsuccess = true;
-        printf("  Serial port = %s\n", comports[comport_number]);
+        printf("  receiver - Serial port win = %s\n", comports[comport_number]);
 
         do
         {
@@ -205,7 +205,7 @@ int read(char *portname, volatile int *running, bool verbose)
         } while (*running);
 
         CloseHandle(hComm); //Closing the Serial Port
-        printf("serial closing \n");
+        printf("receiver - serial closing \n");
     }
     catch (...)
     {

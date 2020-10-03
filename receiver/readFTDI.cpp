@@ -35,7 +35,7 @@ static void dumpBuffer(unsigned char *buffer, int elements)
 	}
 }
 
-int read(char *portname, volatile int *running, bool verbose)
+int readftdi(volatile int *running, bool verbose)
 {
 	unsigned char *pcBufRead;
 	DWORD dwBytesRead;
@@ -46,7 +46,7 @@ int read(char *portname, volatile int *running, bool verbose)
 
 	iport = 0;
 
-	printf("using ftdi lib\n");
+	printf("receiver - using ftdi lib\n");
 
 	ftStatus = FT_Open(iport, &ftHandle);
 	if (ftStatus != FT_OK)
@@ -56,7 +56,7 @@ int read(char *portname, volatile int *running, bool verbose)
 		 	use lsmod to check this and rmmod ftdi_sio to remove
 			also rmmod usbserial
 		 */
-		printf("FT_Open(%d) failed\n", iport);
+		printf("receiver - FT_Open(%d) failed\n", iport);
 		return 1;
 	}
 
@@ -76,13 +76,13 @@ int read(char *portname, volatile int *running, bool verbose)
 
 	if (ftStatus != FT_OK)
 	{
-		printf("Failure.  FT_SetDataCharacteristics returned %d.\n",
+		printf("receiver - Failure.  FT_SetDataCharacteristics returned %d.\n",
 			   (int)ftStatus);
 		return 1;
 	}
 	else
 	{
-		printf("set stop bits\n");
+		printf("receiver - set stop bits\n");
 	}
 
 	ftStatus = FT_SetFlowControl(ftHandle, FT_FLOW_NONE , 0x00, 0x00);
@@ -91,13 +91,13 @@ int read(char *portname, volatile int *running, bool verbose)
 
 	if (ftStatus != FT_OK)
 	{
-		printf("Failure.  FT_SetFlowControl FT_FLOW_NONE returned %d.\n",
+		printf("receiver - Failure.  FT_SetFlowControl FT_FLOW_NONE returned %d.\n",
 			   (int)ftStatus);
 		return 1;
 	}
 	else
 	{
-		printf("set FT_SetFlowControl FT_FLOW_NONE\n");
+		printf("receiver - set FT_SetFlowControl FT_FLOW_NONE\n");
 	}
 
 	//FT_SetDtr(ftHandle);

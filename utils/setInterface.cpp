@@ -11,7 +11,7 @@ int set_interface_attribs(int fd, int speed)
     struct termios tty;
 
     if (tcgetattr(fd, &tty) < 0) {
-        printf("Error from tcgetattr: %s\n", strerror(errno));
+        printf("utils - Error from tcgetattr: %s\n", strerror(errno));
         return 1;
     }
 
@@ -35,7 +35,7 @@ int set_interface_attribs(int fd, int speed)
     tty.c_cc[VTIME] = 0;
 
     if (tcsetattr(fd, TCSANOW, &tty) != 0) {
-        printf("Error from tcsetattr: %s\n", strerror(errno));
+        printf("utils - Error from tcsetattr: %s\n", strerror(errno));
         return 1;
     }
     return 0;

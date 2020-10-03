@@ -34,7 +34,7 @@ int loop;
 
 int initReadData()
 {
-    printf("Load timing data\n");
+    printf("serialconnect - Load timing data\n");
 
     int i, o, ncolumns = 2, nrows = 3;
 
