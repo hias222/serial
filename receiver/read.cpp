@@ -98,9 +98,9 @@ int read(char *portname, volatile int *running, bool verbose)
 
     //CRTS_IFLOW
     //no parity
-    //newtio.c_cflag &= ~(PARENB | PARODD);
+    newtio.c_cflag &= ~(PARENB | PARODD);
     // we need even!!!
-    newtio.c_cflag &= (PARENB);
+    //newtio.c_cflag &= (PARENB);
 
     //1 stopbit
     newtio.c_cflag &= ~CSTOPB;
