@@ -95,15 +95,15 @@ int read(char *portname, volatile int *running, bool verbose)
     newtio.c_oflag = 0;
 
 
-    newtio.c_cflag |= CLOCAL | CREAD;
-    newtio.c_cflag &= ~CRTSCTS;
-
+    //newtio.c_cflag |= CLOCAL | CREAD;
+    //newtio.c_cflag &= ~CRTSCTS;
+    //newtio.c_cflag &= CRTSCTS;
     //CRTS_IFLOW
     //no parity
-    newtio.c_cflag &= ~(PARENB | PARODD);
+    //newtio.c_cflag &= ~(PARENB | PARODD);
     // we need even!!!
     
-    //newtio.c_cflag = PARENB;
+    newtio.c_cflag = PARENB;
 
     //1 stopbit
     newtio.c_cflag &= ~CSTOPB;
