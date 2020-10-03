@@ -1,18 +1,26 @@
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
-if (RASPBERRYPI)
-    message(STATUS "search lib libftd2xx.a ")
-    find_library(libftd2
-    Names libftd2xx.1.4.16.dylib
-    HINTS  libarmv8 )
-    message(STATUS  ${libftd2})
-else(RASPBERRYPI)
-    message(STATUS "search lib libftd2xx.a ")
+if (APPLE)
+    message(STATUS "APPLE search lib libftd2xx.a ")
     find_library(libftd2
     Names libftd2xx.1.4.16.dylib
     HINTS  lib )
     message(STATUS  ${libftd2})
-endif (RASPBERRYPI)
+elseif ( ${ARCHITECTURE} STREQUAL "x86_64" )
+    ## linux
+    message(STATUS "x86_64 search lib libftd2xx.a ")
+    find_library(libftd2
+    Names libftd2xx.1.4.16.dylib
+    HINTS  lib )
+    message(STATUS  ${libftd2})
+else ()
+    message(STATUS "others search lib libftd2xx.a ")
+    find_library(libftd2
+    Names libftd2xx.1.4.16.dylib
+    HINTS  libarmv8 )
+    message(STATUS  ${libftd2})
+endif()
+
 
 if (WIN32)
     set(RASPBERRYPI 0)

@@ -2,6 +2,15 @@ cmake_minimum_required(VERSION 3.0.0)
 string(TIMESTAMP TODAY "%Y%m%d")
 project(serial VERSION 0.1.${TODAY})
 
+EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE )
+message( STATUS "Architecture: ${ARCHITECTURE}" )
+
+if( ${ARCHITECTURE} STREQUAL "x86_64" )
+message( STATUS "x86_64: ${ARCHITECTURE}" )
+else()
+message( STATUS "nothing: ${ARCHITECTURE}" )
+endif()
+
 execute_process(COMMAND bash ${CMAKE_HOME_DIRECTORY}/checkapi RESULT_VARIABLE RASPBERRYPI)
 execute_process(COMMAND bash ${CMAKE_HOME_DIRECTORY}/checkftdi RESULT_VARIABLE ISFTDI)
 
