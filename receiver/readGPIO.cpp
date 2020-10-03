@@ -37,7 +37,7 @@ int read(char *portname, volatile int *running, bool verbose)
     printf("receiver - using gpio RPI \n");
     if (verbose)
     {
-        printf("receiver - debug mode (-d) \n");
+        printf("receiver - verbose mode  \n");
     }
 
 #ifdef info_read
