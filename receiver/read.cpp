@@ -103,7 +103,7 @@ int read(char *portname, volatile int *running, bool verbose)
     //newtio.c_cflag &= ~(PARENB | PARODD);
     // we need even!!!
 
-    //newtio.c_cflag = PARENB;
+    newtio.c_cflag = PARENB;
 
     //1 stopbit
     newtio.c_cflag &= ~CSTOPB;
