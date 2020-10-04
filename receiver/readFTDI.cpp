@@ -48,6 +48,17 @@ int readftdi(volatile int *running, bool verbose)
 
 	printf("receiver - using ftdi lib\n");
 
+	uid_t uid = getuid(), euid = geteuid();
+	if (uid < 0 || uid != euid)
+	{
+		printf("receiver - root privs ok\n");
+	}
+	else
+	{
+		printf("receiver - for usb access we need root privs\n");
+		return 1;
+	}
+
 	ftStatus = FT_Open(iport, &ftHandle);
 	if (ftStatus != FT_OK)
 	{
@@ -85,7 +96,7 @@ int readftdi(volatile int *running, bool verbose)
 		printf("receiver - set stop bits\n");
 	}
 
-	ftStatus = FT_SetFlowControl(ftHandle, FT_FLOW_NONE , 0x00, 0x00);
+	ftStatus = FT_SetFlowControl(ftHandle, FT_FLOW_NONE, 0x00, 0x00);
 
 	//FT_FLOW_NONE Must be one of FT_FLOW_NONE, FT_FLOW_RTS_CTS, FT_FLOW_DTR_DSRor FT_FLOW_XON_XOFF.uXonCharacter used to signal Xon.  Only u
 
