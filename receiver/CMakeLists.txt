@@ -22,9 +22,11 @@ elseif ( ${ARCHITECTURE} STREQUAL "aarch64" )
     message(STATUS  ${libftd2})
 else ()
     message(STATUS "others search lib libftd2xx.a ")
+    set (FTDI_LIBRARIES libwin\\ftd2xx64.dll)
+    # set (LIBRARIES ${FTDI_LIBRARIES})
     find_library(libftd2
-    Names libftd2xx.so.1.4.8
-    HINTS  liblinux64 )
+    Names ftd2xx64.dll
+    HINTS  libwin )
     message(STATUS  ${libftd2})
 endif()
 
