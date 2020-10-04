@@ -134,18 +134,18 @@ int readftdi(volatile int *running, bool verbose)
 	FT_SetTimeouts(ftHandle, 1, 0); // infinite timeouts
 	//FT_SetBitMode(ftHandle, 0xFF, 0x01);
 
+	int checkloop = 0;
 	while (*running)
 	{
+		checkloop++;
 		ftStatus = FT_Read(ftHandle, pcBufRead, BUF_SIZE, &dwBytesRead);
 
-		if (ftStatus != FT_OK)
+		if (checkloop > 100)
 		{
-			printf("Failure.  FT_Read returned %d.\n", (int)ftStatus);
-			return 1;
+			checkloop = 0;
+			ftStatus = FT_GetDeviceInfo(ftHandle, &ftDevice, &deviceID, SerialNumber, Description, NULL);
 		}
 
-		ftStatus = FT_GetDeviceInfo(ftHandle,&ftDevice,&deviceID,SerialNumber,Description,NULL);
-		
 		if (ftStatus != FT_OK)
 		{
 			printf("Failure.  FT_Read returned %d.\n", (int)ftStatus);
