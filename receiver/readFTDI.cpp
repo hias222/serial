@@ -54,6 +54,8 @@ int readftdi(volatile int *running, bool verbose)
 	if (uid < 1 || uid != euid)
 	{
 		printf("receiver - root privs ok\n");
+		printf("receiver - check sudo rmmod ftdi_sio \n");
+		printf("receiver - add ftdi_sio to /etc/modprobe.d/blacklist.conf \n");
 	}
 	else
 	{
