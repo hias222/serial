@@ -126,7 +126,7 @@ int readftdi(volatile int *running, bool verbose)
 	FT_SetBreakOff(ftHandle);
 
 	// FT_SetFlowControl(ftHandle, FT_FLOW_RTS_CTS, 0, 0);
-	FT_SetTimeouts(ftHandle, 1, 0); // infinite timeouts
+	FT_SetTimeouts(ftHandle, 0, 0); // infinite timeouts
 	//FT_SetBitMode(ftHandle, 0xFF, 0x01);
 
 	while (*running)
