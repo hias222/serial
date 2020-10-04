@@ -44,7 +44,11 @@ int readftdi(volatile int *running, bool verbose)
 	FILE *fh;
 	FT_HANDLE ftHandle;
 	FT_STATUS ftStatus;
+	FT_DEVICE ftDevice;
+	DWORD deviceID;
 	DWORD dwModemStatus = 0;
+	char SerialNumber[16];
+	char Description[64];
 	int iport;
 
 	iport = 0;
@@ -140,7 +144,8 @@ int readftdi(volatile int *running, bool verbose)
 			return 1;
 		}
 
-		ftStatus = FT_GetModemStatus(ftHandle, &dwModemStatus);
+		ftStatus = FT_GetDeviceInfo(ftHandle,&ftDevice,&deviceID,SerialNumber,Description,NULL);
+		
 		if (ftStatus != FT_OK)
 		{
 			printf("Failure.  FT_Read returned %d.\n", (int)ftStatus);
