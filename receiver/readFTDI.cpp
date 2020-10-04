@@ -51,13 +51,13 @@ int readftdi(volatile int *running, bool verbose)
 	printf("receiver - using ftdi lib\n");
 
 	uid_t uid = getuid(), euid = geteuid();
-	if (uid < 0 || uid != euid)
+	if (uid < 1 || uid != euid)
 	{
 		printf("receiver - root privs ok\n");
 	}
 	else
 	{
-		printf("receiver - %d - for usb access we need root privs\n", uid);
+		printf("receiver - %d %d - for usb access we need root privs\n", uid, euid);
 
 		keepRunning = 0;
 		running = &keepRunning;
