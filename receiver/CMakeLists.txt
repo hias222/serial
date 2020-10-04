@@ -15,7 +15,7 @@ elseif ( ${ARCHITECTURE} STREQUAL "x86_64" )
     message(STATUS  ${libftd2})
 elseif ( ${ARCHITECTURE} STREQUAL "aarch64" )
     ## linux
-    message(STATUS "others search lib armv8 libftd2xx.so.1.4.8 ")
+    message(STATUS "aarch64 search lib armv8 libftd2xx.so.1.4.8 ")
     find_library(libftd2
     Names libftd2xx.so.1.4.8
     HINTS  libarmv8 )
@@ -75,7 +75,7 @@ if(RASPBERRYPI)
 endif(RASPBERRYPI)
 
 if (WIN32)
-    set (OTHER_SRC readwin.cpp )
+    set (OTHER_SRC readwin.cpp  readFTDI.cpp)
 endif (WIN32)
 
 if (UNIX)
@@ -93,7 +93,9 @@ add_library(receiver
 if(RASPBERRYPI)
     target_link_libraries(receiver serialconnect pigpio ${libftd2})
 else(RASPBERRYPI)
-    target_link_libraries(receiver serialconnect ${libftd2})
+    if (!WIN32)
+        target_link_libraries(receiver serialconnect ${libftd2})
+    endif (!WIN32)
 endif(RASPBERRYPI)
 
 target_include_directories(receiver PUBLIC

@@ -3,13 +3,23 @@ string(TIMESTAMP TODAY "%Y%m%d")
 project(serial VERSION 0.1.${TODAY})
 
 EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE )
+
+if(WIN32)
+    set(ARCHITECTURE WINDOWS)
+endif(WIN32)
+
 message( STATUS "Architecture: ${ARCHITECTURE}" )
 
+if(WIN32)
+    set(ARCHITECTURE WINDOWS)
+endif(WIN32)
+
 if( ${ARCHITECTURE} STREQUAL "x86_64" )
-message( STATUS "x86_64: ${ARCHITECTURE}" )
+    message( STATUS "x86_64: ${ARCHITECTURE}" )
 else()
-message( STATUS "nothing: ${ARCHITECTURE}" )
+    message( STATUS "nothing: ${ARCHITECTURE}" )
 endif()
+
 
 execute_process(COMMAND bash ${CMAKE_HOME_DIRECTORY}/checkapi RESULT_VARIABLE RASPBERRYPI)
 execute_process(COMMAND bash ${CMAKE_HOME_DIRECTORY}/checkftdi RESULT_VARIABLE ISFTDI)

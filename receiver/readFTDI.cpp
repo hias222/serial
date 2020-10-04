@@ -11,7 +11,14 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#ifdef _WIN32
+#include <process.h>
+#include <Windows.h>
+#include <iostream>
+#include <time.h>
+#else
 #include <unistd.h>
+#endif
 #include "ftd2xx.h"
 
 #include "analyseData.h"
@@ -55,6 +62,9 @@ int readftdi(volatile int *running, bool verbose)
 
 	printf("receiver - using ftdi lib\n");
 
+#ifdef _WIN32	
+	printf("receiver - windows ok\n");
+#elif
 	uid_t uid = getuid(), euid = geteuid();
 	if (uid < 1 || uid != euid)
 	{
@@ -71,6 +81,7 @@ int readftdi(volatile int *running, bool verbose)
 
 		return 1;
 	}
+#endif
 
 	ftStatus = FT_Open(iport, &ftHandle);
 	if (ftStatus != FT_OK)
