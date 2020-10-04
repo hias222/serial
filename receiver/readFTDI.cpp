@@ -21,6 +21,8 @@
 
 #define MAX_DEVICES 5
 
+static volatile int keepRunning;
+
 static void dumpBuffer(unsigned char *buffer, int elements)
 {
 	int j;
@@ -55,7 +57,11 @@ int readftdi(volatile int *running, bool verbose)
 	}
 	else
 	{
-		printf("receiver - for usb access we need root privs\n");
+		printf("receiver - %d - for usb access we need root privs\n", uid);
+
+		keepRunning = 0;
+		running = &keepRunning;
+
 		return 1;
 	}
 
