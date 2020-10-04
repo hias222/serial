@@ -20,14 +20,10 @@ elseif ( ${ARCHITECTURE} STREQUAL "aarch64" )
     Names libftd2xx.so.1.4.8
     HINTS  libarmv8 )
     message(STATUS  ${libftd2})
-else ()
-    message(STATUS "others search lib libftd2xx.a ")
-    set (FTDI_LIBRARIES libwin\\ftd2xx64.dll)
-    # set (LIBRARIES ${FTDI_LIBRARIES})
-    find_library(libftd2
-    Names ftd2xx64.dll
-    HINTS  libwin )
-    message(STATUS  ${libftd2})
+elseif (WIN32)
+    message(STATUS "win32 search lib ftd2xx.lib")
+    set (FTDI_LIBRARIES C:\\Users\\User\\git\\serial\\receiver\\libwin32\\ftd2xx.lib)
+    set (LIBRARIES ${FTDI_LIBRARIES})
 endif()
 
 
@@ -97,6 +93,8 @@ if(RASPBERRYPI)
 else(RASPBERRYPI)
     if (!WIN32)
         target_link_libraries(receiver serialconnect ${libftd2})
+    else (!WIN32)
+        target_link_libraries(receiver serialconnect ${LIBRARIES})
     endif (!WIN32)
 endif(RASPBERRYPI)
 
