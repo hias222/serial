@@ -20,6 +20,10 @@ elseif ( ${ARCHITECTURE} STREQUAL "aarch64" )
     Names libftd2xx.so.1.4.8
     HINTS  libarmv8 )
     message(STATUS  ${libftd2})
+elseif (WIN32)
+    message(STATUS "win32 search lib ftd2xx.lib")
+    set (FTDI_LIBRARIES C:\\Users\\User\\git\\serial\\receiver\\libwin32\\ftd2xx.lib)
+    set (LIBRARIES ${FTDI_LIBRARIES})
 else ()
     message(STATUS "others search lib libftd2xx.a ")
     find_library(libftd2
