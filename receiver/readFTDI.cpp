@@ -64,7 +64,7 @@ int readftdi(volatile int *running, bool verbose)
 
 #ifdef _WIN32	
 	printf("receiver - windows ok\n");
-#elif
+#else
 	uid_t uid = getuid(), euid = geteuid();
 	if (uid < 1 || uid != euid)
 	{
