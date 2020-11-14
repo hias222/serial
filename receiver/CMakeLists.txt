@@ -12,14 +12,14 @@ elseif ( ${ARCHITECTURE} STREQUAL "x86_64" )
     find_library(libftd2
     Names libftd2xx.so.1.4.8
     HINTS  liblinux64 )
-    message(STATUS  ${libftd2})
+    message(STATUS ${libftd2})
 elseif ( ${ARCHITECTURE} STREQUAL "aarch64" )
     ## linux
     message(STATUS "aarch64 search lib armv8 libftd2xx.so.1.4.8 ")
     find_library(libftd2
     Names libftd2xx.so.1.4.8
     HINTS  libarmv8 )
-    message(STATUS  ${libftd2})
+    message(STATUS ${libftd2})
 elseif (WIN32)
     message(STATUS "win32 search lib ftd2xx.lib")
     set (FTDI_LIBRARIES C:\\Users\\User\\git\\serial\\receiver\\libwin32\\ftd2xx.lib)
@@ -70,6 +70,8 @@ if(RASPBERRYPI)
         pigpio_INCLUDE_DIR pigpio_LIBRARY pigpiod_if_LIBRARY pigpiod_if2_LIBRARY)
 
     set (OTHER_SRC readGPIO.cpp readFTDI.cpp)
+
+    message(STATUS "configured RASPBERRY")
 endif(RASPBERRYPI)
 
 if (WIN32)
@@ -83,6 +85,8 @@ if (UNIX)
        set (OTHER_SRC read.cpp readFTDI.cpp)
    endif(RASPBERRYPI)
 endif (UNIX)
+
+message(STATUS "lib dirs " ${OTHER_SRC} )
 
 add_library(receiver
                 ${OTHER_SRC}
