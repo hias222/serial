@@ -97,12 +97,12 @@ add_library(receiver
 if(RASPBERRYPI)
     target_link_libraries(receiver serialconnect pigpio ${libftd2})
 else(RASPBERRYPI)
-    if (!WIN32)
+    if (UNIX)
         target_link_libraries(receiver serialconnect ${libftd2})
         message(STATUS "no rpi libs " ${OTHER_SRC} )
-    else (!WIN32)
+    else (UNIX)
         target_link_libraries(receiver serialconnect ${LIBRARIES})
-    endif (!WIN32)
+    endif (UNIX)
 endif(RASPBERRYPI)
 
 target_include_directories(receiver PUBLIC
