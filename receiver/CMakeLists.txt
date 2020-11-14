@@ -79,7 +79,7 @@ if(RASPBERRYPI)
 endif(RASPBERRYPI)
 
 if (WIN32)
-    set (OTHER_SRC readwin.cpp )
+    set (OTHER_SRC readwin.cpp  readFTDI.cpp)
 endif (WIN32)
 
 if (UNIX)
