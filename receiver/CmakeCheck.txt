@@ -12,18 +12,14 @@ elseif ( ${ARCHITECTURE} STREQUAL "x86_64" )
     find_library(libftd2
     Names libftd2xx.so.1.4.8
     HINTS  liblinux64 )
-    message(STATUS ${libftd2})
+    message(STATUS  ${libftd2})
 elseif ( ${ARCHITECTURE} STREQUAL "aarch64" )
     ## linux
-    message(STATUS "aarch64 search lib armv8 libftd2xx.so.1.4.8 ")
+    message(STATUS "others search lib armv8 libftd2xx.so.1.4.8 ")
     find_library(libftd2
     Names libftd2xx.so.1.4.8
     HINTS  libarmv8 )
-    message(STATUS ${libftd2})
-elseif (WIN32)
-    message(STATUS "win32 search lib ftd2xx.lib")
-    set (FTDI_LIBRARIES C:\\Users\\User\\git\\serial\\receiver\\libwin32\\ftd2xx.lib)
-    set (LIBRARIES ${FTDI_LIBRARIES})
+    message(STATUS  ${libftd2})
 else ()
     message(STATUS "others search lib libftd2xx.a ")
     find_library(libftd2
@@ -76,12 +72,10 @@ if(RASPBERRYPI)
         pigpio_INCLUDE_DIR pigpio_LIBRARY pigpiod_if_LIBRARY pigpiod_if2_LIBRARY)
 
     set (OTHER_SRC readGPIO.cpp readFTDI.cpp)
-
-    message(STATUS "configured RASPBERRY")
 endif(RASPBERRYPI)
 
 if (WIN32)
-    set (OTHER_SRC readwin.cpp  readFTDI.cpp)
+    set (OTHER_SRC readwin.cpp )
 endif (WIN32)
 
 if (UNIX)
@@ -92,8 +86,6 @@ if (UNIX)
    endif(RASPBERRYPI)
 endif (UNIX)
 
-message(STATUS "lib dirs " ${OTHER_SRC} )
-
 add_library(receiver
                 ${OTHER_SRC}
             )
@@ -101,12 +93,7 @@ add_library(receiver
 if(RASPBERRYPI)
     target_link_libraries(receiver serialconnect pigpio ${libftd2})
 else(RASPBERRYPI)
-    if (!WIN32)
-        target_link_libraries(receiver serialconnect ${libftd2})
-        message(STATUS "no rpi libs " ${OTHER_SRC} )
-    else (!WIN32)
-        target_link_libraries(receiver serialconnect ${LIBRARIES})
-    endif (!WIN32)
+    target_link_libraries(receiver serialconnect ${libftd2})
 endif(RASPBERRYPI)
 
 target_include_directories(receiver PUBLIC
