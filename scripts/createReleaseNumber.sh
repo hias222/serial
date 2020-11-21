@@ -47,7 +47,7 @@ gh release upload $versionLabel /tmp/windows_binaries_$versionLabel.zip#windows
 rm /tmp/windows_binaries_$versionLabel.zip
 
 zip /tmp/mac_executable_$versionLabel.zip build/serial 
-gh release upload $OSTYPE_$versionLabel /tmp/mac_executable_$versionLabel.zip#$OSTYPE_$versionLabel.zip
+gh release upload $OSTYPE_$versionLabel /tmp/mac_executable_$versionLabel.zip#mac_$versionLabel.zip
 rm /tmp/mac_executable_$versionLabel.zip
 
 exit 0
