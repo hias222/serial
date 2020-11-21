@@ -43,7 +43,7 @@ gh release create $versionLabel -t $versionLabel -F changelog.md
 # upload 
 # gh release upload <tag> <files>... [flags]
 zip /tmp/windows.zip binaries/*
-gh release upload $versionLabel /tmp/windows.zip#windows_$versionLabel
+gh release upload $versionLabel /tmp/windows.zip#windows_$versionLabel.zip
 rm /tmp/windows.zip
 
 zip /tmp/mac.zip build/serial 
