@@ -32,6 +32,33 @@ git merge --no-ff $releaseBranch
  
 # create tag for new version from -master
 git tag $versionLabel
+git push --tags
  
 # remove release branch
 git branch -d $releaseBranch
+
+# go on with gh
+gh release create $versionLabel -t $versionLabel -F changelog.md
+
+# upload 
+# gh release upload <tag> <files>... [flags]
+zip /tmp/windows_binaries_$versionLabel.zip binaries/*
+gh release upload $versionLabel /tmp/windows_binaries_$versionLabel.zip
+rm /tmp/windows_binaries_$versionLabel.zip
+
+zip /tmp/$OSTYPE_executable_$versionLabel.zip build/serial 
+gh release upload $versionLabel '/tmp/$OSTYPE_executable_$versionLabel#mac'
+rm /tmp/$OSTYPE_executable_$versionLabel.zip
+
+exit 0
+# test
+gh release delete v0.1.0 -y
+gh release create v0.1.0 -t v0.1.0 -F changelog.md
+
+zip /tmp/windows_binaries_v0.1.0.zip binaries/*
+gh release upload v0.1.0 '/tmp/windows_binaries_v0.1.0.zip#windows'
+rm /tmp/windows_binaries_v0.1.0.zip
+
+zip /tmp/darwin19.0_executable_v0.1.0.zip build/serial 
+gh release upload v0.1.0 '/tmp/darwin19.0_executable_v0.1.0.zip#darwin19.0'
+rm /tmp/darwin19.0_executable_v0.1.0.zip   
