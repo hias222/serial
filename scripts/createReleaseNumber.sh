@@ -43,11 +43,11 @@ gh release create $versionLabel -t $versionLabel -F changelog.md
 # upload 
 # gh release upload <tag> <files>... [flags]
 zip /tmp/windows_binaries_$versionLabel.zip binaries/*
-gh release upload $versionLabel /tmp/windows_binaries_$versionLabel.zip
+gh release upload $versionLabel /tmp/windows_binaries_$versionLabel.zip#windows
 rm /tmp/windows_binaries_$versionLabel.zip
 
 zip /tmp/$OSTYPE_executable_$versionLabel.zip build/serial 
-gh release upload $versionLabel '/tmp/$OSTYPE_executable_$versionLabel#mac'
+gh release upload $versionLabel /tmp/$OSTYPE_executable_$versionLabel#mac
 rm /tmp/$OSTYPE_executable_$versionLabel.zip
 
 exit 0
