@@ -3,6 +3,12 @@ string(TIMESTAMP TODAY "%Y%m%d")
 project(serial VERSION 0.1.${TODAY})
 
 EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE )
+EXECUTE_PROCESS(COMMAND bash ${CMAKE_HOME_DIRECTORY}/checkapi RESULT_VARIABLE RASPBERRYPI)
+EXECUTE_PROCESS(COMMAND bash ${CMAKE_HOME_DIRECTORY}/checkftdi RESULT_VARIABLE ISFTDI)
+
+message(STATUS "ISFTDI ${ISFTDI} RASPBERRYPI ${RASPBERRYPI} ARCHITECTURE ${ARCHITECTURE}")
+
+set(SENDMODE false)
 
 if(WIN32)
     set(ARCHITECTURE WINDOWS)
@@ -10,25 +16,15 @@ endif(WIN32)
 
 message( STATUS "Architecture: ${ARCHITECTURE}" )
 
-if(WIN32)
-    set(ARCHITECTURE WINDOWS)
-endif(WIN32)
-
 if( ${ARCHITECTURE} STREQUAL "x86_64" )
     message( STATUS "x86_64: ${ARCHITECTURE}" )
 else()
     message( STATUS "nothing: ${ARCHITECTURE}" )
 endif()
 
-
-execute_process(COMMAND bash ${CMAKE_HOME_DIRECTORY}/checkapi RESULT_VARIABLE RASPBERRYPI)
-execute_process(COMMAND bash ${CMAKE_HOME_DIRECTORY}/checkftdi RESULT_VARIABLE ISFTDI)
-
 if (ISFTDI)
     message(STATUS "ISFTDI")
 endif (ISFTDI)
-
-set(SENDMODE false)
 
 if (RASPBERRYPI)
     message(STATUS "RASPBERRY")
@@ -117,6 +113,48 @@ if(WIN32)
 
     file(COPY ${USER_HOME_DIR}/vcpkg/installed/x86-windows/bin/pthreadVC3.dll
     DESTINATION ${PROJECT_BINARY_DIR})
+endif()
+
+
+# apple und Linux
+if(APPLE)
+    message(STATUS "files for APPLE to " ${PROJECT_BINARY_DIR})
+    set(RELEASE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/binaries/mac")
+
+    file(COPY ${PROJECT_BINARY_DIR}/serial
+    DESTINATION ${RELEASE_OUTPUT_PATH})
+
+    file(COPY ${PROJECT_SOURCE_DIR}/receiver/lib/libftd2xx.1.4.16.dylib
+    DESTINATION ${RELEASE_OUTPUT_PATH})
+
+    message(STATUS "files in" ${EXECUTABLE_OUTPUT_PATH})
+elseif(UNIX)
+    if ( ${ARCHITECTURE} STREQUAL "x86_64" )
+        message(STATUS "files for Linux to " ${PROJECT_BINARY_DIR})
+        set(RELEASE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/binaries/linux64")
+
+        file(COPY ${PROJECT_BINARY_DIR}/serial
+        DESTINATION ${RELEASE_OUTPUT_PATH})
+
+        file(COPY ${PROJECT_SOURCE_DIR}/receiver/liblinux64/libftd2xx.so.1.4.8
+        DESTINATION ${RELEASE_OUTPUT_PATH})
+
+        message(STATUS "files in" ${EXECUTABLE_OUTPUT_PATH})
+    endif()
+endif()
+
+# aarch8 arm 8
+if(${ARCHITECTURE} STREQUAL "aarch64")
+    message(STATUS "files for aarch64 to " ${PROJECT_BINARY_DIR})
+    set(RELEASE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/binaries/aarch64")
+
+    file(COPY ${PROJECT_BINARY_DIR}/serial
+    DESTINATION ${RELEASE_OUTPUT_PATH})
+
+    file(COPY ${PROJECT_SOURCE_DIR}/receiver/libarmv8/libftd2xx.so.1.4.8
+    DESTINATION ${RELEASE_OUTPUT_PATH})
+
+    message(STATUS "files in" ${EXECUTABLE_OUTPUT_PATH})
 endif()
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
