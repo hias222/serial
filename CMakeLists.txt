@@ -104,8 +104,8 @@ if(APPLE)
     message(STATUS "files for APPLE to " ${PROJECT_BINARY_DIR})
     set(RELEASE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/binaries/mac")
 
-    file(COPY ${PROJECT_BINARY_DIR}/serial
-    DESTINATION ${RELEASE_OUTPUT_PATH})
+    #file(COPY ${PROJECT_BINARY_DIR}/serial
+    #DESTINATION ${RELEASE_OUTPUT_PATH})
 
     file(COPY ${PROJECT_SOURCE_DIR}/receiver/lib/libftd2xx.1.4.16.dylib
     DESTINATION ${RELEASE_OUTPUT_PATH})
@@ -122,8 +122,8 @@ elseif(UNIX)
         message(STATUS "files for Linux to " ${PROJECT_BINARY_DIR})
         set(RELEASE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/binaries/linux64")
 
-        file(COPY ${PROJECT_BINARY_DIR}/serial
-        DESTINATION ${RELEASE_OUTPUT_PATH})
+        #file(COPY ${PROJECT_BINARY_DIR}/serial
+        #DESTINATION ${RELEASE_OUTPUT_PATH})
 
         file(COPY ${PROJECT_SOURCE_DIR}/receiver/liblinux64/libftd2xx.so.1.4.8
         DESTINATION ${RELEASE_OUTPUT_PATH})
@@ -143,8 +143,8 @@ if(${ARCHITECTURE} STREQUAL "aarch64")
     message(STATUS "files for aarch64 to " ${PROJECT_BINARY_DIR})
     set(RELEASE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/binaries/aarch64")
 
-    file(COPY ${PROJECT_BINARY_DIR}/serial
-    DESTINATION ${RELEASE_OUTPUT_PATH})
+    #file(COPY ${PROJECT_BINARY_DIR}/serial
+    #DESTINATION ${RELEASE_OUTPUT_PATH})
 
     file(COPY ${PROJECT_SOURCE_DIR}/receiver/libarmv8/libftd2xx.so.1.4.8
     DESTINATION ${RELEASE_OUTPUT_PATH})
