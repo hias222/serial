@@ -116,6 +116,7 @@ if(WIN32)
 endif()
 
 
+### copy for release
 # apple und Linux
 if(APPLE)
     message(STATUS "files for APPLE to " ${PROJECT_BINARY_DIR})
@@ -127,6 +128,9 @@ if(APPLE)
     file(COPY ${PROJECT_SOURCE_DIR}/receiver/lib/libftd2xx.1.4.16.dylib
     DESTINATION ${RELEASE_OUTPUT_PATH})
 
+    file(COPY ${PROJECT_SOURCE_DIR}/receiver/liblinux64/Readme.md
+        DESTINATION ${RELEASE_OUTPUT_PATH})
+
     message(STATUS "files in" ${EXECUTABLE_OUTPUT_PATH})
 elseif(UNIX)
     if ( ${ARCHITECTURE} STREQUAL "x86_64" )
@@ -137,6 +141,9 @@ elseif(UNIX)
         DESTINATION ${RELEASE_OUTPUT_PATH})
 
         file(COPY ${PROJECT_SOURCE_DIR}/receiver/liblinux64/libftd2xx.so.1.4.8
+        DESTINATION ${RELEASE_OUTPUT_PATH})
+
+        file(COPY ${PROJECT_SOURCE_DIR}/receiver/liblinux64/Readme.md
         DESTINATION ${RELEASE_OUTPUT_PATH})
 
         message(STATUS "files in" ${EXECUTABLE_OUTPUT_PATH})
@@ -154,7 +161,31 @@ if(${ARCHITECTURE} STREQUAL "aarch64")
     file(COPY ${PROJECT_SOURCE_DIR}/receiver/libarmv8/libftd2xx.so.1.4.8
     DESTINATION ${RELEASE_OUTPUT_PATH})
 
+    file(COPY ${PROJECT_SOURCE_DIR}/receiver/liblinux64/Readme.md
+        DESTINATION ${RELEASE_OUTPUT_PATH})
+
     message(STATUS "files in" ${EXECUTABLE_OUTPUT_PATH})
+endif()
+
+if(WIN32)
+    message(STATUS "files for aarch64 to " ${PROJECT_BINARY_DIR})
+    set(RELEASE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/binaries/win")
+
+    file(COPY ${PROJECT_BINARY_DIR}/mosquitto-1.6.9/lib/mosquitto.dll
+                           DESTINATION ${RELEASE_OUTPUT_PATH})
+
+    file(COPY ${USER_HOME_DIR}/vcpkg/installed/x86-windows/bin/libssl-1_1.dll
+                            DESTINATION ${RELEASE_OUTPUT_PATH})
+
+    file(COPY ${USER_HOME_DIR}/vcpkg/installed/x86-windows/bin/libcrypto-1_1.dll
+    DESTINATION ${RELEASE_OUTPUT_PATH})
+
+    file(COPY ${USER_HOME_DIR}/vcpkg/installed/x86-windows/bin/pthreadVC3.dll
+    DESTINATION ${RELEASE_OUTPUT_PATH})
+
+    file(COPY ${PROJECT_BINARY_DIR}/serial.exe
+    DESTINATION ${RELEASE_OUTPUT_PATH})
+
 endif()
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
