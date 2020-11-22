@@ -98,24 +98,6 @@ target_include_directories(serial PUBLIC
                           "${PROJECT_SOURCE_DIR}/mosquitto-1.6.9/lib"
                           )
 
-if(WIN32)
-    set(LIBRARY_OUTPUT_PATH "${PROJECT_BINARY_DIR}")
-    set(EXECUTABLE_OUTPUT_PATH "${PROJECT_BINARY_DIR}")
-
- #   file(COPY ${PROJECT_BINARY_DIR}/mosquitto-1.6.9/lib/mosquitto.dll
-  #                          DESTINATION ${PROJECT_BINARY_DIR})
-
-    file(COPY ${USER_HOME_DIR}/vcpkg/installed/x86-windows/bin/libssl-1_1.dll
-                            DESTINATION ${PROJECT_BINARY_DIR})
-
-    file(COPY ${USER_HOME_DIR}/vcpkg/installed/x86-windows/bin/libcrypto-1_1.dll
-    DESTINATION ${PROJECT_BINARY_DIR})
-
-    file(COPY ${USER_HOME_DIR}/vcpkg/installed/x86-windows/bin/pthreadVC3.dll
-    DESTINATION ${PROJECT_BINARY_DIR})
-endif()
-
-
 ### copy for release
 # apple und Linux
 if(APPLE)
@@ -132,6 +114,9 @@ if(APPLE)
         DESTINATION ${RELEASE_OUTPUT_PATH})
 
     message(STATUS "files in" ${EXECUTABLE_OUTPUT_PATH})
+
+    set(EXECUTABLE_OUTPUT_PATH "${RELEASE_OUTPUT_PATH}")
+
 elseif(UNIX)
     if ( ${ARCHITECTURE} STREQUAL "x86_64" )
         message(STATUS "files for Linux to " ${PROJECT_BINARY_DIR})
@@ -147,6 +132,9 @@ elseif(UNIX)
         DESTINATION ${RELEASE_OUTPUT_PATH})
 
         message(STATUS "files in" ${EXECUTABLE_OUTPUT_PATH})
+
+        set(EXECUTABLE_OUTPUT_PATH "${RELEASE_OUTPUT_PATH}")
+
     endif()
 endif()
 
@@ -165,9 +153,15 @@ if(${ARCHITECTURE} STREQUAL "aarch64")
         DESTINATION ${RELEASE_OUTPUT_PATH})
 
     message(STATUS "files in" ${EXECUTABLE_OUTPUT_PATH})
+
+    set(EXECUTABLE_OUTPUT_PATH "${RELEASE_OUTPUT_PATH}")
+
 endif()
 
 if(WIN32)
+    #set(LIBRARY_OUTPUT_PATH "${PROJECT_BINARY_DIR}")
+    #set(EXECUTABLE_OUTPUT_PATH "${PROJECT_BINARY_DIR}")
+
     message(STATUS "files for aarch64 to " ${PROJECT_BINARY_DIR})
     set(RELEASE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/binaries/win")
 
@@ -183,9 +177,11 @@ if(WIN32)
     file(COPY ${USER_HOME_DIR}/vcpkg/installed/x86-windows/bin/pthreadVC3.dll
     DESTINATION ${RELEASE_OUTPUT_PATH})
 
-    file(COPY ${PROJECT_BINARY_DIR}/serial.exe
-    DESTINATION ${RELEASE_OUTPUT_PATH})
+    #file(COPY ${PROJECT_BINARY_DIR}/serial.exe
+    #DESTINATION ${RELEASE_OUTPUT_PATH})
 
+    set(EXECUTABLE_OUTPUT_PATH "${RELEASE_OUTPUT_PATH}")
+    set(LIBRARY_OUTPUT_PATH "${RELEASE_OUTPUT_PATH}")
 endif()
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
