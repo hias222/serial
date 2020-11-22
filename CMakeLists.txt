@@ -149,6 +149,9 @@ if(${ARCHITECTURE} STREQUAL "aarch64")
     file(COPY ${PROJECT_SOURCE_DIR}/receiver/libarmv8/libftd2xx.so.1.4.8
     DESTINATION ${RELEASE_OUTPUT_PATH})
 
+    file(COPY ${PROJECT_SOURCE_DIR}/receiver/libarmv8/libftd2xx.a
+    DESTINATION ${RELEASE_OUTPUT_PATH})
+
     file(COPY ${PROJECT_SOURCE_DIR}/receiver/liblinux64/Readme.md
         DESTINATION ${RELEASE_OUTPUT_PATH})
 
