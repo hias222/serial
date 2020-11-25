@@ -184,6 +184,7 @@ void getHeader(uint8_t data[])
     {
         array_match = false;
         mqtt_send(mydata);
+        printf("Header: %s\n", mydata);
 
         //TODO clean Lane Data
         //nein es werden immer alle Zeiten bis zum erbrechen geschickt ...

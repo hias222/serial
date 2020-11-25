@@ -33,7 +33,7 @@ void usage(char *prog)
     printf("                   RPI Ubuntu /dev/ttyAMA0 RPI raspian /dev/serial0  Linux /dev/ttyUSB0\n");
     printf("  -f               using ftdi library no port needed \n");
     printf("  -r               only behind RPI \n");
-    printf("  -x               raw mode and send \n");
+    printf("  -x               raw mode and send (default) \n");
     printf("  -z               only raw mode \n");
     printf("  -v               verbose output for serial \n");
     printf("  -d portname      destination port name like %s \n", DESTINATION_PORTNAME);
