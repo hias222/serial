@@ -46,11 +46,11 @@ zip /tmp/windows.zip binaries/*
 gh release upload $versionLabel /tmp/windows.zip#windows_$versionLabel.zip
 rm /tmp/windows.zip
 
-zip /tmp/mac.zip binaries/mac
+zip /tmp/mac.zip binaries/mac/*
 gh release upload $versionLabel /tmp/mac.zip#mac_$versionLabel.zip
 rm /tmp/mac.zip
 
-zip /tmp/armv8.zip binaries/aarch64
+zip /tmp/armv8.zip binaries/aarch64/*
 gh release upload $versionLabel /tmp/armv8.zip#armv8_$versionLabel.zip
 rm /tmp/armv8.zip
 
