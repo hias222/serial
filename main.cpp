@@ -39,6 +39,8 @@ void usage(char *prog)
     printf("  -d portname      destination port name like %s \n", DESTINATION_PORTNAME);
     printf("                   only for raw mode\n");
     printf("  -h               help \n");
+    printf("\n");
+    printf("data is published to localhost:1883 on queue rawdata\n");
 }
 
 int main(int argc, char *argv[])
