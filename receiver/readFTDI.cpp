@@ -30,16 +30,19 @@
 
 static volatile int keepRunning;
 
-static void dumpBuffer(unsigned char *buffer, int elements)
+static void dumpBuffer(unsigned char *buffer, int elements, bool verbose)
 {
 	int j;
 	for (j = 0; j < elements; j++)
 	{
-		if ((buffer[j] & COLORADO_ADDRESS_WORD_MASK) == COLORADO_ADDRESS_WORD_MASK)
+		if (verbose)
 		{
-			printf("\n");
+			if ((buffer[j] & COLORADO_ADDRESS_WORD_MASK) == COLORADO_ADDRESS_WORD_MASK)
+			{
+				printf("\n");
+			}
+			printf("0x%02X ", buffer[j]);
 		}
-		printf("0x%02X ", buffer[j]);
 		putReadData(buffer[j]);
 	}
 }
@@ -62,7 +65,7 @@ int readftdi(volatile int *running, bool verbose)
 
 	printf("receiver - using ftdi lib\n");
 
-#ifdef _WIN32	
+#ifdef _WIN32
 	printf("receiver - windows ok\n");
 #else
 	uid_t uid = getuid(), euid = geteuid();
@@ -163,7 +166,7 @@ int readftdi(volatile int *running, bool verbose)
 			return 1;
 		}
 
-		dumpBuffer(pcBufRead, (int)dwBytesRead);
+		dumpBuffer(pcBufRead, (int)dwBytesRead, verbose);
 	}
 	free(pcBufRead);
 	FT_Close(ftHandle);
