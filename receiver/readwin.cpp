@@ -94,7 +94,7 @@ int read(char *portname, volatile int *running, bool verbose)
         dcbSerialParams.BaudRate = CBR_9600;   //BaudRate = 9600
         dcbSerialParams.ByteSize = 8;          //ByteSize = 8
         dcbSerialParams.StopBits = ONESTOPBIT; //StopBits = 1
-        dcbSerialParams.Parity = PARITY_EVEN;     //Parity = None NOPARITY
+        dcbSerialParams.Parity = PARITY_EVEN;     //Parity = None NOPARITY PARITY_EVEN
 
         Status = SetCommState(hComm, &dcbSerialParams);
 

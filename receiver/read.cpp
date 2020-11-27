@@ -91,6 +91,7 @@ int read(char *portname, volatile int *running, bool verbose)
 
     // #################
     // only with ftdi 
+    // 	Enable parity bit
     newtio.c_cflag = PARENB;
 
     //1 stopbit
