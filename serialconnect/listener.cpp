@@ -80,7 +80,7 @@ int startListen(volatile int *running, char *portname, bool verbose, bool ftdide
         }
         
 #ifdef _WIN32
-        Sleep(5);
+        Sleep(5000);
         printf(".");
 #else
         if (*running)

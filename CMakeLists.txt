@@ -168,8 +168,8 @@ if(WIN32)
     message(STATUS "files for aarch64 to " ${PROJECT_BINARY_DIR})
     set(RELEASE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/binaries/win")
 
-    file(COPY ${PROJECT_BINARY_DIR}/mosquitto-1.6.9/lib/mosquitto.dll
-                           DESTINATION ${RELEASE_OUTPUT_PATH})
+   # file(COPY ${PROJECT_BINARY_DIR}/mosquitto-1.6.9/lib/mosquitto.dll
+   #                        DESTINATION ${RELEASE_OUTPUT_PATH})
 
     file(COPY ${USER_HOME_DIR}/vcpkg/installed/x86-windows/bin/libssl-1_1.dll
                             DESTINATION ${RELEASE_OUTPUT_PATH})
