@@ -82,7 +82,7 @@ int readftdi(volatile int *running, bool verbose)
 		keepRunning = 0;
 		running = &keepRunning;
 
-		return 1;
+		//return 1;
 	}
 #endif
 
