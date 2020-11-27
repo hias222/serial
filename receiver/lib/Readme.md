@@ -1,5 +1,10 @@
 # Readme install mac x64
 
+## Important
+
+Serial on normal prot tested - OK  
+Serial with ftdi didn't work on my mac
+
 ## install ftdi drivers mode
 
 * Copy libftd2xx.1.4.16.dylib to the /usr/local/lib directory 
