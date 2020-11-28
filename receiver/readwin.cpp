@@ -11,6 +11,7 @@
 #ifdef _WIN32
 #include <Windows.h>
 #include <assert.h>
+#include <tchar.h>
 #endif
 
 #include "analyseData.h"
@@ -22,14 +23,25 @@
 
 using namespace std;
 
+void PrintCommState(DCB dcb)
+{
+    //  Print some of the DCB structure values
+    _tprintf(TEXT("\nBaudRate = %d, ByteSize = %d, Parity = %d, StopBits = %d\n"),
+             dcb.BaudRate,
+             dcb.ByteSize,
+             dcb.Parity,
+             dcb.StopBits);
+}
+
 int read(char *portname, volatile int *running, bool verbose)
 {
-    //printf("port %s\n", portname);
+    // https://docs.microsoft.com/en-us/windows/win32/devio/configuring-a-communications-resource
+
     char subbuff[2];
     memcpy(subbuff, &portname[3], 2);
     int portnumber = atoi(subbuff);
     int comport_number = portnumber - 1;
-    //HANDLE Cport[RS232_PORTNR];
+
     const char *comports[RS232_PORTNR] = {"\\\\.\\COM1", "\\\\.\\COM2", "\\\\.\\COM3", "\\\\.\\COM4",
                                           "\\\\.\\COM5", "\\\\.\\COM6", "\\\\.\\COM7", "\\\\.\\COM8",
                                           "\\\\.\\COM9", "\\\\.\\COM10", "\\\\.\\COM11", "\\\\.\\COM12",
@@ -53,14 +65,17 @@ int read(char *portname, volatile int *running, bool verbose)
     unsigned char loop = 0;
     wchar_t pszPortName[10] = {0}; //com port id
     wchar_t PortNo[20] = {0};      //contain friendly name
+
     try
     {
         printf("Using serial port = %s\n", comports[comport_number]);
 
         if (verbose)
         {
-             printf(" -- Verbose mode\n");
-        }else {
+            printf(" -- Verbose mode\n");
+        }
+        else
+        {
             printf("receiver running normal mode\n");
         }
 
@@ -81,30 +96,45 @@ int read(char *portname, volatile int *running, bool verbose)
             return 1;
         }
 
-        //Setting the Parameters for the SerialPort
-        dcbSerialParams.DCBlength = sizeof(dcbSerialParams);
+        //  Initialize the DCB structure.
+        SecureZeroMemory(&dcbSerialParams, sizeof(DCB));
+        dcbSerialParams.DCBlength = sizeof(DCB);
 
         Status = GetCommState(hComm, &dcbSerialParams); //retreives  the current settings
+
         if (Status == FALSE)
         {
             printf_s("\nError to Get the Com state\n\n");
             return 1;
         }
 
+        printf("init Parameters");
+
+        PrintCommState(dcbSerialParams);
+
         dcbSerialParams.BaudRate = CBR_9600;   //BaudRate = 9600
         dcbSerialParams.ByteSize = 8;          //ByteSize = 8
+        dcbSerialParams.Parity = EVENPARITY;   //Parity = None NOPARITY
         dcbSerialParams.StopBits = ONESTOPBIT; //StopBits = 1
-        dcbSerialParams.Parity = PARITY_EVEN;     //Parity = None NOPARITY PARITY_EVEN
 
         Status = SetCommState(hComm, &dcbSerialParams);
-
-        
 
         if (Status == FALSE)
         {
             printf_s("\nError to Setting DCB Structure\n\n");
             return 1;
         }
+
+        printf("set colorado Parameters (9600, ByteSize = 8, Parity = 2, StopBits = 0)");
+        Status = GetCommState(hComm, &dcbSerialParams); //retreives  the current settings
+
+        if (Status == FALSE)
+        {
+            printf_s("\nError to Get the Com state\n\n");
+            return 1;
+        }
+
+        PrintCommState(dcbSerialParams);
 
         //Setting Timeouts
         timeouts.ReadIntervalTimeout = 50;
@@ -145,7 +175,7 @@ int read(char *portname, volatile int *running, bool verbose)
 
         assert(o.hEvent);
         bool connectsuccess = true;
-        printf("  receiver - Serial port win = %s\n", comports[comport_number]);
+        printf("receiver - set Serial port %s\n", comports[comport_number]);
 
         do
         {
