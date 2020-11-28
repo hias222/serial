@@ -1,6 +1,14 @@
 # serial
 
-serial connect test
+Tool to connect serial port of colorado System 6 to serial/usb converter on linux/mac/raspberry/windows
+
+To connect your pc to system6 scorboard rs232 jack 6.3 (not usb)
+
+* converter cable from jack to usb build your own (it is very, you can split it to 2 ports)
+* or 9 Pin DB9 Female to 3.4mm male jack with adapter to 6.3mm (-> ebay)
+
+Detail install instructions
+* [windows](binaries/win/Release/Readme.md)
 
 ## serial tools
 
