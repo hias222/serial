@@ -1,4 +1,4 @@
-# life timing on colorado serial scoreboard port
+# live timing on colorado serial scoreboard port
 
 ## Description
 
