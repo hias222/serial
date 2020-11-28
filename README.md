@@ -157,7 +157,7 @@ serial console is on:
 
 ### jpnevulator
 
-```
+```bash
 jpnevulator --timing-print --tty /dev/ttyUSB0:SB9600d --read
 2020-04-19 12:51:34.260967:
 80 BE 70 6F 5F 40 30 20 A1 0D 1F 2F 3F 4D 5D 6F
@@ -175,7 +175,7 @@ B4 0A 17 20 30 4A 5D 6F 78 B5 0D 1F 2F 3F 4D 5D
 
 ### serial-receiver
 
-```
+```bash
 ./serial-receiver 
 start....
 
@@ -209,6 +209,7 @@ af 0d 1f 2f 3f 4d 5d 6f 7f 7f
 
 ### Windows
 
+```bash
 be 70 6f 5f 40 30 20
 a1 0d 1f 2f 3f 4d 5d 6f 7f
 bc 0e 1e 20 30 4d 5d 6a 7e
@@ -228,9 +229,11 @@ b0 08 1c 20 30 4c 5f 6c 79
 b1 0d 1f 2f 3f 4d 5d 6f 7f
 ae 07 1b 20 30 4c 5c 6b 7d
 af 0d 1f 2f 3f 4d 5d 6f 7f 7f
+```
 
 #### Arduino
 
+```bash
 80  ---- start detected
 BE  ---- start detected
 70 6F 5F 40 30 20 A1  ---- start detected
@@ -242,4 +245,4 @@ D 1F 2F 3F 4D 5D 6F 7F B8  ---- start detected
 C 19 20 30 4B 5F 6E 79 B9  ---- start detected
 D 1F 2F 3F 4D 5D 6F 7F B6  ---- start detected
 B 18 20 30 4B 5C 6D 77 B7  ---- start detected
-
+```
