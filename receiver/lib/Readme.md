@@ -2,8 +2,8 @@
 
 ## Important
 
-Serial on normal prot tested - OK  
-Serial with ftdi didn't work on my mac
+Serial on normal USB serial converter ist he best usecase. Take a FTDI USB/Serial converter to avoid issues.
+Serial with ftdi librarioes seems to be tricky, should work. 
 
 ## install ftdi drivers mode
 

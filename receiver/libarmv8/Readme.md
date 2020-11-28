@@ -1,6 +1,10 @@
 # Readme install arm x64
 
-Installation tested on raspberry ubuntu 20
+## Important
+
+Take a FTDI USB/Serial converter to avoid issues. With ftdi libs it is easy, don't forget to turn of load of ftdi_sio lib, if you use direct ftdi access.
+
+With ubuntu 20, gpio didn't work. The programm was tested on 64bit versions, should also work on 32bit, you must compile it by your own.
 
 ## Install ftdi driver
 

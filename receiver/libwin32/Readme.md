@@ -1,14 +1,11 @@
 # Readme install windows
 
-## Important
-
-Serial only work with ftdi
-with normal serial partity issue
-
 ## Install
 
 Copy alle files in one directory and start serial like  
 
 ```bash
-serial.exe -f
+serial.exe -f 
+or
+serial.exe -s <portname like com3>
 ```

@@ -110,7 +110,7 @@ if(APPLE)
     file(COPY ${PROJECT_SOURCE_DIR}/receiver/lib/libftd2xx.1.4.16.dylib
     DESTINATION ${RELEASE_OUTPUT_PATH})
 
-    file(COPY ${PROJECT_SOURCE_DIR}/receiver/liblinux64/Readme.md
+    file(COPY ${PROJECT_SOURCE_DIR}/receiver/lib/Readme.md
         DESTINATION ${RELEASE_OUTPUT_PATH})
 
     message(STATUS "files in" ${EXECUTABLE_OUTPUT_PATH})
@@ -152,7 +152,7 @@ if(${ARCHITECTURE} STREQUAL "aarch64")
     file(COPY ${PROJECT_SOURCE_DIR}/receiver/libarmv8/libftd2xx.a
     DESTINATION ${RELEASE_OUTPUT_PATH})
 
-    file(COPY ${PROJECT_SOURCE_DIR}/receiver/liblinux64/Readme.md
+    file(COPY ${PROJECT_SOURCE_DIR}/receiver/libarmv8/Readme.md
         DESTINATION ${RELEASE_OUTPUT_PATH})
 
     message(STATUS "files in" ${EXECUTABLE_OUTPUT_PATH})
@@ -174,11 +174,17 @@ if(WIN32)
     file(COPY ${USER_HOME_DIR}/vcpkg/installed/x86-windows/bin/libssl-1_1.dll
                             DESTINATION ${RELEASE_OUTPUT_PATH})
 
+    file(COPY ${PROJECT_SOURCE_DIR}/receiver/libwin32/Readme.md
+    DESTINATION ${RELEASE_OUTPUT_PATH}/Release)
+
+    file(COPY ${PROJECT_SOURCE_DIR}/receiver/libwin32/ftd2xx.dll
+    DESTINATION ${RELEASE_OUTPUT_PATH}/Release)
+
     file(COPY ${USER_HOME_DIR}/vcpkg/installed/x86-windows/bin/libcrypto-1_1.dll
-    DESTINATION ${RELEASE_OUTPUT_PATH})
+    DESTINATION ${RELEASE_OUTPUT_PATH}/Release)
 
     file(COPY ${USER_HOME_DIR}/vcpkg/installed/x86-windows/bin/pthreadVC3.dll
-    DESTINATION ${RELEASE_OUTPUT_PATH})
+    DESTINATION ${RELEASE_OUTPUT_PATH}/Release)
 
     #file(COPY ${PROJECT_BINARY_DIR}/serial.exe
     #DESTINATION ${RELEASE_OUTPUT_PATH})

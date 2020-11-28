@@ -1,14 +1,22 @@
 # serial
 
-Tool to connect serial port of colorado System 6 to serial/usb converter on linux/mac/raspberry/windows
+## Description
 
-To connect your pc to system6 scorboard rs232 jack 6.3 (not usb)
+Tis is tool receive data of colorado System 6 over a serial/usb on linux/mac/raspberry/windows to local MQTT topic. After this it can be forwarded to a website for life timing.  See [ansibleswim](https://github.com/hias222/ansibleswim) repo for details about using all softwareparts on a raspberry.
 
-* converter cable from jack to usb build your own (it is very, you can split it to 2 ports)
-* or 9 Pin DB9 Female to 3.4mm male jack with adapter to 6.3mm (-> ebay)
+## Install
 
-Detail install instructions
+To connect the USB pc port to system6 scorboard rs232 jack 6.3 (not usb) you need something like this.
+
+* converter cable from jack to usb build your own (it is very easy, also possible to split it to 2 ports)
+* 9 Pin DB9 Female to 3.4mm male jack with adapter to 6.3mm (-> ebay, amazon)
+
+## Detail install instructions
+
 * [windows](binaries/win/Release/Readme.md)
+* [linux64](binaries/linux64/Readme.md)
+* [aarch64](binaries/aarch64/Readme.md)
+* [mac](binaries/mac/Readme.md)
 
 ## serial tools
 

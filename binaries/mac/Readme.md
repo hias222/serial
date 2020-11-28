@@ -1,9 +1,24 @@
-# Readme install linux x64
+# Readme install mac x64
 
-## Install ftdi driver
+## Important
 
-* Copy both libs to /lib
-* remove normal ftdi lib sudo rmmod ftdi_sio
-* add ftdi_sio to /etc/modprobe.d/blacklist.conf
+Serial on normal USB serial converter ist he best usecase. Take a FTDI USB/Serial converter to avoid issues.
+Serial with ftdi librarioes seems to be tricky, should work. 
 
-Attention: forward mode with ftdi not possible
+## install ftdi drivers mode
+
+* Copy libftd2xx.1.4.16.dylib to the /usr/local/lib directory 
+* Change directory to the /usr/local/lib (cd /usr/local/lib)·
+* Create a symbolic link to the library (ln -sf libftd2xx.1.4.16.dylib libftd2xx.dylib)
+
+## test with serial-sender
+
+socat -d -d pty,raw,echo=0 pty,raw,echo=0
+
+## Install mqtt
+
+* docker pull eclipse-mosquitto
+* docker run --rm -it -p 1883:1883 -p 9001:9001 eclipse-mosquitto 
+or
+* docker run -d --rm -p 1883:1883 -p 9001:9001 eclipse-mosquitto
+
