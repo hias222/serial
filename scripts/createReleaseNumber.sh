@@ -42,7 +42,7 @@ gh release create $versionLabel -t $versionLabel -F changelog.md
 
 # upload 
 # gh release upload <tag> <files>... [flags]
-zip /tmp/windows.zip binaries/*
+zip /tmp/windows.zip binaries/win/Release/*
 gh release upload $versionLabel /tmp/windows.zip#windows_$versionLabel.zip
 rm /tmp/windows.zip
 
@@ -53,6 +53,10 @@ rm /tmp/mac.zip
 zip /tmp/armv8.zip binaries/aarch64/*
 gh release upload $versionLabel /tmp/armv8.zip#armv8_$versionLabel.zip
 rm /tmp/armv8.zip
+
+zip /tmp/linux64.zip binaries/linux64/*
+gh release upload $versionLabel /tmp/linux64.zip#linux64_$versionLabel.zip
+rm /tmp/linux64.zip
 
 exit 0
 # test
