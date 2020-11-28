@@ -1,4 +1,4 @@
-# serial
+# life timing on colorado serial scoreboard
 
 ## Description
 
