@@ -2,7 +2,7 @@
 
 ## Description
 
-Tis is tool receive data of colorado System 6 over a serial/usb on linux/mac/raspberry/windows to local MQTT topic. After this it can be forwarded to a website for life timing.  See [ansibleswim](https://github.com/hias222/ansibleswim) repo for details about using all softwareparts on a raspberry.
+Tis is tool receives data of colorado System 6 over a serial/usb on linux/mac/raspberry/windows to local MQTT topic. After this it can be forwarded to a website for life timing.  See [ansibleswim](https://github.com/hias222/ansibleswim) repo for details about using all softwareparts on a raspberry.
 
 ## Install
 
@@ -18,7 +18,7 @@ To connect the USB pc port to system6 scorboard rs232 jack 6.3 (not usb) you nee
 * [aarch64](binaries/aarch64/Readme.md)
 * [mac](binaries/mac/Readme.md)
 
-## serial tools
+## Information about testing and compiling
 
 ### windows
 
