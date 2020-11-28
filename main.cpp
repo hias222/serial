@@ -168,7 +168,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        printf("main - raw local apply to mqttt\n");
+        printf("main - raw local apply to mqttt localhost:1883 topic rawdata\n");
         dataInit(ptrRunning, portname, false, cmd_verbose_mode, ftdi_mode);
     }
 
