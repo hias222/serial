@@ -6,6 +6,8 @@ This tool receives data of colorado System 6 over a serial/usb on linux/mac/rasp
 
 ## Install
 
+To run the programm successful a mqtt server on port 1883 without security needs to be run.
+
 To connect the USB pc port to system6 scorboard rs232 jack 6.3 (not usb) you need something like this.
 
 * converter cable from jack to usb build your own (it is very easy, also possible to split it to 2 ports)
