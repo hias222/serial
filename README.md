@@ -77,6 +77,22 @@ comment out:
 
 remove projects except lib and src
 
+## MAC compile with Visual Studio code
+
+* brew install cmake
+* install cmake plugin
+
+manual cmake
+
+```bash
+cd build
+cmake ../
+cmake --build .
+```
+
+Library instll see
+[libs](binaries/mac/Readme.md)
+
 ## Windows compile 
 
 https://github.com/Microsoft/vcpkg
@@ -155,7 +171,7 @@ serial console is on:
 [   19.953410] usb 1-1.3: ch341-uart converter now attached to ttyUSB0
 ```
 
-## output of test data 
+## output of test data
 
 ### jpnevulator
 
