@@ -183,8 +183,8 @@ if(WIN32)
         set(RELEASE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/binaries/win")
     endif (CMAKE_CL_64)
 
-   file(COPY ${PROJECT_BINARY_DIR}/mosquitto-1.6.9/lib/mosquitto.dll
-                           DESTINATION ${RELEASE_OUTPUT_PATH})
+   file(COPY ${PROJECT_BINARY_DIR}/mosquitto-1.6.9/lib/Release/mosquitto.dll
+                           DESTINATION ${RELEASE_OUTPUT_PATH}/Release)
 
     file(COPY ${USER_HOME_DIR}/vcpkg/installed/x86-windows/bin/libssl-1_1.dll
                             DESTINATION ${RELEASE_OUTPUT_PATH})

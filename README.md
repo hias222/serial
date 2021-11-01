@@ -168,6 +168,8 @@ cmake --build . --config Release
 cmake --build .
 ```
 
+After first run comment out the part for mosquitto.dll in CMakeList.txt
+
 ## RPi install
 
 sudo apt-get install libssl-dev cmake
