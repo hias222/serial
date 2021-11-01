@@ -2,6 +2,7 @@
 # Edit at https://www.gitignore.io/?templates=cmake
 
 build
+build64
 .vscode
 
 ### CMake ###

@@ -3,8 +3,10 @@ string(TIMESTAMP TODAY "%Y%m%d")
 project(serial VERSION 0.1.${TODAY})
 
 EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE )
-EXECUTE_PROCESS(COMMAND bash ${CMAKE_HOME_DIRECTORY}/checkapi RESULT_VARIABLE RASPBERRYPI)
-EXECUTE_PROCESS(COMMAND bash ${CMAKE_HOME_DIRECTORY}/checkftdi RESULT_VARIABLE ISFTDI)
+if (NOT WIN32)
+    EXECUTE_PROCESS(COMMAND bash ${CMAKE_HOME_DIRECTORY}/checkapi RESULT_VARIABLE RASPBERRYPI)
+    EXECUTE_PROCESS(COMMAND bash ${CMAKE_HOME_DIRECTORY}/checkftdi RESULT_VARIABLE ISFTDI)
+endif()
 
 message(STATUS "ISFTDI ${ISFTDI} RASPBERRYPI ${RASPBERRYPI} ARCHITECTURE ${ARCHITECTURE}")
 
@@ -47,13 +49,21 @@ endif()
 if(WIN32)
     set(RASPBERRYPI "0")
     # set(USER_HOME_DIR "C:/Users/Matthias/git")
-    set(USER_HOME_DIR "C:/Users/User/git")
+    set(USER_HOME_DIR "C:/Users/Max/git")
     # set(THREAD_HOME_DIR "C:\\Users\\User\\git\\vcpkg\\installed\\x86-windows")
     # set(ENV{OPENSSL_ROOT_DIR} "C:/Users/User/git/vcpkg/installed/x86-windows")
-    set(ENV{OPENSSL_ROOT_DIR} "${USER_HOME_DIR}/git/vcpkg/installed/x86-windows")
+    if (CMAKE_CL_64)
+        set(OPENSSL_ROOT_DIR "${USER_HOME_DIR}/vcpkg/installed/x64-windows")
+        set(ENV{OPENSSL_ROOT_DIR} "${USER_HOME_DIR}/vcpkg/installed/x64-windows")
+    else (CMAKE_CL_64)
+        set(OPENSSL_ROOT_DIR "${USER_HOME_DIR}/vcpkg/installed/x86-windows")
+        set(ENV{OPENSSL_ROOT_DIR} "${USER_HOME_DIR}/vcpkg/installed/x86-windows")
+    endif (CMAKE_CL_64)
+
     set(PORTNAME "com1")
     set(DESTPORTNAME "com2")
     set(SENDMODE false)
+    message( STATUS "SSL: ${OPENSSL_ROOT_DIR}")
 endif()
 
 configure_file(SerialConfig.h.in SerialConfig.h)
@@ -165,8 +175,13 @@ if(WIN32)
     #set(LIBRARY_OUTPUT_PATH "${PROJECT_BINARY_DIR}")
     #set(EXECUTABLE_OUTPUT_PATH "${PROJECT_BINARY_DIR}")
 
-    message(STATUS "files for aarch64 to " ${PROJECT_BINARY_DIR})
-    set(RELEASE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/binaries/win")
+    if (CMAKE_CL_64)
+        message(STATUS "files for aarch64 to " ${PROJECT_BINARY_DIR})
+        set(RELEASE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/binaries/win64")
+    else (CMAKE_CL_64)
+        message(STATUS "files for aarch64 to " ${PROJECT_BINARY_DIR})
+        set(RELEASE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/binaries/win")
+    endif (CMAKE_CL_64)
 
    # file(COPY ${PROJECT_BINARY_DIR}/mosquitto-1.6.9/lib/mosquitto.dll
    #                        DESTINATION ${RELEASE_OUTPUT_PATH})
@@ -177,7 +192,7 @@ if(WIN32)
     file(COPY ${PROJECT_SOURCE_DIR}/receiver/libwin32/Readme.md
     DESTINATION ${RELEASE_OUTPUT_PATH}/Release)
 
-    file(COPY ${PROJECT_SOURCE_DIR}/receiver/libwin32/ftd2xx.dll
+    file(COPY ${PROJECT_SOURCE_DIR}/receiver/libwin32/ftd2xx.lib
     DESTINATION ${RELEASE_OUTPUT_PATH}/Release)
 
     file(COPY ${USER_HOME_DIR}/vcpkg/installed/x86-windows/bin/libcrypto-1_1.dll
@@ -191,6 +206,8 @@ if(WIN32)
 
     set(EXECUTABLE_OUTPUT_PATH "${RELEASE_OUTPUT_PATH}")
     set(LIBRARY_OUTPUT_PATH "${RELEASE_OUTPUT_PATH}")
+
+    message( STATUS "binaries in: ${RELEASE_OUTPUT_PATH}")
 endif()
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
