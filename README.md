@@ -163,7 +163,8 @@ Open the visual studio command prompt!
 cd build
 cmake ../
 # release
-cmake -DCMAKE_BUILD_TYPE=Release ../
+cmake --build . --config Release
+# Debug
 cmake --build .
 ```
 
@@ -269,30 +270,6 @@ b1 0d 1f 2f 3f 4d 5d 6f 7f
 ae 07 1b 20 30 4c 5c 6b 7d 
 af 0d 1f 2f 3f 4d 5d 6f 7f 7f 
 80
-```
-
-### Windows
-
-```bash
-be 70 6f 5f 40 30 20
-a1 0d 1f 2f 3f 4d 5d 6f 7f
-bc 0e 1e 20 30 4d 5d 6a 7e
-bd 0d 1f 2f 3f 4d 5d 6f 7f
-ba 0d 1a 20 30 4c 59 66 77
-bb 0d 1f 2f 3f 4d 5d 6f 7f
-b8 0c 19 20 30 4b 5f 6e 79
-b9 0d 1f 2f 3f 4d 5d 6f 7f
-b6 0b 18 20 30 4b 5c 6d 77
-b7 0d 1f 2f 3f 4d 5d 6f 7f
-be 70 6f 5f 40 30 20
-b4 0a 17 20 30 4a 5d 6f 78
-b5 0d 1f 2f 3f 4d 5d 6f 7f
-b2 09 1d 20 30 4d 58 68 7b
-b3 0d 1f 2f 3f 4d 5d 6f 7f
-b0 08 1c 20 30 4c 5f 6c 79
-b1 0d 1f 2f 3f 4d 5d 6f 7f
-ae 07 1b 20 30 4c 5c 6b 7d
-af 0d 1f 2f 3f 4d 5d 6f 7f 7f
 ```
 
 #### Arduino
