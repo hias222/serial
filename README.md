@@ -26,22 +26,21 @@ To connect the USB pc port to system6 scorboard rs232 jack 6.3 (not usb) you nee
 
 com0com
 
-https://www.com-port-monitoring.com/downloads.html
+<https://www.com-port-monitoring.com/downloads.html>
 
 ### Linux serial testing
 
-Copy port 
+Copy port
 socat -d -d pty,raw,echo=0 pty,raw,echo=0
 
 echo -ne '\xbe\x70\x6f\x5f\x40\x30\x20\xa1\x0d\x1f\x2f\x3f' > /dev/ttys005
 
-Receive data 
+Receive data
 sudo minicom -D /dev/ttyS0
 
 protocol
 
-https://www.cmrr.umn.edu/~strupp/serial.html
-
+<https://www.cmrr.umn.edu/~strupp/serial.html>
 
 ### Rspberry compile addons
 
@@ -71,9 +70,9 @@ or
 error include utl..
 
 comment out:
-#if (WITH_BUNDLED_DEPS)
+# if (WITH_BUNDLED_DEPS)
         include_directories(${mosquitto_SOURCE_DIR} ${mosquitto_SOURCE_DIR}/src/deps)
-#endif (WITH_BUNDLED_DEPS)
+# endif (WITH_BUNDLED_DEPS)
 
 remove projects except lib and src
 
@@ -93,32 +92,80 @@ cmake --build .
 Library instll see
 [libs](binaries/mac/Readme.md)
 
-## Windows compile 
+## Windows compile
 
-https://github.com/Microsoft/vcpkg
-
-```bash
-git clone https://github.com/Microsoft/vcpkg.git
-PS> .\bootstrap-vcpkg.bat
-
-```
-
-CMake projects should use: "-DCMAKE_TOOLCHAIN_FILE=C:/Users/User/git/vcpkg/scripts/buildsystems/vcpkg.cmake"
-
-```
-vcpkg install openssl:x86-windows
-vcpkg.exe install pthreads
-``` 
+### compiler Visual Studio
 
 c++ compiler
-https://docs.microsoft.com/de-de/cpp/build/building-on-the-command-line?view=vs-2019
---> Build Tools
+<https://docs.microsoft.com/de-de/cpp/build/building-on-the-command-line?view=vs-2019>
+--> Build Tools (Buildtools für Visual Studio 2019)
+--> Desktop development c++
 --> English language pack
 
-without compiler install 
+without compiler install
+
 * vc_redistx86.exe - included in binaries
 * on pre windows 10 - windows 10 universal c runtime
 
+### VCPKG
+
+<https://github.com/Microsoft/vcpkg>
+
+Usage with git bash:
+
+```bash
+git clone https://github.com/Microsoft/vcpkg.git
+```
+
+```ps
+cd vcpkg
+PS> .\bootstrap-vcpkg.bat -disableMetrics
+```
+
+Add Libraries needed for serial:
+
+32-bit
+
+```cmd
+vcpkg.exe install openssl:x86-windows
+vcpkg.exe install pthreads
+```
+
+64 bit
+
+```cmd
+vcpkg.exe install openssl:x64-windows
+vcpkg.exe install pthreads_x64-windows
+```
+
+Error: No suitable Visual Studio instances were found -> Visual Studio not installed correct see above  
+
+CMake projects should use: "-DCMAKE_TOOLCHAIN_FILE=C:/Users/User/git/vcpkg/scripts/buildsystems/vcpkg.cmake"
+
+### compile in Visual Studio Code
+
+Plugins
+
+* C/C++
+* Cmake
+* Cmake Tools
+
+CMake Changes
+
+* edit USE_HOME_DIR to the git folder
+
+Open the visual studio command prompt!  
+
+* version x86 - 32 bit
+* version x64 - 64 bit
+
+```cmd
+cd build
+cmake ../
+# release
+cmake -DCMAKE_BUILD_TYPE=Release ../
+cmake --build .
+```
 
 ## RPi install
 
@@ -128,7 +175,6 @@ sudo apt-get install libssl-dev cmake
 
 sudo raspi-config
 Select option 5, Interfacing options, then option P6, Serial, and select No. Exit raspi-config.
-
 
 ### build with gpio
 
