@@ -5,7 +5,7 @@
 the software has these components:
 
 * arduino serial converter (not included)
-* Mosquito pub/sub -> mosquito (docker)
+* Mosquito pub/sub -> mosquito (docker, Server on windows linux)
 * backend -> datamapping (Nodejs)
 * frontend backend with websocket -> websocket_backend (Nodejs)
 * react frontend -> react_fontend/swimfrontend (react, Nodejs)
@@ -48,30 +48,56 @@ brew install mosquitto
 brew list mosquitto
 ln -s /usr/local/Cellar/mosquitto/1.6.8/bin/mosquitto_sub /usr/local/bin/mosquitto_sub
 
-## datamapping
+### node + pm2 
+
+LTS Version 15.x downlode from nodejs.org as windows installer
+
+npm install pm2@latest -g
+
+## Apps node
+
+### datamapping
 
 ```bash
+git clone git@github.com:hias222/datamapping.git
+cd datamapping 
+npm install
+copy simple.env .env
 node app.js
+# or
+pm2 start app.js
 ```
 
-## websocket-backend
+### websocket-backend
 
 ```bash
-npm build
-npm start
+git clone git@github.com:hias222/displaysocket.git
+cd displaysocket
+npm install
+node app.js
+# or
+pm2 start app.js
 ```
 
 ## react-frontend
 
-### folder swimfrontend
+### livetiming display
 
 ```bash
-npm build
+git clone git@github.com:hias222/displayweb.git
+cd displayweb
+npm install
+copy simple.env .env
 npm start
 ```
 
 ```bash
- Local:            http://localhost:3000/
+git clone git@github.com:hias222/adminweb.git
+cd adminweb
+npm i
+copy simple.env .env
+npm install
+
 ```
 
 ## Tests
