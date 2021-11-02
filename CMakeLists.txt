@@ -183,26 +183,51 @@ if(WIN32)
         set(RELEASE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/binaries/win")
     endif (CMAKE_CL_64)
 
-   file(COPY ${PROJECT_BINARY_DIR}/mosquitto-1.6.9/lib/Release/mosquitto.dll
-                           DESTINATION ${RELEASE_OUTPUT_PATH}/Release)
+   #file(COPY ${PROJECT_BINARY_DIR}/mosquitto-1.6.9/lib/Release/mosquitto.dll
+    #                       DESTINATION ${RELEASE_OUTPUT_PATH}/Release)
 
-    file(COPY ${USER_HOME_DIR}/vcpkg/installed/x86-windows/bin/libssl-1_1.dll
-                            DESTINATION ${RELEASE_OUTPUT_PATH})
+    if (CMAKE_CL_64)
 
-    file(COPY ${PROJECT_SOURCE_DIR}/receiver/libwin32/Readme.md
-    DESTINATION ${RELEASE_OUTPUT_PATH}/Release)
+        file(COPY ${PROJECT_SOURCE_DIR}/receiver/libwin32/Readme.md
+        DESTINATION ${RELEASE_OUTPUT_PATH}/Release)
 
-    file(COPY ${PROJECT_SOURCE_DIR}/receiver/libwin32/ftd2xx.lib
-    DESTINATION ${RELEASE_OUTPUT_PATH}/Release)
+        file(COPY ${PROJECT_SOURCE_DIR}/receiver/libwin64/ftd2xx64.dll
+        DESTINATION ${RELEASE_OUTPUT_PATH}/Release)
+        
+        # change on update
+        file(COPY ${PROJECT_SOURCE_DIR}/receiver/libwin64/mosquitto.dll
+        DESTINATION ${RELEASE_OUTPUT_PATH}/Release)
 
-    file(COPY ${USER_HOME_DIR}/vcpkg/installed/x86-windows/bin/libcrypto-1_1.dll
-    DESTINATION ${RELEASE_OUTPUT_PATH}/Release)
+        file(COPY ${USER_HOME_DIR}/vcpkg/installed/x64-windows/bin/libcrypto-1_1-x64.dll
+        DESTINATION ${RELEASE_OUTPUT_PATH}/Release)
 
-    file(COPY ${USER_HOME_DIR}/vcpkg/installed/x86-windows/bin/pthreadVC3.dll
-    DESTINATION ${RELEASE_OUTPUT_PATH}/Release)
+        #libssl-1_1-x64.dll
+        file(COPY ${USER_HOME_DIR}/vcpkg/installed/x64-windows/bin/libssl-1_1-x64.dll
+        DESTINATION ${RELEASE_OUTPUT_PATH}/Release)
+
+        file(COPY ${USER_HOME_DIR}/vcpkg/installed/x64-windows/bin/pthreadVC3.dll
+        DESTINATION ${RELEASE_OUTPUT_PATH}/Release)
 
     #file(COPY ${PROJECT_BINARY_DIR}/serial.exe
     #DESTINATION ${RELEASE_OUTPUT_PATH})
+
+    else (CMAKE_CL_64)
+        file(COPY ${USER_HOME_DIR}/vcpkg/installed/x86-windows/bin/libssl-1_1.dll
+        DESTINATION ${RELEASE_OUTPUT_PATH})
+
+        file(COPY ${PROJECT_SOURCE_DIR}/receiver/libwin32/Readme.md
+        DESTINATION ${RELEASE_OUTPUT_PATH}/Release)
+
+        file(COPY ${PROJECT_SOURCE_DIR}/receiver/libwin32/ftd2xx.lib
+        DESTINATION ${RELEASE_OUTPUT_PATH}/Release)
+
+        file(COPY ${USER_HOME_DIR}/vcpkg/installed/x86-windows/bin/libcrypto-1_1.dll
+        DESTINATION ${RELEASE_OUTPUT_PATH}/Release)
+
+        file(COPY ${USER_HOME_DIR}/vcpkg/installed/x86-windows/bin/pthreadVC3.dll
+        DESTINATION ${RELEASE_OUTPUT_PATH}/Release)
+
+    endif (CMAKE_CL_64)
 
     set(EXECUTABLE_OUTPUT_PATH "${RELEASE_OUTPUT_PATH}")
     set(LIBRARY_OUTPUT_PATH "${RELEASE_OUTPUT_PATH}")
