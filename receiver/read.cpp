@@ -78,24 +78,28 @@ int read(char *portname, volatile int *running, bool verbose)
 
     tcgetattr(fd, &newtio);
 
+    /*
+    Colorado specific
+    BaudRate = 9600 
+    StopBits = 1 
+    Parity   = none 
+    */
+
     baudrate = B9600;
     cfsetospeed(&newtio, baudrate);
     cfsetispeed(&newtio, baudrate);
 
     //set into raw, no echo mode
     newtio.c_iflag = 0;
-
     newtio.c_lflag = 0;
     newtio.c_oflag = 0;
     newtio.c_cflag = 0;
 
     // #################
-    // only with ftdi 
-    // 	Enable parity bit
-     newtio.c_cflag = PARENB;
-
+    // only with ftdi
+    // 	Enable parity bit ???
+    newtio.c_cflag = PARENB;
     //newtio.c_cflag = PARODD;
-    
 
     //1 stopbit
     newtio.c_cflag &= ~CSTOPB;

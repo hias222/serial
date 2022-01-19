@@ -20,16 +20,14 @@ char clientid[24];
 uint8_t reconnect;
 bool error_state = false;
 
-bool remotesender;
 
 //#define debug_send
 
 #include "send.h"
 
-int mqtt_connect(bool remoteserial)
+int mqtt_connect()
 {
     reconnect = true;
-    remotesender = remoteserial;
     int rc = 0;
 
     mosquitto_lib_init();
@@ -62,12 +60,6 @@ int mqtt_send(char message[MQTT_LONG_LENGTH])
 #ifdef debug_send
     printf("mqtt_send = %s\n", message);
 #endif
-
-    if (remotesender)
-    {
-        sprintf(remotechar, "%s", message);
-        send(remotechar);
-    }
 
     if (mosq)
     {

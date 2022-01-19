@@ -32,7 +32,6 @@ void usage(char *prog)
     printf("                   for both raw and repeater mode\n");
     printf("                   RPI Ubuntu /dev/ttyAMA0 RPI raspian /dev/serial0  Linux /dev/ttyUSB0\n");
     printf("  -f               using ftdi library no port needed \n");
-    printf("  -r               only behind RPI \n");
     printf("  -x               raw mode and send (default) \n");
     printf("  -z               only raw mode \n");
     printf("  -v               verbose output for serial \n");
@@ -50,7 +49,6 @@ int main(int argc, char *argv[])
     char *portname = (char *)malloc(50);
     char *destinationportname = (char *)malloc(50);
     bool send_mode = false;
-    bool repeat_mode = false;
     bool ftdi_mode = false;
 
     // out of SerialConfig
@@ -88,18 +86,9 @@ int main(int argc, char *argv[])
                     ftdi_mode = true;
                 }
                 break;
-            case 'r':
-                if (argc > n)
-                {
-                    repeat_mode = true;
-                    send_mode = false;
-                    cmd_line_failure = false;
-                }
-                break;
             case 'x':
                 if (argc > n)
                 {
-                    repeat_mode = false;
                     send_mode = true;
                     cmd_line_failure = false;
                 }
@@ -107,7 +96,6 @@ int main(int argc, char *argv[])
             case 'z':
                 if (argc > n)
                 {
-                    repeat_mode = false;
                     send_mode = false;
                     cmd_line_failure = false;
                 }
@@ -160,11 +148,6 @@ int main(int argc, char *argv[])
         printf("main - send - send out to port %s\n", destinationportname);
         init_send(destinationportname);
         dataInit(ptrRunning, portname, true, cmd_verbose_mode, ftdi_mode);
-    }
-    else if (repeat_mode)
-    {
-        printf("main - repeat - receive on port %s\n", portname);
-        terminalInit(ptrRunning, portname);
     }
     else
     {

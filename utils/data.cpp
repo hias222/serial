@@ -4,27 +4,17 @@
 #include "analyseData.h"
 #include "mqttUtils.h"
 #include "data.h"
-#include "terminalread.h"
 
 static volatile int *keepRunning;
 
 int dataInit(volatile int *running, char *portname, bool sendmode, bool verbose, bool ftdidevice)
 {
     initReadData();
-    mqtt_connect(sendmode);
+    mqtt_connect();
     printf("utils - mqtt topic rawdata\n");
-    char myText[] = "utils init repeat mode (mqtt rawdata)";
+    char myText[] = "utils init (mqtt rawdata)";
     mqtt_send(myText);
     startListen(running, portname, verbose, ftdidevice);
-    return 0;
-}
-
-int terminalInit(volatile int *running, char *portname)
-{
-    mqtt_connect(false);
-    //char myText[] = "header 1 1";
-    //mqtt_send(myText);
-    startTerminal(running, portname);
     return 0;
 }
 
