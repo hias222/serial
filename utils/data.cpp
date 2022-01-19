@@ -14,7 +14,7 @@ int dataInit(volatile int *running, char *portname, bool sendmode, bool verbose,
     printf("utils - mqtt topic rawdata\n");
     char myText[] = "utils init (mqtt rawdata)";
     mqtt_send(myText);
-    startListen(running, portname, verbose, ftdidevice);
+    startListen(running, portname, verbose, ftdidevice, sendmode);
     return 0;
 }
 

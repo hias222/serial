@@ -61,9 +61,11 @@ bool startftdi(volatile int *running, bool verbose)
     return check;
 }
 
-int startListen(volatile int *running, char *portname, bool verbose, bool ftdidevice)
+int startListen(volatile int *running, char *portname, bool verbose, bool ftdidevice, bool sendode)
 {
     printf("serialconnect - Serial start ...\n");
+    //ToDo add send binary
+
     //ToDo Loop
     //for (int i = 0; i < 5; i++)
     while (*running)
