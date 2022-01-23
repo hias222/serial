@@ -8,7 +8,7 @@
 //#define debug_lane
 //#define debug_header
 //#define debug_time
-//#define debug_data_lanes
+#define debug_data_lanes
 //#define debug_store_rounds
 //#define debug_data_others
 //#define debug_data_start
@@ -106,7 +106,6 @@ int putReadData(uint8_t ReadData)
                 {
 
 #ifdef debug_data_lanes
-                    printf("lane data: ");
                     outPutBuffer(colorado_control_channel, buf);
 #endif
 
@@ -213,7 +212,9 @@ int putReadData(uint8_t ReadData)
 
 int outPutBuffer(int code, uint8_t data[])
 {
-    printf("Buffer ");
+    char mydata[64];
+
+    printf("raw Buffer ");
     printf("%02x: ", code);
     for (int i = 0; i < BUFFER_LENGTH; i++)
     {
@@ -221,6 +222,10 @@ int outPutBuffer(int code, uint8_t data[])
         printf("%02x ", data[i]);
     }
     printf("\n");
+        sprintf(mydata, "channel: %d: 2: %d 4: %d 6: %d 8: %d 10: %d 12: %d 14: %d", code, checkBitValue(data[2]), checkBitValue(data[4]),
+            checkBitValue(data[6]), checkBitValue(data[8]), checkBitValue(data[10]), checkBitValue(data[12]), checkBitValue(data[14]));
+    printf("%s \n", mydata);
 
     return 0;
 }
+
