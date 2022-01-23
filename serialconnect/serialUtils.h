@@ -12,3 +12,5 @@ int initanalyseData();
 int cleananalyseData();
 bool getTime(uint8_t data[]);
 int timehundredth(uint8_t data[]);
+void restTimeAndplace(uint8_t lane);
+void debugLane(int lane, char shortdata[], uint8_t data[]);

@@ -26,7 +26,7 @@
 
 char COLORADO_HEADER_DATA[MQTT_LONG_LENGTH];
 char COLORADO_HEAT_DATA[DISPLAY_LANE_COUNT][MQTT_MESSAGE_LENGTH];
-char COLORADO_PLACE_DATA[DISPLAY_LANE_COUNT][2];
+char COLORADO_PLACE_DATA[DISPLAY_LANE_COUNT][3];
 
 char *mydata;
 char *storeRoundsData;
@@ -106,8 +106,9 @@ int getTime(uint8_t lane, uint8_t data[])
     //char mydata[MQTT_LONG_LENGTH];
     char shortdata[MQTT_MESSAGE_LENGTH] = "0000000";
     char log[MQTT_MESSAGE_LENGTH];
-    char place[2];
+    char place[3];
     bool array_match = false;
+    char nullplace[3] = "0";
 
     // Button ZEit
     //Problem ees wird die ZEit aus dem letzten lauf geschickt mit 0 als platz
@@ -124,9 +125,13 @@ int getTime(uint8_t lane, uint8_t data[])
         array_match = true;
         if (strcmp(place, COLORADO_PLACE_DATA[lane - 1]) != 0)
         {
-            //der platz ist ungleich
-            if (strcmp(place, "0") != 0)
+            //der platz ist ungleich 0
+            
+            if (strcmp(place, nullplace) != 0)
             {
+#ifdef debug_lane_place
+                    printf("change place not null %d place %s - %s - %s\n", lane, place, nullplace, COLORADO_PLACE_DATA[lane - 1]);
+#endif
                 //jetzt müssen wir schicken
                 array_match = false;
             }
@@ -137,22 +142,12 @@ int getTime(uint8_t lane, uint8_t data[])
         if (strcmp(shortdata, "000000") == 0)
         {
             array_match = true;
+            restTimeAndplace(lane);
         }
         else
         {
 #ifdef debug_lane_place
-
-            if (lane == 0x01)
-            {
-                printf("change lane %d \n", lane);
-                printf("change data %s \n", shortdata);
-                printf("stored data %s \n", COLORADO_HEAT_DATA[lane - 1]);
-                for (int i = 0; i < BUFFER_LENGTH; i++)
-                {
-                    printf("%02x ", data[i]);
-                }
-                printf("\n");
-            }
+            debugLane(lane, shortdata, data);
 #endif
             array_match = false;
         }
@@ -166,6 +161,7 @@ int getTime(uint8_t lane, uint8_t data[])
 
     if (!array_match)
     {
+        array_match = true;
         // wir schicken nur wenn die uhr läuft
         if (hundredth > 0)
         {
@@ -186,11 +182,12 @@ int getTime(uint8_t lane, uint8_t data[])
             COLORADO_HEAT_DATA[lane - 1][i] = shortdata[i];
         }
 
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < 3; i++)
         {
             COLORADO_PLACE_DATA[lane - 1][i] = place[i];
         }
     }
+
     return 0;
 }
 
@@ -202,6 +199,19 @@ int8_t checkBitValue(int8_t data)
     }
     return data;
 };
+
+void restTimeAndplace(uint8_t lane)
+{
+    char shortdata[MQTT_MESSAGE_LENGTH] = "0000000";
+    char place[2] = "0";
+
+    //reset
+    for (int i = 0; i < DISPLAY_LANE_COUNT; i++)
+    {
+        COLORADO_PLACE_DATA[lane - 1][i] = place[i];
+        COLORADO_HEAT_DATA[lane - 1][i] = shortdata[i];
+    }
+}
 
 void storeRounds(uint8_t data[])
 {
@@ -377,4 +387,19 @@ int timehundredth(uint8_t data[])
     printf("timehundredth: %d\n", timehundredth);
 #endif
     return timehundredth;
+}
+
+void debugLane(int lane, char shortdata[], uint8_t data[])
+{
+    if (lane == 0x01)
+    {
+        printf("change lane %d \n", lane);
+        printf("change data %s \n", shortdata);
+        printf("stored data %s \n", COLORADO_HEAT_DATA[lane - 1]);
+        for (int i = 0; i < BUFFER_LENGTH; i++)
+        {
+            printf("%02x ", data[i]);
+        }
+        printf("\n");
+    }
 }
