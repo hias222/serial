@@ -8,16 +8,20 @@
 //#define debug_lane
 //#define debug_header
 //#define debug_time
+//#define debug_data_lanes
+//#define debug_store_rounds
+//#define debug_data_others
+//#define debug_data_start
 #define COLORADO_CHANNELS 32
 #define COLORADO_ADDRESS_WORD_MASK 0x80
 #define COLORADO_ROWS 16
 
-#define DISPLAY_LANE_COUNT 8
+#define DISPLAY_LANE_COUNT 10
+#define BUFFER_LENGTH 9
 
 #define MQTT_MESSAGE_LENGTH 8
 // for the message to broker
 #define MQTT_LONG_LENGTH 25
-#define BUFFER_LENGTH 9
 
 uint8_t colorado_start_detected;
 uint8_t buf[BUFFER_LENGTH];
@@ -75,7 +79,7 @@ int putReadData(uint8_t ReadData)
     if ((ReadData & COLORADO_ADDRESS_WORD_MASK) == COLORADO_ADDRESS_WORD_MASK)
     {
 #ifdef debug_incoming
-        printf("start \n ");
+        printf("start data \n ");
 #endif
 
         if (0x01 == colorado_start_detected)
@@ -100,9 +104,16 @@ int putReadData(uint8_t ReadData)
 #endif
                 if (colorado_control_channel != 0x00 && colorado_control_channel < (DISPLAY_LANE_COUNT + 1))
                 {
+
+#ifdef debug_data_lanes
+                    printf("lane data: ");
+                    outPutBuffer(colorado_control_channel, buf);
+#endif
+
 #ifdef debug_lane
                     outPutBuffer(colorado_control_channel, buf);
 #endif
+                    //please check number lanes in colorado config !!!!!!!!!
                     analyseActiveData(colorado_control_channel, colorado_data[colorado_control_channel]);
                 }
                 else if (colorado_control_channel == 0x00)
@@ -114,6 +125,7 @@ int putReadData(uint8_t ReadData)
                     outPutBuffer(colorado_control_channel, buf);
 
 #endif
+                    // alle 10 anschauen
                     if (loop > 10)
                     {
                         getTime(colorado_data[colorado_control_channel]);
@@ -135,6 +147,24 @@ int putReadData(uint8_t ReadData)
 #endif
                     getHeader(colorado_data[colorado_control_channel]);
                 }
+                else if (colorado_control_channel == 0x12)
+                {
+#ifdef debug_store_rounds
+                    printf("0d - store rounds \n ");
+                    showDisplayLine(colorado_data[colorado_control_channel]);
+#endif
+                    storeRounds(colorado_data[colorado_control_channel]);
+                }
+#ifdef debug_data_others
+                else
+                {
+                    if (colorado_control_channel > (DISPLAY_LANE_COUNT))
+                    {
+                        printf("others - %02x \n ", colorado_control_channel);
+                        showDisplayLine(colorado_data[colorado_control_channel]);
+                    }
+                }
+#endif
             }
 #ifdef debug_incoming
             else
@@ -169,6 +199,10 @@ int putReadData(uint8_t ReadData)
                 colorado_start_detected = 0x00;
 #ifdef debug_incoming
                 printf("uups %02x in_count too large \n", ReadData);
+#endif
+
+#ifdef debug_data_start
+                printf("reset colorado_start_detected \n ");
 #endif
             }
         }

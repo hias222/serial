@@ -113,6 +113,7 @@ int read(char *portname, volatile int *running, bool verbose)
     printf("\n");
     printf("    receiver - port in (USB)= %s\n", portname);
     printf("\n");
+    printf("receiver - check configured lanes on scoreboard \n");
 
     int g = 0;
 

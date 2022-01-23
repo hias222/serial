@@ -73,6 +73,7 @@ int readftdi(volatile int *running, bool verbose)
 	{
 		printf("receiver - root privs ok\n");
 		printf("receiver - check sudo rmmod ftdi_sio \n");
+		printf("receiver - check configured lanes on scoreboard \n");
 		printf("receiver - add ftdi_sio to /etc/modprobe.d/blacklist.conf \n");
 	}
 	else

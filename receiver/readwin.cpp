@@ -69,6 +69,7 @@ int read(char *portname, volatile int *running, bool verbose)
     try
     {
         printf("Using serial port = %s\n", comports[comport_number]);
+        printf("receiver - check configured lanes on scoreboard \n");
 
         if (verbose)
         {

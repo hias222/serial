@@ -6,6 +6,7 @@
 #include "mqttUtils.h"
 
 //#define debug_header
+//#define debug_lane_place
 //#define debug_lane
 //#define debug_start
 //#define debug_time
@@ -16,7 +17,8 @@
 #include <unistd.h>
 #endif
 
-#define DISPLAY_LANE_COUNT 8
+#define DISPLAY_LANE_COUNT 10
+#define BUFFER_LENGTH 16
 
 #define MQTT_MESSAGE_LENGTH 8
 // for the message to broker
@@ -27,6 +29,8 @@ char COLORADO_HEAT_DATA[DISPLAY_LANE_COUNT][MQTT_MESSAGE_LENGTH];
 char COLORADO_PLACE_DATA[DISPLAY_LANE_COUNT][2];
 
 char *mydata;
+char *storeRoundsData;
+int round;
 
 int noworking;
 bool running, stopping, pending;
@@ -42,17 +46,24 @@ int initanalyseData()
     hundredth = 0;
     running = false;
 
+    //round = malloc(cnt * sizeof *round);
+    round = 0;
+
     mydata = (char *)malloc(sizeof(char) * MQTT_LONG_LENGTH);
+    storeRoundsData = (char *)malloc(sizeof(char) * MQTT_LONG_LENGTH);
     for (i = 0; i < MQTT_LONG_LENGTH; i++)
     {
         mydata[i] = '0';
+        storeRoundsData[i] = '0';
     }
+
     return 0;
 }
 
 int cleananalyseData()
 {
-    free(mydata);
+    //free(mydata);
+    //free(storeRoundsData);
     mqtt_clean();
     return 0;
 }
@@ -63,17 +74,34 @@ bool analyseActiveData(uint8_t channel, uint8_t data[32])
     char mydata[64];
 
 #ifdef debug_lane
-    sprintf(mydata, "channel: %d: 2: %d 4: %d 6: %d 8: %d 10: %d 12: %d 14: %d", channel, checkBitValue(data[2]), checkBitValue(data[4]), checkBitValue(data[6]), checkBitValue(data[8]), data[10], data[12], data[14]);
+    sprintf(mydata, "channel: %d: 2: %d 4: %d 6: %d 8: %d 10: %d 12: %d 14: %d", channel, checkBitValue(data[2]), checkBitValue(data[4]),
+            checkBitValue(data[6]), checkBitValue(data[8]), checkBitValue(data[10]), checkBitValue(data[12]), checkBitValue(data[14]));
     printf("result: %s \n", mydata);
+
+    printf("              ");
+    for (int i = 0; i < BUFFER_LENGTH; i++)
+    {
+        printf("%02x ", data[i]);
+    }
+    printf("\n");
+
 #endif
 
-    sprintf(mydata, "%d: %d %d%d %d%d %d%d", channel, checkBitValue(data[2]), checkBitValue(data[4]), checkBitValue(data[6]), checkBitValue(data[8]), data[10], data[12], data[14]);
+#ifdef debug_lane_place
+
+    if (channel == 0x01)
+    {
+        printf("channel %d \n", channel);
+    }
+
+#endif
+
     getTime(channel, data);
 
     return true;
 }
 
-int getTime(int lane, uint8_t data[])
+int getTime(uint8_t lane, uint8_t data[])
 {
     //char mydata[MQTT_LONG_LENGTH];
     char shortdata[MQTT_MESSAGE_LENGTH] = "0000000";
@@ -112,10 +140,25 @@ int getTime(int lane, uint8_t data[])
         }
         else
         {
+#ifdef debug_lane_place
+
+            if (lane == 0x01)
+            {
+                printf("change lane %d \n", lane);
+                printf("change data %s \n", shortdata);
+                printf("stored data %s \n", COLORADO_HEAT_DATA[lane - 1]);
+                for (int i = 0; i < BUFFER_LENGTH; i++)
+                {
+                    printf("%02x ", data[i]);
+                }
+                printf("\n");
+            }
+#endif
             array_match = false;
         }
     }
 
+    // ???
     if (checkBitValue(data[2]) == 0 && checkBitValue(data[14]) == 13)
     {
         array_match = true;
@@ -159,6 +202,50 @@ int8_t checkBitValue(int8_t data)
     }
     return data;
 };
+
+void storeRounds(uint8_t data[])
+{
+    char mydata[MQTT_LONG_LENGTH];
+    char sendData[MQTT_LONG_LENGTH];
+    bool array_match = true;
+
+    sprintf(mydata, "%d%d%d%d%d%d%d%d", checkBitValue(data[0]), checkBitValue(data[2]), checkBitValue(data[4]),
+            checkBitValue(data[6]), checkBitValue(data[8]), checkBitValue(data[10]),
+            checkBitValue(data[12]), checkBitValue(data[14]));
+    //printf("showDisplayLine\n");
+    //printf("--> %s\n", mydata);
+
+    if (strcmp(mydata, "00000000") == 0)
+    {
+        round = 0;
+        if (strcmp(mydata, storeRoundsData) != 0)
+        {
+            strcpy(storeRoundsData, mydata);
+            sprintf(sendData, "round %d", round);
+            mqtt_send(sendData);
+        }
+    }
+
+    if (strcmp(mydata, storeRoundsData) != 0)
+    {
+        round++;
+        strcpy(storeRoundsData, mydata);
+        sprintf(sendData, "round %d", round);
+        mqtt_send(sendData);
+    }
+}
+
+void showDisplayLine(uint8_t data[])
+{
+    char mydata[MQTT_LONG_LENGTH];
+    bool array_match = true;
+
+    sprintf(mydata, "-> %d-%d-%d-%d-%d-%d-%d-%d", checkBitValue(data[0]), checkBitValue(data[2]), checkBitValue(data[4]),
+            checkBitValue(data[6]), checkBitValue(data[8]), checkBitValue(data[10]),
+            checkBitValue(data[12]), checkBitValue(data[14]));
+    //printf("showDisplayLine\n");
+    printf("%s\n", mydata);
+}
 
 void getHeader(uint8_t data[])
 {
