@@ -9,10 +9,11 @@
 //#define debug_header
 //#define debug_time
 //#define debug_data_lanes
-#define debug_lane_pointer
+//#define debug_lane_pointer
 //#define debug_store_rounds
 //#define debug_data_others
 //#define debug_data_start
+#define LOOP_COUNT_DEF 30
 #define COLORADO_CHANNELS 32
 #define COLORADO_ADDRESS_WORD_MASK 0x80
 #define COLORADO_ROWS 16
@@ -131,7 +132,7 @@ int putReadData(uint8_t ReadData)
 
 #endif
                     // alle 10 anschauen
-                    if (loop > 10)
+                    if (loop > LOOP_COUNT_DEF)
                     {
                         getTime(colorado_data[colorado_control_channel]);
 #ifdef debug_time

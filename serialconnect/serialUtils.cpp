@@ -96,7 +96,7 @@ bool analyseActiveData(uint8_t channel, uint8_t *data[32])
 
 #endif
 
-    showDisplayLine(*data);
+    //showDisplayLine(*data);
 
     getTime(channel, *data);
 
