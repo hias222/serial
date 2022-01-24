@@ -68,7 +68,7 @@ int cleananalyseData()
     return 0;
 }
 
-bool analyseActiveData(uint8_t channel, uint8_t data[32])
+bool analyseActiveData(uint8_t channel, uint8_t *data[32])
 {
     //MQTT_LONG_LENGTH
     char mydata[64];
@@ -96,7 +96,9 @@ bool analyseActiveData(uint8_t channel, uint8_t data[32])
 
 #endif
 
-    getTime(channel, data);
+    showDisplayLine(*data);
+
+    getTime(channel, *data);
 
     return true;
 }
@@ -126,11 +128,11 @@ int getTime(uint8_t lane, uint8_t data[])
         if (strcmp(place, COLORADO_PLACE_DATA[lane - 1]) != 0)
         {
             //der platz ist ungleich 0
-            
+
             if (strcmp(place, nullplace) != 0)
             {
 #ifdef debug_lane_place
-                    printf("change place not null %d place %s - %s - %s\n", lane, place, nullplace, COLORADO_PLACE_DATA[lane - 1]);
+                printf("change place not null %d place %s - %s - %s\n", lane, place, nullplace, COLORADO_PLACE_DATA[lane - 1]);
 #endif
                 //jetzt müssen wir schicken
                 array_match = false;
@@ -191,7 +193,7 @@ int getTime(uint8_t lane, uint8_t data[])
     return 0;
 }
 
-int8_t checkBitValue(int8_t data)
+uint8_t checkBitValue(uint8_t data)
 {
     if (data == 0x0F)
     {

@@ -8,7 +8,8 @@
 //#define debug_lane
 //#define debug_header
 //#define debug_time
-#define debug_data_lanes
+//#define debug_data_lanes
+#define debug_lane_pointer
 //#define debug_store_rounds
 //#define debug_data_others
 //#define debug_data_start
@@ -109,11 +110,16 @@ int putReadData(uint8_t ReadData)
                     outPutBuffer(colorado_control_channel, buf);
 #endif
 
+#ifdef debug_lane_pointer
+                    printf("lane %d \n", colorado_control_channel);
+                    showDisplayLine(colorado_data[colorado_control_channel]);
+#endif
+
 #ifdef debug_lane
                     outPutBuffer(colorado_control_channel, buf);
 #endif
                     //please check number lanes in colorado config !!!!!!!!!
-                    analyseActiveData(colorado_control_channel, colorado_data[colorado_control_channel]);
+                    analyseActiveData(colorado_control_channel, &colorado_data[colorado_control_channel]);
                 }
                 else if (colorado_control_channel == 0x00)
                 {

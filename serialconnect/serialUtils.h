@@ -1,11 +1,11 @@
 #include <string>
 
-bool analyseActiveData(uint8_t channel, uint8_t data[32]);
+bool analyseActiveData(uint8_t channel, uint8_t *data[32]);
 int getTime(uint8_t lane, uint8_t data[]);
 void getHeader(uint8_t data[]);
 void showDisplayLine(uint8_t data[]);
 void storeRounds(uint8_t data[]);
-int8_t checkBitValue(int8_t data);
+uint8_t checkBitValue(uint8_t data);
 bool checknotnull(uint8_t data[]);
 bool checkStartStop(uint8_t data[]);
 int initanalyseData();
