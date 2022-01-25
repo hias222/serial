@@ -23,8 +23,10 @@
 #define MQTT_LONG_LENGTH 25
 
 char COLORADO_HEADER_DATA[MQTT_LONG_LENGTH];
-char COLORADO_HEAT_DATA[DISPLAY_LANE_COUNT][MQTT_MESSAGE_LENGTH];
-char COLORADO_PLACE_DATA[DISPLAY_LANE_COUNT][3];
+char **COLORADO_HEAT_DATA;
+//char COLORADO_HEAT_DATA[DISPLAY_LANE_COUNT][MQTT_MESSAGE_LENGTH];
+char **COLORADO_PLACE_DATA;
+//char COLORADO_PLACE_DATA[DISPLAY_LANE_COUNT][3];
 
 char *mydata;
 char *storeRoundsData;
@@ -40,7 +42,7 @@ int initanalyseData()
     //char *str;
     //str = (char *)malloc(sizeof(*str) * COLORADO_CHANNELS);
 
-    int i;
+    int i, o;
     hundredth = 0;
     running = false;
 
@@ -55,6 +57,18 @@ int initanalyseData()
         storeRoundsData[i] = '0';
     }
 
+    COLORADO_HEAT_DATA = (char **)malloc(sizeof(char *) * DISPLAY_LANE_COUNT);
+    for (i = 0; i < DISPLAY_LANE_COUNT; i++)
+    {
+        COLORADO_HEAT_DATA[i] = (char *)malloc(sizeof(char) * MQTT_MESSAGE_LENGTH);
+    }
+
+    COLORADO_PLACE_DATA = (char **)malloc(sizeof(char *) * DISPLAY_LANE_COUNT);
+    for (i = 0; i < DISPLAY_LANE_COUNT; i++)
+    {
+        COLORADO_PLACE_DATA[i] = (char *)malloc(sizeof(char) * 3);
+    }
+
     return 0;
 }
 
@@ -64,7 +78,7 @@ int cleananalyseData()
     return 0;
 }
 
-int getLaneTime(uint8_t lane, uint8_t data[])
+void getLaneTime(uint8_t lane, uint8_t data[])
 {
     //char mydata[MQTT_LONG_LENGTH];
     char shortdata[MQTT_MESSAGE_LENGTH] = "0000000";
@@ -183,8 +197,6 @@ int getLaneTime(uint8_t lane, uint8_t data[])
 #ifdef debug_trace
     printf("getLaneTime - step 4\n");
 #endif
-
-    return 0;
 }
 
 void restTimeAndplace(uint8_t lane)
