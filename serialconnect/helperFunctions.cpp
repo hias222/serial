@@ -3,7 +3,7 @@
 #include <string.h>
 #include "helperFunctions.h"
 
-#define DISPLAY_ONLY_LINE 3
+//#define DISPLAY_ONLY_LINE 3
 
 uint8_t checkDisplayBit(uint8_t displaybit)
 {

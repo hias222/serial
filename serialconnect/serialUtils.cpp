@@ -18,7 +18,7 @@
 #define DISPLAY_LANE_COUNT 10
 #define BUFFER_LENGTH 16
 
-#define MQTT_MESSAGE_LENGTH 8
+#define MQTT_MESSAGE_LENGTH 16
 // for the message to broker
 #define MQTT_LONG_LENGTH 25
 
@@ -160,23 +160,26 @@ void getLaneTime(uint8_t lane, uint8_t data[])
 
     if (!array_match)
     {
+#ifdef debug_trace
+            printf("getLaneTime - step 3a\n");
+#endif
         array_match = true;
         // wir schicken nur wenn die uhr läuft
         if (hundredth > 0)
         {
 #ifdef debug_trace
-            printf("getLaneTime - step 3a\n");
+            printf("getLaneTime - step 3b\n");
 #endif
             if (mqtt_send(mydata))
             {
 #ifdef debug_trace
-                printf("getLaneTime - step 3a\n");
+                printf("getLaneTime - step 3c\n");
 #endif
                 printf("Error sending \n");
             }
         }
 #ifdef debug_trace
-        printf("getLaneTime - step 3b\n");
+        printf("getLaneTime - step 3d\n");
 #endif
 
         for (int i = 0; i < MQTT_MESSAGE_LENGTH; i++)
@@ -185,7 +188,7 @@ void getLaneTime(uint8_t lane, uint8_t data[])
         }
 
 #ifdef debug_trace
-        printf("getLaneTime - step 3c\n");
+        printf("getLaneTime - step 3e\n");
 #endif
 
         for (int i = 0; i < 3; i++)
@@ -360,6 +363,7 @@ void analyseActiveData(uint8_t channel, uint8_t *data[])
 {
 #ifdef debug
     printf("analyseActiveData - start\n");
+    showDisplayInternal(*data);
 #endif
     getLaneTime(channel, *data);
 
