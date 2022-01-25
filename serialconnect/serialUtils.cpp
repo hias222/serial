@@ -64,12 +64,6 @@ int cleananalyseData()
     return 0;
 }
 
-bool analyseActiveData(uint8_t channel, uint8_t *data[])
-{
-    getLaneTime(channel, *data);
-    return true;
-}
-
 int getLaneTime(uint8_t lane, uint8_t data[])
 {
     //char mydata[MQTT_LONG_LENGTH];
@@ -296,14 +290,21 @@ int timehundredth(uint8_t data[])
 
     int decent;
     decent = checkBitValue(data[12]);
-#ifdef debug_time
-    printf("Minutes: %d Seconds: %d Zentel: %d\n", minutes, seconds, decent);
-#endif
     int timehundredth = (minutes * 60 + seconds) * 100 + decent * 10;
-#ifdef debug_time
-    printf("timehundredth: %d\n", timehundredth);
-#endif
+
     return timehundredth;
+}
+
+void analyseActiveData(uint8_t channel, uint8_t *data[])
+{
+#ifdef debug
+    printf("analyseActiveData - start\n");
+#endif
+    getLaneTime(channel, *data);
+
+#ifdef debug
+    printf("analyseActiveData - end\n");
+#endif
 }
 
 void checkStartStop(uint8_t *data[])
@@ -311,7 +312,7 @@ void checkStartStop(uint8_t *data[])
 #ifdef debug
     printf("checkStartStop - start\n");
 #endif
-        checkStartStopInternal(*data);
+    checkStartStopInternal(*data);
 #ifdef debug
     printf("checkStartStop - end\n");
 #endif
@@ -322,7 +323,7 @@ void getTime(uint8_t *data[])
 #ifdef debug
     printf("getTime - start\n");
 #endif
-        getTimeInternal(*data);
+    getTimeInternal(*data);
 #ifdef debug
     printf("getTime - end\n");
 #endif
@@ -333,7 +334,7 @@ void getHeader(uint8_t *data[])
 #ifdef debug
     printf("getHeader - start\n");
 #endif
-        getHeaderInternal(*data);
+    getHeaderInternal(*data);
 #ifdef debug
     printf("getHeader - end\n");
 #endif
@@ -344,7 +345,7 @@ void storeRounds(uint8_t *data[])
 #ifdef debug
     printf("storeRounds - start\n");
 #endif
-        storeRoundsInternal(*data);
+    storeRoundsInternal(*data);
 #ifdef debug
     printf("storeRounds - end\n");
 #endif

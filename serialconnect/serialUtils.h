@@ -1,6 +1,6 @@
 #include <string>
 
-bool analyseActiveData(uint8_t channel, uint8_t *data[]);
+void analyseActiveData(uint8_t channel, uint8_t *data[]);
 void getHeader(uint8_t *data[]);
 void storeRounds(uint8_t *data[]);
 void checkStartStop(uint8_t *data[]);
