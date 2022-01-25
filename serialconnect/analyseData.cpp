@@ -4,16 +4,11 @@
 
 #include "analyseData.h"
 #include "serialUtils.h"
-//#define debug_incoming
-//#define debug_lane
-//#define debug_header
-//#define debug_time
-//#define debug_data_lanes
-//#define debug_lane_pointer
-//#define debug_store_rounds
-//#define debug_data_others
-//#define debug_data_start
-#define LOOP_COUNT_DEF 30
+#include "helperFunctions.h"
+
+#define debug_lane_pointer
+
+#define LOOP_COUNT_DEF 10
 #define COLORADO_CHANNELS 32
 #define COLORADO_ADDRESS_WORD_MASK 0x80
 #define COLORADO_ROWS 16
@@ -43,6 +38,8 @@ int initReadData()
     printf("serialconnect - Load timing data\n");
 
     int i, o, ncolumns = 2, nrows = 3;
+
+    //only way to alloc 2 dimensonal
 
     colorado_data = (uint8_t **)malloc(sizeof(uint8_t *) * 32);
     for (i = 0; i < 32; i++)
@@ -74,51 +71,28 @@ int cleanReadData()
 int putReadData(uint8_t ReadData)
 {
     uint8_t j;
-#ifdef debug_incoming
-    printf("%02x ", ReadData);
-#endif
 
     if ((ReadData & COLORADO_ADDRESS_WORD_MASK) == COLORADO_ADDRESS_WORD_MASK)
     {
-#ifdef debug_incoming
-        printf("start data \n ");
-#endif
 
         if (0x01 == colorado_start_detected)
         {
             if (in_count == colorado_channel_length[colorado_control_channel])
             {
 
-#ifdef debug_incoming
-                printf("save %d ctrl %02x \n", in_count, colorado_control_channel);
-#endif
                 for (j = 1; j < colorado_channel_length[colorado_control_channel]; j++)
                 {
                     colorado_digit_no = (buf[j] >> 4) & 0x07;
-#ifdef debug_incoming
-                    printf("%d: [%d][%d] %d ", j, colorado_control_channel, (colorado_digit_no << 1) + colorado_control_bit, (~buf[j]) & 0x0F);
-#endif
                     colorado_data[colorado_control_channel][(colorado_digit_no << 1) + colorado_control_bit] = (~buf[j]) & 0x0F;
                 }
 
-#ifdef debug_incoming
-                printf("\n ");
-#endif
                 if (colorado_control_channel != 0x00 && colorado_control_channel < (DISPLAY_LANE_COUNT + 1))
                 {
 
-#ifdef debug_data_lanes
-                    outPutBuffer(colorado_control_channel, buf);
-#endif
-
 #ifdef debug_lane_pointer
-                    printf("lane %d \n", colorado_control_channel);
-                    showDisplayLine(colorado_data[colorado_control_channel]);
+                    showDisplayLine(&colorado_data[colorado_control_channel]);
 #endif
 
-#ifdef debug_lane
-                    outPutBuffer(colorado_control_channel, buf);
-#endif
                     //please check number lanes in colorado config !!!!!!!!!
                     analyseActiveData(colorado_control_channel, &colorado_data[colorado_control_channel]);
                 }
@@ -126,19 +100,10 @@ int putReadData(uint8_t ReadData)
                 {
                     checkStartStop(colorado_data[colorado_control_channel]);
                     loop++;
-#ifdef debug_incoming
-                    printf("--- time %02x \n", ReadData);
-                    outPutBuffer(colorado_control_channel, buf);
-
-#endif
                     // alle 10 anschauen
                     if (loop > LOOP_COUNT_DEF)
                     {
                         getTime(colorado_data[colorado_control_channel]);
-#ifdef debug_time
-                        printf("--- time %02x \n", ReadData);
-                        outPutBuffer(colorado_control_channel, buf);
-#endif
                         loop = 0;
                     }
                 }
@@ -149,50 +114,24 @@ int putReadData(uint8_t ReadData)
                     //0c
                     // 0c oder 0a
                     // A600102E304050607D
-                    outPutBuffer(colorado_control_channel, buf);
+                    //outPutBuffer(colorado_control_channel, buf);
 #endif
                     getHeader(colorado_data[colorado_control_channel]);
                 }
                 else if (colorado_control_channel == 0x12)
                 {
-#ifdef debug_store_rounds
-                    printf("0d - store rounds \n ");
-                    showDisplayLine(colorado_data[colorado_control_channel]);
-#endif
                     storeRounds(colorado_data[colorado_control_channel]);
                 }
-#ifdef debug_data_others
-                else
-                {
-                    if (colorado_control_channel > (DISPLAY_LANE_COUNT))
-                    {
-                        printf("others - %02x \n ", colorado_control_channel);
-                        showDisplayLine(colorado_data[colorado_control_channel]);
-                    }
-                }
-#endif
+
             }
-#ifdef debug_incoming
-            else
-            {
-                printf("not save %d ctrl %02x \n", in_count, colorado_control_channel);
-            }
-#endif
+
         }
         in_count = 1;
         colorado_start_detected = 0x01;
-#ifdef debug_incoming
-        printf("last\n");
-        outPutBuffer(colorado_control_channel, buf);
-#endif
         buf[0] = ReadData;
         colorado_control_bit = buf[0] & 0x01;
         colorado_control_channel = (~(buf[0] >> 1)) & 0x1F;
-#ifdef debug_incoming
-        printf("colorado_control_bit: %02x %#02x  \n", ReadData, colorado_control_bit);
-        printf("colorado_control_channel: %02x %#02x  \n", ReadData, colorado_control_channel);
-        printf("we need %d bytes\n", colorado_channel_length[colorado_control_channel]);
-#endif
+
     }
     else
     {
@@ -203,13 +142,6 @@ int putReadData(uint8_t ReadData)
             if (in_count > 9)
             { // Ups... Da ist was schief gelaufen. Mehr als 8 Bytes bis zum nächsten Adress Word
                 colorado_start_detected = 0x00;
-#ifdef debug_incoming
-                printf("uups %02x in_count too large \n", ReadData);
-#endif
-
-#ifdef debug_data_start
-                printf("reset colorado_start_detected \n ");
-#endif
             }
         }
     }
@@ -217,6 +149,7 @@ int putReadData(uint8_t ReadData)
     return true;
 }
 
+/*
 int outPutBuffer(int code, uint8_t data[])
 {
     char mydata[64];
@@ -235,4 +168,4 @@ int outPutBuffer(int code, uint8_t data[])
 
     return 0;
 }
-
+*/

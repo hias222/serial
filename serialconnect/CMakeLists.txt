@@ -3,7 +3,9 @@ set(C_SRC
 info.cpp 
 listener.cpp
 analyseData.cpp
-serialUtils.cpp)
+serialUtils.cpp
+helperFunctions.cpp
+)
 
 # not shared here - Windows
 

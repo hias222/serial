@@ -4,12 +4,7 @@
 #include "mosquitto.h"
 #include "serialUtils.h"
 #include "mqttUtils.h"
-
-//#define debug_header
-//#define debug_lane_place
-//#define debug_lane
-//#define debug_start
-//#define debug_time
+#include "helperFunctions.h"
 
 #ifdef _WIN32
 #include <process.h>
@@ -62,44 +57,13 @@ int initanalyseData()
 
 int cleananalyseData()
 {
-    //free(mydata);
-    //free(storeRoundsData);
     mqtt_clean();
     return 0;
 }
 
-bool analyseActiveData(uint8_t channel, uint8_t *data[32])
+bool analyseActiveData(uint8_t channel, uint8_t *data[])
 {
-    //MQTT_LONG_LENGTH
-    char mydata[64];
-
-#ifdef debug_lane
-    sprintf(mydata, "channel: %d: 2: %d 4: %d 6: %d 8: %d 10: %d 12: %d 14: %d", channel, checkBitValue(data[2]), checkBitValue(data[4]),
-            checkBitValue(data[6]), checkBitValue(data[8]), checkBitValue(data[10]), checkBitValue(data[12]), checkBitValue(data[14]));
-    printf("result: %s \n", mydata);
-
-    printf("              ");
-    for (int i = 0; i < BUFFER_LENGTH; i++)
-    {
-        printf("%02x ", data[i]);
-    }
-    printf("\n");
-
-#endif
-
-#ifdef debug_lane_place
-
-    if (channel == 0x01)
-    {
-        printf("channel %d \n", channel);
-    }
-
-#endif
-
-    //showDisplayLine(*data);
-
     getTime(channel, *data);
-
     return true;
 }
 
@@ -118,10 +82,6 @@ int getTime(uint8_t lane, uint8_t data[])
     sprintf(mydata, "lane %d %d%d:%d%d,%d%d %d", lane, checkBitValue(data[4]), checkBitValue(data[6]), checkBitValue(data[8]), checkBitValue(data[10]), checkBitValue(data[12]), checkBitValue(data[14]), checkBitValue(data[2]));
     sprintf(place, "%d", checkBitValue(data[2]));
 
-#ifdef debug_lane
-    printf("gettime: %s \n ", mydata);
-#endif
-
     if (strcmp(shortdata, COLORADO_HEAT_DATA[lane - 1]) == 0)
     {
         array_match = true;
@@ -131,9 +91,6 @@ int getTime(uint8_t lane, uint8_t data[])
 
             if (strcmp(place, nullplace) != 0)
             {
-#ifdef debug_lane_place
-                printf("change place not null %d place %s - %s - %s\n", lane, place, nullplace, COLORADO_PLACE_DATA[lane - 1]);
-#endif
                 //jetzt müssen wir schicken
                 array_match = false;
             }
@@ -148,9 +105,6 @@ int getTime(uint8_t lane, uint8_t data[])
         }
         else
         {
-#ifdef debug_lane_place
-            debugLane(lane, shortdata, data);
-#endif
             array_match = false;
         }
     }
@@ -172,12 +126,6 @@ int getTime(uint8_t lane, uint8_t data[])
                 printf("Error sending \n");
             }
         }
-        else
-        {
-#ifdef debug_time
-            printf("no data transfer clock : %d\n", hundredth);
-#endif
-        }
 
         for (int i = 0; i < MQTT_MESSAGE_LENGTH; i++)
         {
@@ -193,14 +141,7 @@ int getTime(uint8_t lane, uint8_t data[])
     return 0;
 }
 
-uint8_t checkBitValue(uint8_t data)
-{
-    if (data == 0x0F)
-    {
-        return 0x00;
-    }
-    return data;
-};
+
 
 void restTimeAndplace(uint8_t lane)
 {
@@ -247,29 +188,12 @@ void storeRounds(uint8_t data[])
     }
 }
 
-void showDisplayLine(uint8_t data[])
-{
-    char mydata[MQTT_LONG_LENGTH];
-    bool array_match = true;
-
-    sprintf(mydata, "-> %d-%d-%d-%d-%d-%d-%d-%d", checkBitValue(data[0]), checkBitValue(data[2]), checkBitValue(data[4]),
-            checkBitValue(data[6]), checkBitValue(data[8]), checkBitValue(data[10]),
-            checkBitValue(data[12]), checkBitValue(data[14]));
-    //printf("showDisplayLine\n");
-    printf("%s\n", mydata);
-}
-
 void getHeader(uint8_t data[])
 {
     char mydata[MQTT_LONG_LENGTH];
     bool array_match = true;
 
     sprintf(mydata, "header %d%d%d %d%d%d", checkBitValue(data[0]), checkBitValue(data[2]), checkBitValue(data[4]), checkBitValue(data[10]), checkBitValue(data[12]), checkBitValue(data[14]));
-
-#ifdef debug_header
-    printf("%02x %02x %02x %02x %02x %02x %02x %02x\n", data[0], data[2], data[4], data[6], data[8], data[10], data[12], data[14]);
-    printf("Header: %s\n\n", mydata);
-#endif
 
     if (strcmp(mydata, "header 000 000") == 0)
     {
@@ -336,17 +260,11 @@ bool checkStartStop(uint8_t data[])
     {
         if (running)
         {
-#ifdef debug_start
-            printf("start\n");
-#endif
             sprintf(mydata, "start");
             mqtt_send(mydata);
         }
         else
         {
-#ifdef debug_start
-            printf("stop\n");
-#endif
             sprintf(mydata, "stop");
             mqtt_send(mydata);
         }
@@ -361,12 +279,10 @@ bool getTime(uint8_t data[])
     char mydata[MQTT_LONG_LENGTH];
     hundredth = timehundredth(data);
 
-    sprintf(mydata, "time %d%d:%d%d,%d", checkBitValue(data[4]), checkBitValue(data[6]), checkBitValue(data[8]), checkBitValue(data[10]), checkBitValue(data[12]));
+    sprintf(mydata, "time %d%d:%d%d,%d", checkBitValue(data[4]), checkBitValue(data[6]), 
+    checkBitValue(data[8]), checkBitValue(data[10]), checkBitValue(data[12]));
 
     mqtt_send(mydata);
-#ifdef debug_time
-    printf("%s\n", mydata);
-#endif
     return true;
 };
 
@@ -391,17 +307,3 @@ int timehundredth(uint8_t data[])
     return timehundredth;
 }
 
-void debugLane(int lane, char shortdata[], uint8_t data[])
-{
-    if (lane == 0x01)
-    {
-        printf("change lane %d \n", lane);
-        printf("change data %s \n", shortdata);
-        printf("stored data %s \n", COLORADO_HEAT_DATA[lane - 1]);
-        for (int i = 0; i < BUFFER_LENGTH; i++)
-        {
-            printf("%02x ", data[i]);
-        }
-        printf("\n");
-    }
-}
