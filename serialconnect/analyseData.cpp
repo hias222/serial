@@ -6,7 +6,7 @@
 #include "serialUtils.h"
 #include "helperFunctions.h"
 
-#define debug_lane_pointer
+//#define debug_lane_pointer
 
 #define LOOP_COUNT_DEF 10
 #define COLORADO_CHANNELS 32
@@ -98,12 +98,12 @@ int putReadData(uint8_t ReadData)
                 }
                 else if (colorado_control_channel == 0x00)
                 {
-                    checkStartStop(colorado_data[colorado_control_channel]);
+                    checkStartStop(&colorado_data[colorado_control_channel]);
                     loop++;
                     // alle 10 anschauen
                     if (loop > LOOP_COUNT_DEF)
                     {
-                        getTime(colorado_data[colorado_control_channel]);
+                        getTime(&colorado_data[colorado_control_channel]);
                         loop = 0;
                     }
                 }
@@ -116,11 +116,11 @@ int putReadData(uint8_t ReadData)
                     // A600102E304050607D
                     //outPutBuffer(colorado_control_channel, buf);
 #endif
-                    getHeader(colorado_data[colorado_control_channel]);
+                    getHeader(&colorado_data[colorado_control_channel]);
                 }
                 else if (colorado_control_channel == 0x12)
                 {
-                    storeRounds(colorado_data[colorado_control_channel]);
+                    storeRounds(&colorado_data[colorado_control_channel]);
                 }
 
             }

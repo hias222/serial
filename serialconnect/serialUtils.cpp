@@ -6,6 +6,9 @@
 #include "mqttUtils.h"
 #include "helperFunctions.h"
 
+#define debug
+#define debug_trace
+
 #ifdef _WIN32
 #include <process.h>
 #else
@@ -63,11 +66,11 @@ int cleananalyseData()
 
 bool analyseActiveData(uint8_t channel, uint8_t *data[])
 {
-    getTime(channel, *data);
+    getLaneTime(channel, *data);
     return true;
 }
 
-int getTime(uint8_t lane, uint8_t data[])
+int getLaneTime(uint8_t lane, uint8_t data[])
 {
     //char mydata[MQTT_LONG_LENGTH];
     char shortdata[MQTT_MESSAGE_LENGTH] = "0000000";
@@ -77,7 +80,7 @@ int getTime(uint8_t lane, uint8_t data[])
     char nullplace[3] = "0";
 
     // Button ZEit
-    //Problem ees wird die ZEit aus dem letzten lauf geschickt mit 0 als platz
+    //Problem ees wird die Zeit aus dem letzten lauf geschickt mit 0 als platz
     sprintf(shortdata, "%d%d%d%d%d%d", checkBitValue(data[4]), checkBitValue(data[14]), checkBitValue(data[12]), checkBitValue(data[10]), checkBitValue(data[8]), checkBitValue(data[6]));
     sprintf(mydata, "lane %d %d%d:%d%d,%d%d %d", lane, checkBitValue(data[4]), checkBitValue(data[6]), checkBitValue(data[8]), checkBitValue(data[10]), checkBitValue(data[12]), checkBitValue(data[14]), checkBitValue(data[2]));
     sprintf(place, "%d", checkBitValue(data[2]));
@@ -141,8 +144,6 @@ int getTime(uint8_t lane, uint8_t data[])
     return 0;
 }
 
-
-
 void restTimeAndplace(uint8_t lane)
 {
     char shortdata[MQTT_MESSAGE_LENGTH] = "0000000";
@@ -156,7 +157,7 @@ void restTimeAndplace(uint8_t lane)
     }
 }
 
-void storeRounds(uint8_t data[])
+void storeRoundsInternal(uint8_t data[])
 {
     char mydata[MQTT_LONG_LENGTH];
     char sendData[MQTT_LONG_LENGTH];
@@ -188,7 +189,7 @@ void storeRounds(uint8_t data[])
     }
 }
 
-void getHeader(uint8_t data[])
+void getHeaderInternal(uint8_t data[])
 {
     char mydata[MQTT_LONG_LENGTH];
     bool array_match = true;
@@ -251,7 +252,7 @@ bool checknotnull(uint8_t data[])
     return pending;
 };
 
-bool checkStartStop(uint8_t data[])
+void checkStartStopInternal(uint8_t data[])
 {
     running = checknotnull(data);
     char mydata[MQTT_LONG_LENGTH];
@@ -270,20 +271,18 @@ bool checkStartStop(uint8_t data[])
         }
     }
     stopping = running;
-    return true;
 };
 
-bool getTime(uint8_t data[])
+void getTimeInternal(uint8_t data[])
 {
-    running = checknotnull(data);
     char mydata[MQTT_LONG_LENGTH];
+    running = checknotnull(data);
     hundredth = timehundredth(data);
 
-    sprintf(mydata, "time %d%d:%d%d,%d", checkBitValue(data[4]), checkBitValue(data[6]), 
-    checkBitValue(data[8]), checkBitValue(data[10]), checkBitValue(data[12]));
+    sprintf(mydata, "time %d%d:%d%d,%d", checkBitValue(data[4]), checkBitValue(data[6]),
+            checkBitValue(data[8]), checkBitValue(data[10]), checkBitValue(data[12]));
 
     mqtt_send(mydata);
-    return true;
 };
 
 int timehundredth(uint8_t data[])
@@ -307,3 +306,46 @@ int timehundredth(uint8_t data[])
     return timehundredth;
 }
 
+void checkStartStop(uint8_t *data[])
+{
+#ifdef debug
+    printf("checkStartStop - start\n");
+#endif
+        checkStartStopInternal(*data);
+#ifdef debug
+    printf("checkStartStop - end\n");
+#endif
+}
+
+void getTime(uint8_t *data[])
+{
+#ifdef debug
+    printf("getTime - start\n");
+#endif
+        getTimeInternal(*data);
+#ifdef debug
+    printf("getTime - end\n");
+#endif
+};
+
+void getHeader(uint8_t *data[])
+{
+#ifdef debug
+    printf("getHeader - start\n");
+#endif
+        getHeaderInternal(*data);
+#ifdef debug
+    printf("getHeader - end\n");
+#endif
+}
+
+void storeRounds(uint8_t *data[])
+{
+#ifdef debug
+    printf("storeRounds - start\n");
+#endif
+        storeRoundsInternal(*data);
+#ifdef debug
+    printf("storeRounds - end\n");
+#endif
+}
