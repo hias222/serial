@@ -79,15 +79,27 @@ int getLaneTime(uint8_t lane, uint8_t data[])
     sprintf(mydata, "lane %d %d%d:%d%d,%d%d %d", lane, checkBitValue(data[4]), checkBitValue(data[6]), checkBitValue(data[8]), checkBitValue(data[10]), checkBitValue(data[12]), checkBitValue(data[14]), checkBitValue(data[2]));
     sprintf(place, "%d", checkBitValue(data[2]));
 
+#ifdef debug_trace
+    printf("getLaneTime - step 1\n");
+#endif
+
     if (strcmp(shortdata, COLORADO_HEAT_DATA[lane - 1]) == 0)
     {
+#ifdef debug_trace
+        printf("getLaneTime - step 1a\n");
+#endif
         array_match = true;
         if (strcmp(place, COLORADO_PLACE_DATA[lane - 1]) != 0)
         {
             //der platz ist ungleich 0
-
+#ifdef debug_trace
+            printf("getLaneTime - step 1aa\n");
+#endif
             if (strcmp(place, nullplace) != 0)
             {
+#ifdef debug_trace
+                printf("getLaneTime - step 1aaa\n");
+#endif
                 //jetzt müssen wir schicken
                 array_match = false;
             }
@@ -95,22 +107,42 @@ int getLaneTime(uint8_t lane, uint8_t data[])
     }
     else
     {
+#ifdef debug_trace
+        printf("getLaneTime - step 1b\n");
+#endif
         if (strcmp(shortdata, "000000") == 0)
         {
+#ifdef debug_trace
+            printf("getLaneTime - step 1bb\n");
+#endif
             array_match = true;
             restTimeAndplace(lane);
         }
         else
         {
+#ifdef debug_trace
+            printf("getLaneTime - step 1bc\n");
+#endif
             array_match = false;
         }
     }
 
+#ifdef debug_trace
+    printf("getLaneTime - step 2\n");
+#endif
+
     // ???
     if (checkBitValue(data[2]) == 0 && checkBitValue(data[14]) == 13)
     {
+#ifdef debug_trace
+        printf("getLaneTime - step 2a\n");
+#endif
         array_match = true;
     }
+
+#ifdef debug_trace
+    printf("getLaneTime - step 3\n");
+#endif
 
     if (!array_match)
     {
@@ -118,22 +150,39 @@ int getLaneTime(uint8_t lane, uint8_t data[])
         // wir schicken nur wenn die uhr läuft
         if (hundredth > 0)
         {
+#ifdef debug_trace
+            printf("getLaneTime - step 3a\n");
+#endif
             if (mqtt_send(mydata))
             {
+#ifdef debug_trace
+                printf("getLaneTime - step 3a\n");
+#endif
                 printf("Error sending \n");
             }
         }
+#ifdef debug_trace
+        printf("getLaneTime - step 3b\n");
+#endif
 
         for (int i = 0; i < MQTT_MESSAGE_LENGTH; i++)
         {
             COLORADO_HEAT_DATA[lane - 1][i] = shortdata[i];
         }
 
+#ifdef debug_trace
+        printf("getLaneTime - step 3c\n");
+#endif
+
         for (int i = 0; i < 3; i++)
         {
             COLORADO_PLACE_DATA[lane - 1][i] = place[i];
         }
     }
+
+#ifdef debug_trace
+    printf("getLaneTime - step 4\n");
+#endif
 
     return 0;
 }
