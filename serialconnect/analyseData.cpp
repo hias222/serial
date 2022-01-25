@@ -14,9 +14,9 @@
 #define COLORADO_ROWS 16
 
 #define DISPLAY_LANE_COUNT 10
-#define BUFFER_LENGTH 9
+#define BUFFER_LENGTH 10
 
-#define MQTT_MESSAGE_LENGTH 8
+#define MQTT_MESSAGE_LENGTH 16
 // for the message to broker
 #define MQTT_LONG_LENGTH 25
 
