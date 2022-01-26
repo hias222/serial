@@ -5,6 +5,10 @@ listener.cpp
 analyseData.cpp
 serialUtils.cpp
 helperFunctions.cpp
+analyseStartStop.cpp
+analyseHeader.cpp
+analyseLane.cpp
+analyseRunningTime.cpp
 )
 
 # not shared here - Windows

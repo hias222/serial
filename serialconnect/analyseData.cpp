@@ -5,6 +5,12 @@
 #include "analyseData.h"
 #include "serialUtils.h"
 #include "helperFunctions.h"
+#include "analyseStartStop.h"
+#include "analyseHeader.h"
+#include "analyseRunningTime.h"
+#include "analyseLane.h"
+
+#define debug
 
 //#define debug_lane_pointer
 
@@ -55,15 +61,22 @@ int initReadData()
         }
     }
 
-    // more inits
+// more inits
 
     initanalyseData();
+    initRunninTime();
+    initanalyseLane(DISPLAY_LANE_COUNT, MQTT_MESSAGE_LENGTH);
+    initanalyseHeader(MQTT_LONG_LENGTH);
+#ifdef debug
+    printf("analyseData - INIT reaady\n");
+#endif
     return 0;
 }
 
 int cleanReadData()
 {
     cleananalyseData();
+    cleananalyseLane();
     free(colorado_data);
     return 0;
 }
@@ -122,16 +135,13 @@ int putReadData(uint8_t ReadData)
                 {
                     storeRounds(&colorado_data[colorado_control_channel]);
                 }
-
             }
-
         }
         in_count = 1;
         colorado_start_detected = 0x01;
         buf[0] = ReadData;
         colorado_control_bit = buf[0] & 0x01;
         colorado_control_channel = (~(buf[0] >> 1)) & 0x1F;
-
     }
     else
     {
