@@ -18,25 +18,29 @@
 #include <unistd.h>
 #endif
 
-char **COLORADO_HEAT_DATA;
-char **COLORADO_PLACE_DATA;
+char **coloradoHeatData;
+char **coloradoPlaceData;
 
 int DISPLAY_LANE_COUNT;
 int MQTT_MESSAGE_LENGTH;
 
-#define TIME_STORE_LENGTH 8
-#define PLACE_LENGTH 3
-
 void resetTimeAndPlace(uint8_t lane)
 {
-    char nullshortdata[TIME_STORE_LENGTH];
-    sprintf(nullshortdata, "%d%d%d%d%d%d", 0, 0, 0, 0, 0, 0);
-    COLORADO_HEAT_DATA[lane - 1] = nullshortdata;
+    if (lane == 0)
+    {
+        printf("internal error lane 0 resetTimeAndPlace\n");
+    }
+    else
+    {
+        char xxshortdata[8];
+        sprintf(xxshortdata, "%d%d%d%d%d%d", getNullBit(), getNullBit(), getNullBit(), getNullBit(), getNullBit(), getNullBit());
+        char nullplace[3];
+        sprintf(nullplace, "%d", getNullBit());
 
-    //char nullplace[3];
-    //sprintf(nullplace, "%d", 0);
-    //COLORADO_PLACE_DATA[lane - 1] = nullplace;
-
+        //coloradoHeatData[lane - 1] = nullshortdata;
+        strncpy(coloradoPlaceData[lane - 1], nullplace, 3);
+        strncpy(coloradoHeatData[lane - 1], xxshortdata, 8);
+    }
 }
 
 void resetAllData()
@@ -44,7 +48,7 @@ void resetAllData()
     for (int clearnr = 0; clearnr < DISPLAY_LANE_COUNT; clearnr++)
     {
         resetTimeAndPlace(clearnr);
-        //sprintf(COLORADO_HEAT_DATA[clearnr], "000000");
+        //sprintf(coloradoHeatData[clearnr], "000000");
     }
 }
 
@@ -54,31 +58,37 @@ void initanalyseLane(int laneCount, int mqqMsgLength)
     DISPLAY_LANE_COUNT = laneCount;
     MQTT_MESSAGE_LENGTH = mqqMsgLength;
 
-    printf("analyseLane with %d lanes and %d message size ", laneCount, mqqMsgLength);
+    printf("analyseLane with %d lanes and %d message size \n", laneCount, mqqMsgLength);
 
     //    char shortdata[MQTT_MESSAGE_LENGTH] = "0000000";
 
-    COLORADO_HEAT_DATA = (char **)malloc(sizeof(char *) * DISPLAY_LANE_COUNT);
+    coloradoHeatData = (char **)malloc(sizeof(char *) * DISPLAY_LANE_COUNT);
     for (i = 0; i < DISPLAY_LANE_COUNT; i++)
     {
         // in case for special characters +8
-        COLORADO_HEAT_DATA[i] = (char *)malloc(sizeof(char) * (TIME_STORE_LENGTH));
+        coloradoHeatData[i] = (char *)malloc(sizeof(char) * (12));
+        char xxshortdata[12];
+        sprintf(xxshortdata, "%d%d%d%d%d%d", getNullBit(), getNullBit(), getNullBit(), getNullBit(), getNullBit(), getNullBit());
+        strncpy(coloradoHeatData[i], xxshortdata, 12);
     }
 
-    COLORADO_PLACE_DATA = (char **)malloc(sizeof(char *) * DISPLAY_LANE_COUNT);
+    coloradoPlaceData = (char **)malloc(sizeof(char *) * DISPLAY_LANE_COUNT);
     for (i = 0; i < DISPLAY_LANE_COUNT; i++)
     {
         // in case for special characters +2
-        COLORADO_PLACE_DATA[i] = (char *)malloc(sizeof(char) * (PLACE_LENGTH + 2));
+        coloradoPlaceData[i] = (char *)malloc(sizeof(char) * (10));
+        char nullplace[3];
+        sprintf(nullplace, "%d", getNullBit());
+        strncpy(coloradoPlaceData[i], nullplace, 3);
     }
 
-    resetAllData();
+    //resetAllData();
 }
 
 void cleananalyseLane()
 {
-    free(COLORADO_PLACE_DATA);
-    free(COLORADO_HEAT_DATA);
+    free(coloradoPlaceData);
+    free(coloradoHeatData);
 }
 
 void sendLaneData(char mydata[])
@@ -120,16 +130,15 @@ void sendLaneData(char mydata[])
 
 void getLaneTime(uint8_t lane, uint8_t data[])
 {
-    char nullshortdata[TIME_STORE_LENGTH];
+    char nullshortdata[7];
     sprintf(nullshortdata, "%d%d%d%d%d%d", 0, 0, 0, 0, 0, 0);
     char nullplace[3];
     sprintf(nullplace, "%d", 0);
 
-    char log[MQTT_MESSAGE_LENGTH];
-    char place[PLACE_LENGTH];
+    char place[3];
     bool array_match = false;
     char mydata[64];
-    char shortdata[TIME_STORE_LENGTH];
+    char shortdata[7];
 
     // Button ZEit
     //Problem ees wird die Zeit aus dem letzten lauf geschickt mit 0 als platz
@@ -139,10 +148,10 @@ void getLaneTime(uint8_t lane, uint8_t data[])
             checkBitValue(data[10]), checkBitValue(data[12]), checkBitValue(data[14]), checkBitValue(data[2]));
     sprintf(place, "%d", checkBitValue(data[2]));
 
-    if (strcmp(shortdata, COLORADO_HEAT_DATA[lane - 1]) == 0)
+    if (strcmp(shortdata, coloradoHeatData[lane - 1]) == 0)
     {
         array_match = true;
-        if (strcmp(place, COLORADO_PLACE_DATA[lane - 1]) != 0)
+        if (strcmp(place, coloradoPlaceData[lane - 1]) != 0)
         {
             //der platz ist ungleich 0
             if (strcmp(place, nullplace) != 0)
@@ -162,7 +171,8 @@ void getLaneTime(uint8_t lane, uint8_t data[])
         else
         {
 #ifdef debug_send
-            printf("not matching and time not null (000000) - %s -- %s\n", shortdata, COLORADO_HEAT_DATA[lane - 1]);
+            printf("not matching and time not null - %s\n", shortdata);
+            printf("stored time                    - %s\n",coloradoHeatData[lane - 1]);
 #endif
             array_match = false;
         }
@@ -175,13 +185,18 @@ void getLaneTime(uint8_t lane, uint8_t data[])
 
     if (!array_match)
     {
+#ifdef debug_send
+        printf("prepare data - %s -- %s -- %s\n", shortdata, coloradoHeatData[lane - 1], coloradoPlaceData[lane - 1]);
+#endif
         sendLaneData(mydata);
         array_match = true;
-        COLORADO_HEAT_DATA[lane - 1] = shortdata;
-        //for (int i = 0; i < 3; i++)
-        //{
-        COLORADO_PLACE_DATA[lane - 1] = place;
-        //}
+        strncpy(coloradoHeatData[lane - 1], shortdata,8);
+        //coloradoHeatData[lane - 1] = shortdata;
+        strncpy(coloradoPlaceData[lane - 1], place,3);
+        //coloradoPlaceData[lane - 1] = place;
+#ifdef debug_send
+        printf("send data - %s -- %s -- %s\n", shortdata, coloradoHeatData[lane - 1], coloradoPlaceData[lane - 1]);
+#endif
     }
 }
 

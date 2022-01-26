@@ -5,6 +5,7 @@
 #include "serialUtils.h"
 #include "mqttUtils.h"
 #include "helperFunctions.h"
+#include "analyseLane.h"
 
 //#define debug
 
@@ -21,6 +22,7 @@ void checkStartStopInternal(uint8_t data[])
         {
             sprintf(mydata, "start");
             mqtt_send(mydata);
+            resetAllData();
         }
         else
         {

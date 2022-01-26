@@ -14,6 +14,11 @@ uint8_t checkDisplayBit(uint8_t displaybit)
     return displaybit;
 };
 
+
+uint8_t getNullBit() {
+    return 0x00;
+}
+
 uint8_t checkBitValue(uint8_t data)
 {
     if (data == 0x0F)
