@@ -6,19 +6,18 @@
 #include "mqttUtils.h"
 #include "helperFunctions.h"
 
-// #define debug
+//#define debug
 
 int noworking;
-bool pending;
-
-bool running;
+bool pending, running;
 int hundredth;
 
 void initRunninTime()
 {
-
+    noworking = 0;
     hundredth = 0;
     running = false;
+    pending = false;
 }
 
 int timehundredth(uint8_t data[])
@@ -34,15 +33,25 @@ int timehundredth(uint8_t data[])
     decent = checkBitValue(data[12]);
     int timehundredth = (minutes * 60 + seconds) * 100 + decent * 10;
 
+#ifdef debug
+        printf("time 100 %d \n", timehundredth);
+#endif
+       
+
     return timehundredth;
 }
 
 bool checknotnull(uint8_t data[])
 {
+
     // nur jedes 5 mal
     noworking++;
     if (noworking > 5)
     {
+
+#ifdef debug
+        printf("time %d \n", pending);
+#endif
         noworking = 0;
         for (int i = 12; i > 4; i = i - 2)
         {
@@ -88,7 +97,13 @@ bool getRunningState()
 {
     if (hundredth > 0)
     {
+#ifdef debug
+        printf("running \n");
+#endif
         return true;
     }
+#ifdef debug
+        printf("stopped \n");
+#endif
     return false;
 }
