@@ -85,7 +85,7 @@ void storeRoundsInternal(uint8_t data[])
         if (strcmp(mydata, storeRoundsData) != 0)
         {
             strcpy(storeRoundsData, mydata);
-            sprintf(sendData, "p_round %d", p_round);
+            sprintf(sendData, "round %d", p_round);
             mqtt_send(sendData);
         }
     }
@@ -94,7 +94,7 @@ void storeRoundsInternal(uint8_t data[])
     {
         p_round++;
         strcpy(storeRoundsData, mydata);
-        sprintf(sendData, "p_round %d", p_round);
+        sprintf(sendData, "round %d", p_round);
         mqtt_send(sendData);
     }
 }
