@@ -32,14 +32,14 @@ void resetTimeAndPlace(uint8_t lane)
     }
     else
     {
-        char xxshortdata[8];
-        sprintf(xxshortdata, "%d%d%d%d%d%d", getNullBit(), getNullBit(), getNullBit(), getNullBit(), getNullBit(), getNullBit());
+        char setshortdata[8];
+        sprintf(setshortdata, "%d%d%d%d%d%d", getNullBit(), getNullBit(), getNullBit(), getNullBit(), getNullBit(), getNullBit());
         char nullplace[3];
         sprintf(nullplace, "%d", getNullBit());
 
         //coloradoHeatData[lane - 1] = nullshortdata;
         strncpy(coloradoPlaceData[lane - 1], nullplace, 3);
-        strncpy(coloradoHeatData[lane - 1], xxshortdata, 8);
+        strncpy(coloradoHeatData[lane - 1], setshortdata, 8);
     }
 }
 
@@ -66,10 +66,10 @@ void initanalyseLane(int laneCount, int mqqMsgLength)
     for (i = 0; i < DISPLAY_LANE_COUNT; i++)
     {
         // in case for special characters +8
-        coloradoHeatData[i] = (char *)malloc(sizeof(char) * (12));
-        char xxshortdata[12];
-        sprintf(xxshortdata, "%d%d%d%d%d%d", getNullBit(), getNullBit(), getNullBit(), getNullBit(), getNullBit(), getNullBit());
-        strncpy(coloradoHeatData[i], xxshortdata, 12);
+        coloradoHeatData[i] = (char *)malloc(sizeof(char) * (18));
+        char setshortdata[12];
+        sprintf(setshortdata, "%d%d%d%d%d%d", getNullBit(), getNullBit(), getNullBit(), getNullBit(), getNullBit(), getNullBit());
+        strncpy(coloradoHeatData[i], setshortdata, 12);
     }
 
     coloradoPlaceData = (char **)malloc(sizeof(char *) * DISPLAY_LANE_COUNT);
@@ -138,7 +138,7 @@ void getLaneTime(uint8_t lane, uint8_t data[])
     char place[3];
     bool array_match = false;
     char mydata[64];
-    char shortdata[7];
+    char shortdata[16];
 
     // Button ZEit
     //Problem ees wird die Zeit aus dem letzten lauf geschickt mit 0 als platz
@@ -172,7 +172,7 @@ void getLaneTime(uint8_t lane, uint8_t data[])
         {
 #ifdef debug_send
             printf("not matching and time not null - %s\n", shortdata);
-            printf("stored time                    - %s\n",coloradoHeatData[lane - 1]);
+            printf("stored time                    - %s\n", coloradoHeatData[lane - 1]);
 #endif
             array_match = false;
         }
@@ -190,9 +190,9 @@ void getLaneTime(uint8_t lane, uint8_t data[])
 #endif
         sendLaneData(mydata);
         array_match = true;
-        strncpy(coloradoHeatData[lane - 1], shortdata,8);
+        strncpy(coloradoHeatData[lane - 1], shortdata, 8);
         //coloradoHeatData[lane - 1] = shortdata;
-        strncpy(coloradoPlaceData[lane - 1], place,3);
+        strncpy(coloradoPlaceData[lane - 1], place, 3);
         //coloradoPlaceData[lane - 1] = place;
 #ifdef debug_send
         printf("send data - %s -- %s -- %s\n", shortdata, coloradoHeatData[lane - 1], coloradoPlaceData[lane - 1]);

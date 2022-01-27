@@ -25,6 +25,12 @@ uint8_t checkBitValue(uint8_t data)
     {
         return 0x00;
     }
+
+    if (data > 0x09)
+    {
+        return 0x00;
+    }
+
     return data;
 };
 
