@@ -30,7 +30,7 @@
 
 char *mydata;
 char *storeRoundsData;
-int round;
+int p_round;
 
 //int noworking;
 //bool running, stopping
@@ -47,8 +47,8 @@ int initanalyseData()
     //hundredth = 0;
     //running = false;
 
-    //round = malloc(cnt * sizeof *round);
-    round = 0;
+    //p_round = malloc(cnt * sizeof *p_round);
+    p_round = 0;
 
     mydata = (char *)malloc(sizeof(char) * MQTT_LONG_LENGTH);
     storeRoundsData = (char *)malloc(sizeof(char) * MQTT_LONG_LENGTH);
@@ -81,20 +81,20 @@ void storeRoundsInternal(uint8_t data[])
 
     if (strcmp(mydata, "00000000") == 0)
     {
-        round = 0;
+        p_round = 0;
         if (strcmp(mydata, storeRoundsData) != 0)
         {
             strcpy(storeRoundsData, mydata);
-            sprintf(sendData, "round %d", round);
+            sprintf(sendData, "p_round %d", p_round);
             mqtt_send(sendData);
         }
     }
 
     if (strcmp(mydata, storeRoundsData) != 0)
     {
-        round++;
+        p_round++;
         strcpy(storeRoundsData, mydata);
-        sprintf(sendData, "round %d", round);
+        sprintf(sendData, "p_round %d", p_round);
         mqtt_send(sendData);
     }
 }

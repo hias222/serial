@@ -27,7 +27,7 @@ void initanalyseHeader( int mqttLength)
 
 void getHeaderInternal(uint8_t data[])
 {
-    char mydata[mqttLongLength];
+    char mydata[64];
     bool array_match = true;
 
     sprintf(mydata, "header %d%d%d %d%d%d", checkBitValue(data[0]), checkBitValue(data[2]), checkBitValue(data[4]), checkBitValue(data[10]), checkBitValue(data[12]), checkBitValue(data[14]));
