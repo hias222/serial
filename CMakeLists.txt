@@ -216,7 +216,7 @@ if(WIN32)
         file(COPY ${PROJECT_SOURCE_DIR}/receiver/libwin32/Readme.md
         DESTINATION ${RELEASE_OUTPUT_PATH}/Release)
 
-        file(COPY ${PROJECT_SOURCE_DIR}/receiver/libwin32/ftd2xx.lib
+        file(COPY ${PROJECT_SOURCE_DIR}/receiver/libwin32/ftd2xx.dll
         DESTINATION ${RELEASE_OUTPUT_PATH}/Release)
 
         file(COPY ${USER_HOME_DIR}/vcpkg/installed/x86-windows/bin/libcrypto-1_1.dll
