@@ -21,8 +21,8 @@ uint8_t getNullBit() {
 
 uint8_t checkBitValue(uint8_t data)
 {
-    //lane 10 - cracy
-    if (data > 0x10)
+    //lane 10 - switch to decimal lt
+    if (data > 10)
     {
         return 0x00;
     }
