@@ -47,7 +47,7 @@ void resetAllData()
 {
     for (int clearnr = 0; clearnr < DISPLAY_LANE_COUNT; clearnr++)
     {
-        resetTimeAndPlace(clearnr);
+        resetTimeAndPlace(clearnr + 1);
         //sprintf(coloradoHeatData[clearnr], "000000");
     }
 }
