@@ -21,15 +21,17 @@ uint8_t getNullBit() {
 
 uint8_t checkBitValue(uint8_t data)
 {
+    //lane 10 - cracy
+    if (data > 0x10)
+    {
+        return 0x00;
+    }
+/* history
     if (data == 0x0F)
     {
         return 0x00;
     }
-
-    if (data > 0x09)
-    {
-        return 0x00;
-    }
+*/
 
     return data;
 };
