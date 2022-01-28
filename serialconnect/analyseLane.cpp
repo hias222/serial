@@ -7,7 +7,8 @@
 #include "helperFunctions.h"
 #include "analyseRunningTime.h"
 
-#define debug_send
+#define debug_info
+//#define debug_send
 //#define debug
 //#define debug_trace
 //#define debug_trace
@@ -45,6 +46,7 @@ void resetTimeAndPlace(uint8_t lane)
 
 void resetAllData()
 {
+    // first prevent data send
     for (int clearnr = 0; clearnr < DISPLAY_LANE_COUNT; clearnr++)
     {
         resetTimeAndPlace(clearnr + 1);
@@ -98,8 +100,8 @@ void sendLaneData(char mydata[])
     printf("getLaneTime - step 3a\n");
 #endif
     // wir schicken nur wenn die uhr läuft
-    //if (hundredth > 0)
-    if (getRunningState())
+    //if (hundredth > 500)
+    if (getsendActiveState())
     {
 
 #ifdef debug_trace
@@ -113,7 +115,7 @@ void sendLaneData(char mydata[])
             printf("Error sending \n");
         }
     }
-#ifdef debug_send
+#ifdef debug_info
     else
     {
         printf("no running state - ");
@@ -123,7 +125,7 @@ void sendLaneData(char mydata[])
     printf("getLaneTime - step 3d\n");
 #endif
 
-#ifdef debug_send
+#ifdef debug_info
     printf("sendLaneData - %s \n", mydata);
 #endif
 }

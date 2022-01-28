@@ -8,16 +8,14 @@
 
 //#define debug
 
-int noworking;
-bool pending, running;
 int hundredth;
+
+bool sendActiveState;
 
 void initRunninTime()
 {
-    noworking = 0;
     hundredth = 0;
-    running = false;
-    pending = false;
+    sendActiveState = false;
 }
 
 int timehundredth(uint8_t data[])
@@ -33,47 +31,27 @@ int timehundredth(uint8_t data[])
     decent = checkBitValue(data[12]);
     int timehundredth = (minutes * 60 + seconds) * 100 + decent * 10;
 
+    if (hundredth > 500)
+    {
+        sendActiveState = true;
+    }
+
+    if (hundredth < 500)
+    {
+        sendActiveState = false;
+    }
+
 #ifdef debug
-        printf("time 100 %d \n", timehundredth);
+    printf("time 100 %d \n", timehundredth);
 #endif
-       
 
     return timehundredth;
 }
 
-bool checknotnull(uint8_t data[])
-{
-
-    // nur jedes 5 mal
-    noworking++;
-    if (noworking > 5)
-    {
-
-#ifdef debug
-        printf("time %d \n", pending);
-#endif
-        noworking = 0;
-        for (int i = 12; i > 4; i = i - 2)
-        {
-            if (data[i] != 0x0F)
-            {
-                if (data[i] > 0)
-                {
-                    pending = true;
-                    return true;
-                }
-            }
-        }
-        pending = false;
-        return false;
-    }
-    return pending;
-};
-
 void getTimeInternal(uint8_t data[])
 {
     char mydata[64];
-    running = checknotnull(data);
+    //running = checknotnull(data);
     hundredth = timehundredth(data);
 
     sprintf(mydata, "time %d%d:%d%d,%d", checkBitValue(data[4]), checkBitValue(data[6]),
@@ -93,17 +71,7 @@ void getTime(uint8_t *data[])
 #endif
 };
 
-bool getRunningState()
+bool getsendActiveState()
 {
-    if (hundredth > 0)
-    {
-#ifdef debug
-        printf("running \n");
-#endif
-        return true;
-    }
-#ifdef debug
-        printf("stopped \n");
-#endif
-    return false;
+    return sendActiveState;
 }

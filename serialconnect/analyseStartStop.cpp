@@ -9,7 +9,39 @@
 
 //#define debug
 
+int noworking;
+bool pending, running;
+
 bool b_running, b_stopping;
+
+bool checknotnull(uint8_t data[])
+{
+
+    // nur jedes 5 mal
+    noworking++;
+    if (noworking > 5 || !pending)
+    {
+
+#ifdef debug
+        printf("time %d \n", pending);
+#endif
+        noworking = 0;
+        for (int i = 12; i > 4; i = i - 2)
+        {
+            if (data[i] != 0x0F)
+            {
+                if (data[i] > 0)
+                {
+                    pending = true;
+                    return true;
+                }
+            }
+        }
+        pending = false;
+        return false;
+    }
+    return pending;
+};
 
 void checkStartStopInternal(uint8_t data[])
 {
@@ -18,11 +50,11 @@ void checkStartStopInternal(uint8_t data[])
 
     if (b_stopping != b_running)
     {
+        resetAllData();
         if (b_running)
         {
             sprintf(mydata, "start");
             mqtt_send(mydata);
-            resetAllData();
         }
         else
         {
