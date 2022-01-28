@@ -63,7 +63,7 @@ int read(char *portname, char *dstname, bool forward, volatile int *running, boo
         if (fo < 0)
         {
             perror(dstname);
-            return 1;
+            //return 0;
         }
     }
 
