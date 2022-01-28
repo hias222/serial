@@ -30,13 +30,13 @@ bool checkPort()
     return check;
 }
 
-bool start(volatile int *running, char *portname, bool verbose)
+bool start(volatile int *running, char *portname, char *dstportname,bool forward, bool verbose)
 {
     bool check = false;
     //char portname[] = "myport";
     try
     {
-        read(portname, running, verbose);
+        read(portname, dstportname, forward, running, verbose);
         check = true;
     }
     catch (...)
@@ -61,7 +61,7 @@ bool startftdi(volatile int *running, bool verbose)
     return check;
 }
 
-int startListen(volatile int *running, char *portname, bool verbose, bool ftdidevice, bool sendode)
+int startListen(volatile int *running, char *portname,char *dstportname, bool verbose, bool ftdidevice, bool sendode)
 {
     printf("serialconnect - Serial start ...\n");
     //ToDo add send binary
@@ -78,7 +78,7 @@ int startListen(volatile int *running, char *portname, bool verbose, bool ftdide
             startftdi(running,verbose);
         }else{
             printf("serialconnect - serial running\n");
-            start(running, portname, verbose);
+            start(running, portname, dstportname, sendode, verbose);
         }
         
 #ifdef _WIN32

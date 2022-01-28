@@ -32,9 +32,9 @@ volatile int STOP = FALSE;
 
 using namespace std;
 
-int read(char *portname, volatile int *running, bool verbose)
+int read(char *portname, char *dstname, bool forward, volatile int *running, bool verbose)
 {
-    int fd, c, res;
+    int fd, c, res, fo;
     int flag, baudrate;
     struct termios oldtio, newtio;
     unsigned char buf[BUFFER_LENGTH];
@@ -47,6 +47,7 @@ int read(char *portname, volatile int *running, bool verbose)
 #endif
 
     //fd = open(portname, O_RDONLY);
+
     fd = open(portname, O_RDWR | O_NOCTTY | O_NDELAY);
 
     if (fd < 0)
@@ -54,6 +55,19 @@ int read(char *portname, volatile int *running, bool verbose)
         perror(portname);
         return 1;
     }
+
+    if (forward)
+    {
+        fo = open(dstname, O_RDWR | O_NOCTTY | O_NDELAY);
+
+        if (fo < 0)
+        {
+            perror(dstname);
+            return 1;
+        }
+    }
+
+    //fo = open(, O_RDWR | O_NOCTTY | O_NDELAY);
 
     tcgetattr(fd, &oldtio); //save current port settings
     bzero(&newtio, sizeof(newtio));
@@ -99,6 +113,7 @@ int read(char *portname, volatile int *running, bool verbose)
     // only with ftdi
     // 	Enable parity bit ???
     newtio.c_cflag = PARENB;
+    //newtio.c_cflag = PARMRK;
     //newtio.c_cflag = PARODD;
 
     //1 stopbit
@@ -111,7 +126,11 @@ int read(char *portname, volatile int *running, bool verbose)
     tcsetattr(fd, TCSANOW, &newtio);
 
     printf("\n");
-    printf("    receiver - port in (USB)= %s\n", portname);
+    printf("    receiver - port in (USB)=%s\n", portname);
+    if (forward)
+    {
+        printf("    forward to - port in (USB)=%s\n", dstname);
+    }
     printf("\n");
     printf("receiver - check configured lanes on scoreboard \n");
 
@@ -120,6 +139,12 @@ int read(char *portname, volatile int *running, bool verbose)
     while (*running)
     {
         res = read(fd, buf, BUFFER_LENGTH); /* returns after 5 chars have been input */
+
+        if (forward)
+        {
+            write(fo, buf, res);
+        }
+
         buf[res] = 0;
 
 #ifdef info_read
