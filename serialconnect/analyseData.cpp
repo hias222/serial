@@ -14,7 +14,7 @@
 
 //#define debug_lane_pointer
 
-#define LOOP_COUNT_DEF 10
+#define LOOP_COUNT_DEF 30
 #define COLORADO_CHANNELS 32
 #define COLORADO_ADDRESS_WORD_MASK 0x80
 #define COLORADO_ROWS 16

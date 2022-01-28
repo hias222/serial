@@ -8,6 +8,9 @@
 
 //#define debug
 
+//100/s 
+#define INACTIVE_TIME_AFTER_START 1000
+
 int hundredth;
 
 bool sendActiveState;
@@ -31,12 +34,12 @@ int timehundredth(uint8_t data[])
     decent = checkBitValue(data[12]);
     int timehundredth = (minutes * 60 + seconds) * 100 + decent * 10;
 
-    if (hundredth > 500)
+    if (hundredth > INACTIVE_TIME_AFTER_START)
     {
         sendActiveState = true;
     }
 
-    if (hundredth < 500)
+    if (hundredth < INACTIVE_TIME_AFTER_START)
     {
         sendActiveState = false;
     }
