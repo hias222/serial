@@ -10,9 +10,9 @@
 #include <windows.h>
 #endif
 
-#ifdef SEND_MODE
-#include "send.h"
-#endif
+//#ifdef SEND_MODE
+//#include "send.h"
+//#endif
 
 static volatile int keepRunning;
 static volatile int *ptrRunning;
@@ -32,14 +32,17 @@ void usage(char *prog)
     printf("                   for both raw and repeater mode\n");
     printf("                   RPI Ubuntu /dev/ttyAMA0 RPI raspian /dev/serial0  Linux /dev/ttyUSB0\n");
     printf("  -f               using ftdi library no port needed \n");
-    printf("  -x               raw mode and send (default) \n");
-    printf("  -z               only raw mode \n");
+    printf("  -x               raw mode and send - only with USB device ftdi not possible \n");
+    printf("                   implemented in linux \n");
+    printf("  -z               only raw mode (default) \n");
     printf("  -v               verbose output for serial \n");
     printf("  -d portname      destination port name like %s \n", DESTINATION_PORTNAME);
     printf("                   only for raw mode\n");
     printf("  -h               help \n");
     printf("\n");
     printf("data is published to localhost:1883 on queue rawdata\n");
+    printf("\n");
+    printf("RAW data can only be received with original FTDI USB serial converter\n");
 }
 
 int main(int argc, char *argv[])
@@ -49,7 +52,7 @@ int main(int argc, char *argv[])
     char *portname = (char *)malloc(50);
     char *destinationportname = (char *)malloc(50);
     bool send_mode = false;
-    bool ftdi_mode = false;
+    bool ftdi_mode = true;
 
     // out of SerialConfig
     sprintf(portname, "%s", BASIC_PORTNAME);
@@ -58,12 +61,13 @@ int main(int argc, char *argv[])
     bool cmd_line_failure = true;
     bool cmd_verbose_mode = false;
 
+/*
     if (SEND_MODE)
     {
         printf("main - compiled with SENDMODE override with z\n");
         send_mode = true;
     }
-
+*/
     for (int n = 1; n < argc; n++) /* Scan through args. */
     {
         switch ((int)argv[n][0]) /* Check for option character. */
@@ -77,6 +81,7 @@ int main(int argc, char *argv[])
                 {
                     portname = argv[n + 1];
                     cmd_line_failure = false;
+                    ftdi_mode = false;
                 }
                 break;
             case 'f':
@@ -91,6 +96,7 @@ int main(int argc, char *argv[])
                 {
                     send_mode = true;
                     cmd_line_failure = false;
+                    ftdi_mode = false;
                 }
                 break;
             case 'z':
@@ -105,6 +111,7 @@ int main(int argc, char *argv[])
                 {
                     destinationportname = argv[n + 1];
                     cmd_line_failure = false;
+                    ftdi_mode = false;
                 }
                 break;
             case 'v':
@@ -146,22 +153,23 @@ int main(int argc, char *argv[])
     if (send_mode)
     {
         printf("main - send - send out to port %s\n", destinationportname);
-        init_send(destinationportname);
-        dataInit(ptrRunning, portname, true, cmd_verbose_mode, ftdi_mode);
+        //init_send(destinationportname);
+        dataInit(ptrRunning, portname, destinationportname, true, cmd_verbose_mode, ftdi_mode);
     }
     else
     {
         printf("main - raw local apply to mqttt localhost:1883 topic rawdata\n");
-        dataInit(ptrRunning, portname, false, cmd_verbose_mode, ftdi_mode);
+        dataInit(ptrRunning, portname, destinationportname, false, cmd_verbose_mode, ftdi_mode);
     }
 
     dataClean();
 
+/*
     if (send_mode)
     {
         close_send();
     }
-
+*/
     free(portname);
     free(destinationportname);
 }

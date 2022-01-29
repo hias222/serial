@@ -33,7 +33,8 @@ void PrintCommState(DCB dcb)
              dcb.StopBits);
 }
 
-int read(char *portname, volatile int *running, bool verbose)
+//int read(char *portname, volatile int *running, bool verbose)
+int read(char *portname, char *dstname, bool forward, volatile int *running, bool verbose)
 {
     // https://docs.microsoft.com/en-us/windows/win32/devio/configuring-a-communications-resource
 

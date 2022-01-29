@@ -32,11 +32,134 @@ volatile int STOP = FALSE;
 
 using namespace std;
 
-int read(char *portname, volatile int *running, bool verbose)
+char *see_speed(speed_t speed)
 {
-    int fd, c, res;
+    static char SPEED[20];
+    switch (speed)
+    {
+    case B0:
+        strcpy(SPEED, "B0");
+        break;
+    case B50:
+        strcpy(SPEED, "B50");
+        break;
+    case B75:
+        strcpy(SPEED, "B75");
+        break;
+    case B110:
+        strcpy(SPEED, "B110");
+        break;
+    case B134:
+        strcpy(SPEED, "B134");
+        break;
+    case B150:
+        strcpy(SPEED, "B150");
+        break;
+    case B200:
+        strcpy(SPEED, "B200");
+        break;
+    case B300:
+        strcpy(SPEED, "B300");
+        break;
+    case B600:
+        strcpy(SPEED, "B600");
+        break;
+    case B1200:
+        strcpy(SPEED, "B1200");
+        break;
+    case B1800:
+        strcpy(SPEED, "B1800");
+        break;
+    case B2400:
+        strcpy(SPEED, "B2400");
+        break;
+    case B4800:
+        strcpy(SPEED, "B4800");
+        break;
+    case B9600:
+        strcpy(SPEED, "B9600");
+        break;
+    case B19200:
+        strcpy(SPEED, "B19200");
+        break;
+    case B38400:
+        strcpy(SPEED, "B38400");
+        break;
+    default:
+        sprintf(SPEED, "unknown (%d)", (int)speed);
+    }
+    return SPEED;
+}
+
+void setAttributesOnSerial(int fd)
+{
+    struct termios sendtio;
+    tcgetattr(fd, &sendtio);
+
+    int baudrate;
+
+    baudrate = B9600;
+    cfsetospeed(&sendtio, baudrate);
+    cfsetispeed(&sendtio, baudrate);
+
+    //set into raw, no echo mode
+    sendtio.c_iflag = 0;
+    sendtio.c_lflag = 0;
+    sendtio.c_oflag = 0;
+    //sendtio.c_cflag = 0;
+    // ftdi
+    sendtio.c_cflag = PARENB;
+    // for standard adapter
+    //sendtio.c_cflag = ~PARENB;
+
+    sendtio.c_cc[VTIME] = 1; // inter-character timer unused
+    sendtio.c_cc[VMIN] = 0;  // blocking read until 5 chars received
+
+    tcflush(fd, TCIFLUSH);
+    tcsetattr(fd, TCSANOW, &sendtio);
+}
+
+void printAttributesOfSerialInterface(int fd)
+{
+    struct termios gettio;
+    static char SPEED[20];
+    speed_t speed;
+
+    /*
+    Colorado specific
+    BaudRate = 9600 
+    StopBits = 1 
+    Parity   = none 
+    */
+    puts("BaudRate = 9600, StopBits = 1, Parity   = yes ??");
+
+    if (tcgetattr(fd, &gettio) != 0)
+        perror("tcgetatt() error");
+    else
+    {
+        if (gettio.c_cflag & PARENB)
+            puts("PARENB is used -> parity");
+        else
+            puts("PARENB is not used -> no parity");
+        if (gettio.c_lflag & CSTOPB)
+            puts("CSTOPB is set -> 2 stop bits");
+        else
+            puts("CSTOPB is not set -> 1 stop bit");
+        printf("The end-of-file character is x'%02x'\n",
+               gettio.c_cc[VEOF]);
+
+        speed = cfgetispeed(&gettio);
+        printf("BAUDRATE is %s\n",
+               see_speed(speed));
+    }
+}
+
+int read(char *portname, char *dstname, bool forward, volatile int *running, bool verbose)
+{
+    int fd, c, res, fo;
     int flag, baudrate;
     struct termios oldtio, newtio;
+
     unsigned char buf[BUFFER_LENGTH];
 
     printf("receiver - using serial read linux\n");
@@ -47,6 +170,7 @@ int read(char *portname, volatile int *running, bool verbose)
 #endif
 
     //fd = open(portname, O_RDONLY);
+
     fd = open(portname, O_RDWR | O_NOCTTY | O_NDELAY);
 
     if (fd < 0)
@@ -54,64 +178,30 @@ int read(char *portname, volatile int *running, bool verbose)
         perror(portname);
         return 1;
     }
+    setAttributesOnSerial(fd);
 
-    tcgetattr(fd, &oldtio); //save current port settings
-    bzero(&newtio, sizeof(newtio));
+    if (forward)
+    {
+        fo = open(dstname, O_RDWR | O_NOCTTY | O_NDELAY);
 
-    // new
-    // https://www.linuxquestions.org/questions/programming-9/why-minicom-reads-data-correctly-from-dev-ttyusb0-but-my-program-does-not-904382/
+        if (fo < 0)
+        {
+            perror(dstname);
+            return 1;
+        }
 
-    flag = fcntl(fd, F_GETFL, 0);
-    fcntl(fd, F_SETFL, flag & ~O_NDELAY);
+        setAttributesOnSerial(fo);
+    }
 
-    //set baudrate to 0 and go back to normal
-    printf("receiver - set baudrate to 0......\n");
-    tcgetattr(fd, &newtio);
-    tcgetattr(fd, &oldtio);
-    cfsetospeed(&newtio, B0);
-    cfsetispeed(&newtio, B0);
-    tcsetattr(fd, TCSANOW, &newtio);
-    sleep(1);
-    tcsetattr(fd, TCSANOW, &oldtio);
-
-    printf("receiver - baudrate is back to normal......\n");
-
-    tcgetattr(fd, &newtio);
-
-    /*
-    Colorado specific
-    BaudRate = 9600 
-    StopBits = 1 
-    Parity   = none 
-    */
-
-    baudrate = B9600;
-    cfsetospeed(&newtio, baudrate);
-    cfsetispeed(&newtio, baudrate);
-
-    //set into raw, no echo mode
-    newtio.c_iflag = 0;
-    newtio.c_lflag = 0;
-    newtio.c_oflag = 0;
-    newtio.c_cflag = 0;
-
-    // #################
-    // only with ftdi
-    // 	Enable parity bit ???
-    newtio.c_cflag = PARENB;
-    //newtio.c_cflag = PARODD;
-
-    //1 stopbit
-    newtio.c_cflag &= ~CSTOPB;
-
-    newtio.c_cc[VTIME] = 1; // inter-character timer unused
-    newtio.c_cc[VMIN] = 0;  // blocking read until 5 chars received
-
-    tcflush(fd, TCIFLUSH);
-    tcsetattr(fd, TCSANOW, &newtio);
 
     printf("\n");
-    printf("    receiver - port in (USB)= %s\n", portname);
+    printf("    receiver - port in (USB)=%s\n", portname);
+    printAttributesOfSerialInterface(fd);
+    if (forward)
+    {
+        printf("    forward to - port in (USB)=%s\n", dstname);
+        printAttributesOfSerialInterface(fo);
+    }
     printf("\n");
     printf("receiver - check configured lanes on scoreboard \n");
 
@@ -120,6 +210,12 @@ int read(char *portname, volatile int *running, bool verbose)
     while (*running)
     {
         res = read(fd, buf, BUFFER_LENGTH); /* returns after 5 chars have been input */
+
+        if (forward)
+        {
+            write(fo, buf, res);
+        }
+
         buf[res] = 0;
 
 #ifdef info_read

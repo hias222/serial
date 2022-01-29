@@ -392,3 +392,5 @@ Aborted
 *** stack smashing detected ***: terminated
 Aborted
 ```
+
+sudo apt install setserial
