@@ -13,12 +13,14 @@
 #define SEND_TIME_EVERY_COUNTS 30
 
 int hundredth;
+int loopcount;
 
 bool sendActiveState;
 
 void initRunninTime()
 {
     hundredth = 0;
+    loopcount = 0;
     sendActiveState = false;
 }
 
@@ -55,7 +57,6 @@ int timehundredth(uint8_t data[])
 void getTimeInternal(uint8_t data[])
 {
     char mydata[64];
-    int loopcount = 0;
     //running = checknotnull(data);
     hundredth = timehundredth(data);
 
