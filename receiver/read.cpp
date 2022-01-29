@@ -236,7 +236,7 @@ int read(char *portname, char *dstname, bool forward, volatile int *running, boo
     // only with ftdi
     // 	Enable parity bit ???
     //changed 290122 from PARENB
-    newtio.c_cflag = ~PARENB;
+    newtio.c_cflag = PARENB;
     //newtio.c_cflag = PARMRK;
     //newtio.c_cflag = PARODD;
 
