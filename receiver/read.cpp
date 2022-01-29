@@ -91,10 +91,10 @@ int read(char *portname, char *dstname, bool forward, volatile int *running, boo
         if (fo < 0)
         {
             perror(dstname);
-
-            setAttributesOnSerial(fo);
-            //return 0;
+            return 1;
         }
+        
+        setAttributesOnSerial(fo);
     }
 
     //fo = open(, O_RDWR | O_NOCTTY | O_NDELAY);
