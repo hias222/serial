@@ -32,6 +32,65 @@ volatile int STOP = FALSE;
 
 using namespace std;
 
+char *see_speed(speed_t speed)
+{
+    static char SPEED[20];
+    switch (speed)
+    {
+    case B0:
+        strcpy(SPEED, "B0");
+        break;
+    case B50:
+        strcpy(SPEED, "B50");
+        break;
+    case B75:
+        strcpy(SPEED, "B75");
+        break;
+    case B110:
+        strcpy(SPEED, "B110");
+        break;
+    case B134:
+        strcpy(SPEED, "B134");
+        break;
+    case B150:
+        strcpy(SPEED, "B150");
+        break;
+    case B200:
+        strcpy(SPEED, "B200");
+        break;
+    case B300:
+        strcpy(SPEED, "B300");
+        break;
+    case B600:
+        strcpy(SPEED, "B600");
+        break;
+    case B1200:
+        strcpy(SPEED, "B1200");
+        break;
+    case B1800:
+        strcpy(SPEED, "B1800");
+        break;
+    case B2400:
+        strcpy(SPEED, "B2400");
+        break;
+    case B4800:
+        strcpy(SPEED, "B4800");
+        break;
+    case B9600:
+        strcpy(SPEED, "B9600");
+        break;
+    case B19200:
+        strcpy(SPEED, "B19200");
+        break;
+    case B38400:
+        strcpy(SPEED, "B38400");
+        break;
+    default:
+        sprintf(SPEED, "unknown (%d)", (int)speed);
+    }
+    return SPEED;
+}
+
 void setAttributesOnSerial(int fd)
 {
     struct termios sendtio;
@@ -48,7 +107,7 @@ void setAttributesOnSerial(int fd)
     sendtio.c_lflag = 0;
     sendtio.c_oflag = 0;
     sendtio.c_cflag = 0;
-    sendtio.c_cflag = PARENB;
+    sendtio.c_cflag = ~PARENB;
     //1 stopbit
     sendtio.c_cflag &= ~CSTOPB;
 
@@ -57,6 +116,40 @@ void setAttributesOnSerial(int fd)
 
     tcflush(fd, TCIFLUSH);
     tcsetattr(fd, TCSANOW, &sendtio);
+}
+
+void printAttributesOfSerialInterface(int fd)
+{
+    struct termios gettio;
+    static char SPEED[20];
+    speed_t speed;
+
+    /*
+    Colorado specific
+    BaudRate = 9600 
+    StopBits = 1 
+    Parity   = none 
+    */
+
+    if (tcgetattr(fd, &gettio) != 0)
+        perror("tcgetatt() error");
+    else
+    {
+        if (gettio.c_cflag & PARENB)
+            puts("PARENB is used -> parity");
+        else
+            puts("PARENB is not used -> no parity");
+        if (gettio.c_lflag & CSTOPB)
+            puts("CSTOPB is set -> 2 stop bits");
+        else
+            puts("CSTOPB is not set -> 1 stop bit");
+        printf("The end-of-file character is x'%02x'\n",
+               gettio.c_cc[VEOF]);
+
+        speed = cfgetispeed(&gettio);
+        printf("BAUDRATE is %s\n",
+               see_speed(speed));
+    }
 }
 
 int read(char *portname, char *dstname, bool forward, volatile int *running, bool verbose)
@@ -93,7 +186,7 @@ int read(char *portname, char *dstname, bool forward, volatile int *running, boo
             perror(dstname);
             return 1;
         }
-        
+
         setAttributesOnSerial(fo);
     }
 
@@ -142,7 +235,8 @@ int read(char *portname, char *dstname, bool forward, volatile int *running, boo
     // #################
     // only with ftdi
     // 	Enable parity bit ???
-    newtio.c_cflag = PARENB;
+    //changed 290122 from PARENB
+    newtio.c_cflag = ~PARENB;
     //newtio.c_cflag = PARMRK;
     //newtio.c_cflag = PARODD;
 
@@ -157,9 +251,11 @@ int read(char *portname, char *dstname, bool forward, volatile int *running, boo
 
     printf("\n");
     printf("    receiver - port in (USB)=%s\n", portname);
+    printAttributesOfSerialInterface(fd);
     if (forward)
     {
         printf("    forward to - port in (USB)=%s\n", dstname);
+        printAttributesOfSerialInterface(fo);
     }
     printf("\n");
     printf("receiver - check configured lanes on scoreboard \n");
