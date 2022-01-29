@@ -106,10 +106,11 @@ void setAttributesOnSerial(int fd)
     sendtio.c_iflag = 0;
     sendtio.c_lflag = 0;
     sendtio.c_oflag = 0;
-    sendtio.c_cflag = 0;
-    sendtio.c_cflag = ~PARENB;
-    //1 stopbit
-    sendtio.c_cflag &= ~CSTOPB;
+    //sendtio.c_cflag = 0;
+    // ftdi
+    sendtio.c_cflag = PARENB;
+    // for standard adapter
+    //sendtio.c_cflag = ~PARENB;
 
     sendtio.c_cc[VTIME] = 1; // inter-character timer unused
     sendtio.c_cc[VMIN] = 0;  // blocking read until 5 chars received
@@ -130,6 +131,7 @@ void printAttributesOfSerialInterface(int fd)
     StopBits = 1 
     Parity   = none 
     */
+    puts("BaudRate = 9600, StopBits = 1, Parity   = yes ??");
 
     if (tcgetattr(fd, &gettio) != 0)
         perror("tcgetatt() error");
@@ -176,6 +178,7 @@ int read(char *portname, char *dstname, bool forward, volatile int *running, boo
         perror(portname);
         return 1;
     }
+    setAttributesOnSerial(fd);
 
     if (forward)
     {
@@ -190,64 +193,6 @@ int read(char *portname, char *dstname, bool forward, volatile int *running, boo
         setAttributesOnSerial(fo);
     }
 
-    //fo = open(, O_RDWR | O_NOCTTY | O_NDELAY);
-
-    tcgetattr(fd, &oldtio); //save current port settings
-    bzero(&newtio, sizeof(newtio));
-
-    // new
-    // https://www.linuxquestions.org/questions/programming-9/why-minicom-reads-data-correctly-from-dev-ttyusb0-but-my-program-does-not-904382/
-
-    flag = fcntl(fd, F_GETFL, 0);
-    fcntl(fd, F_SETFL, flag & ~O_NDELAY);
-
-    //set baudrate to 0 and go back to normal
-    printf("receiver - set baudrate to 0......\n");
-    tcgetattr(fd, &newtio);
-    tcgetattr(fd, &oldtio);
-    cfsetospeed(&newtio, B0);
-    cfsetispeed(&newtio, B0);
-    tcsetattr(fd, TCSANOW, &newtio);
-    sleep(1);
-    tcsetattr(fd, TCSANOW, &oldtio);
-
-    printf("receiver - baudrate is back to normal......\n");
-
-    tcgetattr(fd, &newtio);
-
-    /*
-    Colorado specific
-    BaudRate = 9600 
-    StopBits = 1 
-    Parity   = none 
-    */
-
-    baudrate = B9600;
-    cfsetospeed(&newtio, baudrate);
-    cfsetispeed(&newtio, baudrate);
-
-    //set into raw, no echo mode
-    newtio.c_iflag = 0;
-    newtio.c_lflag = 0;
-    newtio.c_oflag = 0;
-    newtio.c_cflag = 0;
-
-    // #################
-    // only with ftdi
-    // 	Enable parity bit ???
-    //changed 290122 from PARENB
-    newtio.c_cflag = PARENB;
-    //newtio.c_cflag = PARMRK;
-    //newtio.c_cflag = PARODD;
-
-    //1 stopbit
-    newtio.c_cflag &= ~CSTOPB;
-
-    newtio.c_cc[VTIME] = 1; // inter-character timer unused
-    newtio.c_cc[VMIN] = 0;  // blocking read until 5 chars received
-
-    tcflush(fd, TCIFLUSH);
-    tcsetattr(fd, TCSANOW, &newtio);
 
     printf("\n");
     printf("    receiver - port in (USB)=%s\n", portname);
