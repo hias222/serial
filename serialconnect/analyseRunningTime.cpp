@@ -8,8 +8,9 @@
 
 //#define debug
 
-//100/s 
+//100/s
 #define INACTIVE_TIME_AFTER_START 1000
+#define SEND_TIME_EVERY_COUNTS 30
 
 int hundredth;
 
@@ -54,13 +55,19 @@ int timehundredth(uint8_t data[])
 void getTimeInternal(uint8_t data[])
 {
     char mydata[64];
+    int loopcount = 0;
     //running = checknotnull(data);
     hundredth = timehundredth(data);
 
-    sprintf(mydata, "time %d%d:%d%d,%d", checkBitValue(data[4]), checkBitValue(data[6]),
-            checkBitValue(data[8]), checkBitValue(data[10]), checkBitValue(data[12]));
+    if (loopcount > SEND_TIME_EVERY_COUNTS)
+    {
+        sprintf(mydata, "time %d%d:%d%d,%d", checkBitValue(data[4]), checkBitValue(data[6]),
+                checkBitValue(data[8]), checkBitValue(data[10]), checkBitValue(data[12]));
 
-    mqtt_send(mydata);
+        mqtt_send(mydata);
+        loopcount = 0;
+    }
+    loopcount++;
 };
 
 void getTime(uint8_t *data[])

@@ -32,11 +32,39 @@ volatile int STOP = FALSE;
 
 using namespace std;
 
+void setAttributesOnSerial(int fd)
+{
+    struct termios sendtio;
+    tcgetattr(fd, &sendtio);
+
+    int baudrate;
+
+    baudrate = B9600;
+    cfsetospeed(&sendtio, baudrate);
+    cfsetispeed(&sendtio, baudrate);
+
+    //set into raw, no echo mode
+    sendtio.c_iflag = 0;
+    sendtio.c_lflag = 0;
+    sendtio.c_oflag = 0;
+    sendtio.c_cflag = 0;
+    sendtio.c_cflag = PARENB;
+    //1 stopbit
+    sendtio.c_cflag &= ~CSTOPB;
+
+    sendtio.c_cc[VTIME] = 1; // inter-character timer unused
+    sendtio.c_cc[VMIN] = 0;  // blocking read until 5 chars received
+
+    tcflush(fd, TCIFLUSH);
+    tcsetattr(fd, TCSANOW, &sendtio);
+}
+
 int read(char *portname, char *dstname, bool forward, volatile int *running, bool verbose)
 {
     int fd, c, res, fo;
     int flag, baudrate;
     struct termios oldtio, newtio;
+
     unsigned char buf[BUFFER_LENGTH];
 
     printf("receiver - using serial read linux\n");
@@ -63,6 +91,8 @@ int read(char *portname, char *dstname, bool forward, volatile int *running, boo
         if (fo < 0)
         {
             perror(dstname);
+
+            setAttributesOnSerial(fo);
             //return 0;
         }
     }

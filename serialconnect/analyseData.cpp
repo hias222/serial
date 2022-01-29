@@ -14,7 +14,6 @@
 
 //#define debug_lane_pointer
 
-#define LOOP_COUNT_DEF 30
 #define COLORADO_CHANNELS 32
 #define COLORADO_ADDRESS_WORD_MASK 0x80
 #define COLORADO_ROWS 16
@@ -61,7 +60,7 @@ int initReadData()
         }
     }
 
-// more inits
+    // more inits
 
     initanalyseData();
     initRunninTime();
@@ -112,13 +111,7 @@ int putReadData(uint8_t ReadData)
                 else if (colorado_control_channel == 0x00)
                 {
                     checkStartStop(&colorado_data[colorado_control_channel]);
-                    loop++;
-                    // alle 10 anschauen
-                    if (loop > LOOP_COUNT_DEF)
-                    {
-                        getTime(&colorado_data[colorado_control_channel]);
-                        loop = 0;
-                    }
+                    getTime(&colorado_data[colorado_control_channel]);
                 }
                 else if (colorado_control_channel == 0x0c)
                 {
