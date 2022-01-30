@@ -109,8 +109,12 @@ void setAttributesOnSerial(int fd)
     //sendtio.c_cflag = 0;
     // ftdi
     sendtio.c_cflag = PARENB;
+
     // for standard adapter
     //sendtio.c_cflag = ~PARENB;
+
+    //INPCK  Enable input parity checking.
+    //IGNPAR Ignore framing errors and parity errors.
 
     sendtio.c_cc[VTIME] = 1; // inter-character timer unused
     sendtio.c_cc[VMIN] = 0;  // blocking read until 5 chars received

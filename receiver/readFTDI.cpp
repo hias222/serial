@@ -47,19 +47,123 @@ static void dumpBuffer(unsigned char *buffer, int elements, bool verbose)
 	}
 }
 
+DWORD getNumberOfFtdiDevices()
+{
+	FT_STATUS ftStatus;
+	FT_DEVICE_LIST_INFO_NODE *devInfo;
+	DWORD numDevs;
+	// create the device information list
+	ftStatus = FT_CreateDeviceInfoList(&numDevs);
+	if (ftStatus == FT_OK)
+	{
+		printf("Number of devices is %d\n", numDevs);
+	}
+	return numDevs;
+}
+
+int openFtdiHanlde(int numberDevice, FT_HANDLE *prepareHandle)
+{
+	FT_STATUS ftStatus;
+
+	ftStatus = FT_Open(numberDevice, prepareHandle);
+
+	if (ftStatus != FT_OK)
+	{
+		printf("receiver - %d - FT_Open (Error: %d) failed\n", numberDevice, (int)ftStatus);
+		return 1;
+	}
+	else
+	{
+		printf("receiver - %d - FT_Open success\n", numberDevice);
+	}
+
+	ftStatus = FT_ResetDevice(*prepareHandle);
+	if (ftStatus != FT_OK)
+	{
+		printf("receiver - %d - Failure.  FT_ResetDevice returned %d.\n",
+			   numberDevice, (int)ftStatus);
+		return 1;
+	}
+	else
+	{
+		printf("receiver - %d - FT_ResetDevice\n", numberDevice);
+	}
+
+	ftStatus = FT_SetBaudRate(*prepareHandle, 9600);
+
+	if (ftStatus != FT_OK)
+	{
+		printf("receiver - %d - Failure.  FT_SetBaudRate returned %d.\n",
+			   numberDevice, (int)ftStatus);
+		return 1;
+	}
+	else
+	{
+		printf("receiver - %d - set Baud Rate bits\n", numberDevice);
+	}
+
+	ftStatus = FT_SetDataCharacteristics(*prepareHandle,
+										 FT_BITS_8,
+										 FT_STOP_BITS_1,
+										 FT_PARITY_EVEN);
+
+	//Parity -must be FT_PARITY_NONE, FT_PARITY_ODD, FT_PARITY_EVEN, FT_PARITY_MARKor FT_PARITY SPACE
+
+	if (ftStatus != FT_OK)
+	{
+		printf("receiver - %d - Failure.  FT_SetDataCharacteristics returned %d.\n",
+			   numberDevice, (int)ftStatus);
+		return 1;
+	}
+	else
+	{
+		printf("receiver - %d - set stop bits\n", numberDevice);
+	}
+
+	ftStatus = FT_SetFlowControl(*prepareHandle, FT_FLOW_NONE, 0x00, 0x00);
+
+	//FT_FLOW_NONE Must be one of FT_FLOW_NONE, FT_FLOW_RTS_CTS, FT_FLOW_DTR_DSRor FT_FLOW_XON_XOFF.uXonCharacter used to signal Xon.  Only u
+
+	if (ftStatus != FT_OK)
+	{
+		printf("receiver - %d - Failure.  FT_SetFlowControl FT_FLOW_NONE returned %d.\n",
+			   numberDevice, (int)ftStatus);
+		return 1;
+	}
+	else
+	{
+		printf("receiver - %d - set FT_SetFlowControl FT_FLOW_NONE\n", numberDevice);
+	}
+
+	//FT_SetDtr(ftHandle);
+	//FT_SetRts(ftHandle);
+	FT_ClrDtr(*prepareHandle);
+	FT_ClrRts(*prepareHandle);
+	FT_SetBreakOff(*prepareHandle);
+
+	// FT_SetFlowControl(ftHandle, FT_FLOW_RTS_CTS, 0, 0);
+	FT_SetTimeouts(*prepareHandle, 1, 0); // infinite timeouts
+										 //FT_SetBitMode(ftHandle, 0xFF, 0x01);
+
+	return 0;
+}
+
 int readftdi(volatile int *running, bool verbose)
 {
 	unsigned char *pcBufRead;
-	DWORD dwBytesRead;
+	DWORD dwBytesRead, dwBytesWrite;
 	FILE *fh;
 	FT_HANDLE ftHandle;
+	FT_HANDLE sendftHandle;
 	FT_STATUS ftStatus;
-	FT_DEVICE ftDevice;
-	DWORD deviceID;
-	DWORD dwModemStatus = 0;
-	char SerialNumber[16];
-	char Description[64];
+
+	FT_DEVICE_LIST_INFO_NODE *devInfo;
+
+	bool sendmode = false;
+
 	int iport;
+
+	pcBufRead = (unsigned char *)malloc(BUF_SIZE);
 
 	iport = 0;
 
@@ -79,87 +183,33 @@ int readftdi(volatile int *running, bool verbose)
 	else
 	{
 		printf("receiver - %d %d - for usb access we need root privs\n", uid, euid);
-
 		keepRunning = 0;
 		running = &keepRunning;
-
 		//return 1;
 	}
 #endif
 
-	ftStatus = FT_Open(iport, &ftHandle);
-	if (ftStatus != FT_OK)
+	DWORD numFtdisvs = getNumberOfFtdiDevices();
+	printf("found %d ftdi devices\n", numFtdisvs);
+
+	if (numFtdisvs > 1)
 	{
-		/* 
-			This can fail if the ftdi_sio driver is loaded
-		 	use lsmod to check this and rmmod ftdi_sio to remove
-			also rmmod usbserial
-		 */
-		printf("receiver - FT_Open(%d) failed\n", iport);
-		return 1;
+		sendmode = true;
 	}
 
-	pcBufRead = (unsigned char *)malloc(BUF_SIZE);
+	devInfo =
+		(FT_DEVICE_LIST_INFO_NODE *)malloc(sizeof(FT_DEVICE_LIST_INFO_NODE) * numFtdisvs);
 
-	FT_ResetDevice(ftHandle);
-	FT_SetBaudRate(ftHandle, 9600);
-
-	ftStatus = FT_SetDataCharacteristics(ftHandle,
-										 FT_BITS_8,
-										 FT_STOP_BITS_1,
-										 FT_PARITY_EVEN);
-
-	/*
-				 Parity -must be FT_PARITY_NONE, FT_PARITY_ODD, FT_PARITY_EVEN, FT_PARITY_MARKor FT_PARITY SPACE
-	*/
-
-	if (ftStatus != FT_OK)
+	for (int i = 0; i < numFtdisvs; i++)
 	{
-		printf("receiver - Failure.  FT_SetDataCharacteristics returned %d.\n",
-			   (int)ftStatus);
-		return 1;
+		openFtdiHanlde(i, &devInfo[i].ftHandle);
 	}
-	else
-	{
-		printf("receiver - set stop bits\n");
-	}
-
-	ftStatus = FT_SetFlowControl(ftHandle, FT_FLOW_NONE, 0x00, 0x00);
-
-	//FT_FLOW_NONE Must be one of FT_FLOW_NONE, FT_FLOW_RTS_CTS, FT_FLOW_DTR_DSRor FT_FLOW_XON_XOFF.uXonCharacter used to signal Xon.  Only u
-
-	if (ftStatus != FT_OK)
-	{
-		printf("receiver - Failure.  FT_SetFlowControl FT_FLOW_NONE returned %d.\n",
-			   (int)ftStatus);
-		return 1;
-	}
-	else
-	{
-		printf("receiver - set FT_SetFlowControl FT_FLOW_NONE\n");
-	}
-
-	//FT_SetDtr(ftHandle);
-	//FT_SetRts(ftHandle);
-	FT_ClrDtr(ftHandle);
-	FT_ClrRts(ftHandle);
-	FT_SetBreakOff(ftHandle);
-
-	// FT_SetFlowControl(ftHandle, FT_FLOW_RTS_CTS, 0, 0);
-	FT_SetTimeouts(ftHandle, 1, 0); // infinite timeouts
-	//FT_SetBitMode(ftHandle, 0xFF, 0x01);
 
 	int checkloop = 0;
 	while (*running)
 	{
 		checkloop++;
-		ftStatus = FT_Read(ftHandle, pcBufRead, BUF_SIZE, &dwBytesRead);
-
-		if (checkloop > 100)
-		{
-			checkloop = 0;
-			ftStatus = FT_GetDeviceInfo(ftHandle, &ftDevice, &deviceID, SerialNumber, Description, NULL);
-		}
+		ftStatus = FT_Read(devInfo[0].ftHandle, pcBufRead, BUF_SIZE, &dwBytesRead);
 
 		if (ftStatus != FT_OK)
 		{
@@ -167,10 +217,25 @@ int readftdi(volatile int *running, bool verbose)
 			return 1;
 		}
 
+		if (sendmode)
+		{
+
+			ftStatus = FT_Write(devInfo[1].ftHandle, pcBufRead, BUF_SIZE, &dwBytesWrite);
+
+			if (ftStatus != FT_OK)
+			{
+				printf("Failure.  FT_Write returned %d.\n", (int)ftStatus);
+				return 1;
+			}
+		}
+
 		dumpBuffer(pcBufRead, (int)dwBytesRead, verbose);
 	}
 	free(pcBufRead);
-	FT_Close(ftHandle);
+	FT_Close(devInfo[0].ftHandle);
+	FT_Close(devInfo[1].ftHandle);
+
+	free(devInfo);
 
 	return 0;
 }
