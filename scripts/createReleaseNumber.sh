@@ -42,7 +42,11 @@ gh release create $versionLabel -t $versionLabel -F changelog.md
 
 # upload 
 # gh release upload <tag> <files>... [flags]
-zip -j /tmp/windows.zip binaries/win/Release/*
+zip -j /tmp/windows32.zip binaries/win/Release/*
+gh release upload $versionLabel /tmp/windows32.zip#windows_$versionLabel.zip
+rm /tmp/windows32.zip
+
+zip -j /tmp/windows.zip binaries/win64/Release/*
 gh release upload $versionLabel /tmp/windows.zip#windows_$versionLabel.zip
 rm /tmp/windows.zip
 
