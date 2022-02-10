@@ -14,7 +14,14 @@ or
 serial.exe -s <portname like com3>
 ```
 
-## Errors 
+## Start as service
+
+Two steps
+
+* Trust serial system to system
+* Install tool NSSM and create a service with serial.exe 
+
+## Errors
 
 ### FTD2XX.dll is missing
 
