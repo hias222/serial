@@ -62,6 +62,10 @@ zip -j /tmp/linux64.zip binaries/linux64/*
 gh release upload $versionLabel /tmp/linux64.zip#linux64_$versionLabel.zip
 rm /tmp/linux64.zip
 
+zip -j /tmp/nginxfrontend.zip binaries/nginxfrontend/*
+gh release upload $versionLabel /tmp/nginxfrontend.zip#nginxfrontend$versionLabel.zip
+rm /tmp/nginxfrontend.zip
+
 exit 0
 # test
 gh release delete v0.1.0 -y
