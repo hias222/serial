@@ -21,17 +21,20 @@ uint8_t getNullBit() {
 
 uint8_t checkBitValue(uint8_t data)
 {
+    // history empty
+    /*
+    if (data == 0x0F)
+    {
+        return 0x0f;
+    }
+    */
+
     //lane 10 - switch to decimal lt
     if (data > 10)
     {
         return 0x00;
     }
-/* history
-    if (data == 0x0F)
-    {
-        return 0x00;
-    }
-*/
+
 
     return data;
 };
