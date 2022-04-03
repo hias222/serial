@@ -8,8 +8,10 @@
 #include "analyseRunningTime.h"
 
 #define debug_info
+// ###############################
 // für Reihenfolge nach Platz
-#define orderbyplace
+// #define orderbyplace
+// ################################
 //#define debug_send
 //#define debug
 //#define debug_trace
