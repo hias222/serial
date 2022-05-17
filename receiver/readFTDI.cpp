@@ -3,10 +3,10 @@
 	Shows one method of using list devices also.
 	Assumes the devices have a loopback connector on them and they also have a serial number
 
-	To build use the following gcc statement 
+	To build use the following gcc statement
 	(assuming you have the static d2xx library in the /usr/local/lib directory
 	and you have created a symbolic link to it in the current dir).
-	gcc -o static_link main.c -lpthread libftd2xx.a 
+	gcc -o static_link main.c -lpthread libftd2xx.a
 */
 
 #include <stdio.h>
@@ -44,6 +44,15 @@ static void dumpBuffer(unsigned char *buffer, int elements, bool verbose)
 			printf("0x%02X ", buffer[j]);
 		}
 		putReadData(buffer[j]);
+	}
+}
+
+static void dumpToFile(unsigned char *buffer, int elements, FILE *filename)
+{
+	int j;
+	for (j = 0; j < elements; j++)
+	{
+		fprintf(filename,"%02X", buffer[j]);
 	}
 }
 
@@ -107,7 +116,7 @@ int openFtdiHanlde(int numberDevice, FT_HANDLE *prepareHandle)
 										 FT_STOP_BITS_1,
 										 FT_PARITY_EVEN);
 
-	//Parity -must be FT_PARITY_NONE, FT_PARITY_ODD, FT_PARITY_EVEN, FT_PARITY_MARKor FT_PARITY SPACE
+	// Parity -must be FT_PARITY_NONE, FT_PARITY_ODD, FT_PARITY_EVEN, FT_PARITY_MARKor FT_PARITY SPACE
 
 	if (ftStatus != FT_OK)
 	{
@@ -122,7 +131,7 @@ int openFtdiHanlde(int numberDevice, FT_HANDLE *prepareHandle)
 
 	ftStatus = FT_SetFlowControl(*prepareHandle, FT_FLOW_NONE, 0x00, 0x00);
 
-	//FT_FLOW_NONE Must be one of FT_FLOW_NONE, FT_FLOW_RTS_CTS, FT_FLOW_DTR_DSRor FT_FLOW_XON_XOFF.uXonCharacter used to signal Xon.  Only u
+	// FT_FLOW_NONE Must be one of FT_FLOW_NONE, FT_FLOW_RTS_CTS, FT_FLOW_DTR_DSRor FT_FLOW_XON_XOFF.uXonCharacter used to signal Xon.  Only u
 
 	if (ftStatus != FT_OK)
 	{
@@ -135,20 +144,20 @@ int openFtdiHanlde(int numberDevice, FT_HANDLE *prepareHandle)
 		printf("receiver - %d - set FT_SetFlowControl FT_FLOW_NONE\n", numberDevice);
 	}
 
-	//FT_SetDtr(ftHandle);
-	//FT_SetRts(ftHandle);
+	// FT_SetDtr(ftHandle);
+	// FT_SetRts(ftHandle);
 	FT_ClrDtr(*prepareHandle);
 	FT_ClrRts(*prepareHandle);
 	FT_SetBreakOff(*prepareHandle);
 
 	// FT_SetFlowControl(ftHandle, FT_FLOW_RTS_CTS, 0, 0);
 	FT_SetTimeouts(*prepareHandle, 1, 0); // infinite timeouts
-										 //FT_SetBitMode(ftHandle, 0xFF, 0x01);
+										  // FT_SetBitMode(ftHandle, 0xFF, 0x01);
 
 	return 0;
 }
 
-int readftdi(volatile int *running, bool verbose)
+int readftdi(volatile int *running, bool verbose, bool outputdata)
 {
 	unsigned char *pcBufRead;
 	DWORD dwBytesRead, dwBytesWrite;
@@ -156,6 +165,7 @@ int readftdi(volatile int *running, bool verbose)
 	FT_HANDLE ftHandle;
 	FT_HANDLE sendftHandle;
 	FT_STATUS ftStatus;
+	FILE *outputfile;
 
 	FT_DEVICE_LIST_INFO_NODE *devInfo;
 
@@ -185,7 +195,7 @@ int readftdi(volatile int *running, bool verbose)
 		printf("receiver - %d %d - for usb access we need root privs\n", uid, euid);
 		keepRunning = 0;
 		running = &keepRunning;
-		//return 1;
+		// return 1;
 	}
 #endif
 
@@ -205,6 +215,12 @@ int readftdi(volatile int *running, bool verbose)
 		openFtdiHanlde(i, &devInfo[i].ftHandle);
 	}
 
+	if (outputdata)
+	{
+		// log to file
+		outputfile = fopen("rawdata.txt", "w+");
+	}
+
 	int checkloop = 0;
 	while (*running)
 	{
@@ -215,6 +231,12 @@ int readftdi(volatile int *running, bool verbose)
 		{
 			printf("Failure.  FT_Read returned %d.\n", (int)ftStatus);
 			return 1;
+		}
+
+		if (outputdata)
+		{
+			// log to file
+			dumpToFile(pcBufRead, (int)dwBytesRead, outputfile);
 		}
 
 		if (sendmode)
@@ -232,6 +254,12 @@ int readftdi(volatile int *running, bool verbose)
 		dumpBuffer(pcBufRead, (int)dwBytesRead, verbose);
 	}
 	free(pcBufRead);
+
+	if (outputdata)
+	{
+		fclose(outputfile);
+	}
+
 	FT_Close(devInfo[0].ftHandle);
 	FT_Close(devInfo[1].ftHandle);
 

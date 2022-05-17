@@ -139,7 +139,7 @@ int setDestSerialPort(HANDLE *hComm, const char *comport_name)
 }
 
 //int read(char *portname, volatile int *running, bool verbose)
-int read(char *portname, char *dstname, bool forward, volatile int *running, bool verbose)
+int read(char *portname, char *dstname, bool forward, volatile int *running, bool verbose, bool output)
 {
     // https://docs.microsoft.com/en-us/windows/win32/devio/configuring-a-communications-resource
 

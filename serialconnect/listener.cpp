@@ -30,13 +30,13 @@ bool checkPort()
     return check;
 }
 
-bool start(volatile int *running, char *portname, char *dstportname,bool forward, bool verbose)
+bool start(volatile int *running, char *portname, char *dstportname, bool forward, bool verbose, bool output)
 {
     bool check = false;
-    //char portname[] = "myport";
+    // char portname[] = "myport";
     try
     {
-        read(portname, dstportname, forward, running, verbose);
+        read(portname, dstportname, forward, running, verbose, output);
         check = true;
     }
     catch (...)
@@ -46,12 +46,12 @@ bool start(volatile int *running, char *portname, char *dstportname,bool forward
     return check;
 }
 
-bool startftdi(volatile int *running, bool verbose)
+bool startftdi(volatile int *running, bool verbose, bool outputdata)
 {
     bool check = false;
     try
     {
-        readftdi(running, verbose);
+        readftdi(running, verbose, outputdata);
         check = true;
     }
     catch (...)
@@ -61,26 +61,29 @@ bool startftdi(volatile int *running, bool verbose)
     return check;
 }
 
-int startListen(volatile int *running, char *portname,char *dstportname, bool verbose, bool ftdidevice, bool sendode)
+int startListen(volatile int *running, char *portname, char *dstportname, bool verbose, bool ftdidevice, bool sendode, bool outputdata)
 {
     printf("serialconnect - Serial start ...\n");
-    //ToDo add send binary
+    // ToDo add send binary
 
-    //ToDo Loop
-    //for (int i = 0; i < 5; i++)
+    // ToDo Loop
+    // for (int i = 0; i < 5; i++)
     while (*running)
     {
         time_t now;
         time(&now);
         printf("%s", ctime(&now));
-        if(ftdidevice){
+        if (ftdidevice)
+        {
             printf("serialconnect - ftdi running\n");
-            startftdi(running,verbose);
-        }else{
-            printf("serialconnect - serial running\n");
-            start(running, portname, dstportname, sendode, verbose);
+            startftdi(running, verbose, outputdata);
         }
-        
+        else
+        {
+            printf("serialconnect - serial running\n");
+            start(running, portname, dstportname, sendode, verbose, outputdata);
+        }
+
 #ifdef _WIN32
         Sleep(5000);
         printf(".");

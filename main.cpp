@@ -38,6 +38,7 @@ void usage(char *prog)
     printf("  -v               verbose output for serial \n");
     printf("  -d portname      destination port name like %s \n", DESTINATION_PORTNAME);
     printf("                   only for raw mode\n");
+    printf("  -o               log rawdata to rawdata.txt (only with ftdi) \n");
     printf("  -h               help \n");
     printf("\n");
     printf("data is published to localhost:1883 on queue rawdata\n");
@@ -51,6 +52,7 @@ int main(int argc, char *argv[])
     printf("serial %d.%d.%d \n", SERIAL_VERSION_MAJOR, SERIAL_VERSION_MINOR, SERIAL_VERSION_PATCH);
     char *portname = (char *)malloc(50);
     char *destinationportname = (char *)malloc(50);
+    char *destinationfile = (char *)malloc(255);
     bool send_mode = false;
     bool ftdi_mode = true;
 
@@ -60,6 +62,7 @@ int main(int argc, char *argv[])
 
     bool cmd_line_failure = true;
     bool cmd_verbose_mode = false;
+    bool lograwdata = false;
 
 /*
     if (SEND_MODE)
@@ -114,6 +117,12 @@ int main(int argc, char *argv[])
                     ftdi_mode = false;
                 }
                 break;
+            case 'o':
+                if (argc > n)
+                {
+                    lograwdata = true;
+                }
+                break;
             case 'v':
                 cmd_verbose_mode = true;
                 break;
@@ -154,12 +163,12 @@ int main(int argc, char *argv[])
     {
         printf("main - send - send out to port %s\n", destinationportname);
         //init_send(destinationportname);
-        dataInit(ptrRunning, portname, destinationportname, true, cmd_verbose_mode, ftdi_mode);
+        dataInit(ptrRunning, portname, destinationportname, true, cmd_verbose_mode, ftdi_mode, lograwdata);
     }
     else
     {
         printf("main - raw local apply to mqttt localhost:1883 topic rawdata\n");
-        dataInit(ptrRunning, portname, destinationportname, false, cmd_verbose_mode, ftdi_mode);
+        dataInit(ptrRunning, portname, destinationportname, false, cmd_verbose_mode, ftdi_mode, lograwdata);
     }
 
     dataClean();

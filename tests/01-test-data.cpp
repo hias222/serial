@@ -23,7 +23,7 @@ int main()
 
 
 
-    dataInit(keepRunning, portname, dstname, false, true, false);
+    dataInit(keepRunning, portname, dstname, false, true, false, false);
     dataStart();
     dataClean();
 
