@@ -40,13 +40,17 @@ else()
 endif()
 
 if(APPLE)
-    set(ENV{OPENSSL_ROOT_DIR} "/usr/local/opt/openssl@1.1")
-    set(ENV{OPENSSL_LIBRARIES} "/usr/local/opt/openssl@1.1/lib")
+    message(STATUS "Set parameter for Apple x86")
+    #set(ENV{OPENSSL_ROOT_DIR} "/usr/local/opt/openssl@1.1")
+    set(ENV{OPENSSL_ROOT_DIR} "/opt/homebrew/Cellar/openssl@1.1/1.1.1t")
+    #set(ENV{OPENSSL_LIBRARIES} "/usr/local/opt/openssl@1.1/lib")
+    set(ENV{OPENSSL_LIBRARIES} "/opt/homebrew/Cellar/openssl@1.1/1.1.1t/lib")
     set(PORTNAME "/dev/ttys002")
     set(DESTPORTNAME "/dev/ttys010")
 endif()
 
 if(WIN32)
+    message(STATUS "Set parameter for Windows x86")
     set(RASPBERRYPI "0")
     # set(USER_HOME_DIR "C:/Users/Matthias/git")
     set(USER_HOME_DIR "C:/Users/Max/git")
@@ -110,20 +114,35 @@ target_include_directories(serial PUBLIC
 # apple und Linux
 if(APPLE)
     message(STATUS "files for APPLE to " ${PROJECT_BINARY_DIR})
-    set(RELEASE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/binaries/mac")
+    
+    message(STATUS "Project Path " ${PROJECT_SOURCE_DIR})
 
-    #file(COPY ${PROJECT_BINARY_DIR}/serial
-    #DESTINATION ${RELEASE_OUTPUT_PATH})
+    if(${ARCHITECTURE} STREQUAL "arm64")
+        message(STATUS "ARM")
+        set(RELEASE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/binaries/m1")
 
-    file(COPY ${PROJECT_SOURCE_DIR}/receiver/lib/libftd2xx.1.4.16.dylib
-    DESTINATION ${RELEASE_OUTPUT_PATH})
-
-    file(COPY ${PROJECT_SOURCE_DIR}/receiver/lib/Readme.md
+        file(COPY ${PROJECT_SOURCE_DIR}/receiver/libm/libftd2xx.1.4.24.dylib
         DESTINATION ${RELEASE_OUTPUT_PATH})
 
-    message(STATUS "files in" ${EXECUTABLE_OUTPUT_PATH})
+        file(COPY ${PROJECT_SOURCE_DIR}/receiver/libm/Readme.md
+        DESTINATION ${RELEASE_OUTPUT_PATH})
+
+    else()
+
+        set(RELEASE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/binaries/mac")
+        #file(COPY ${PROJECT_BINARY_DIR}/serial
+        #DESTINATION ${RELEASE_OUTPUT_PATH})
+
+        file(COPY ${PROJECT_SOURCE_DIR}/receiver/lib/libftd2xx.1.4.16.dylib
+        DESTINATION ${RELEASE_OUTPUT_PATH})
+
+        file(COPY ${PROJECT_SOURCE_DIR}/receiver/lib/Readme.md
+        DESTINATION ${RELEASE_OUTPUT_PATH})
+
+    endif()
 
     set(EXECUTABLE_OUTPUT_PATH "${RELEASE_OUTPUT_PATH}")
+    message(STATUS "files in " ${EXECUTABLE_OUTPUT_PATH})
 
 elseif(UNIX)
     if ( ${ARCHITECTURE} STREQUAL "x86_64" )
@@ -139,9 +158,8 @@ elseif(UNIX)
         file(COPY ${PROJECT_SOURCE_DIR}/receiver/liblinux64/Readme.md
         DESTINATION ${RELEASE_OUTPUT_PATH})
 
-        message(STATUS "files in" ${EXECUTABLE_OUTPUT_PATH})
-
         set(EXECUTABLE_OUTPUT_PATH "${RELEASE_OUTPUT_PATH}")
+        message(STATUS "files in" ${EXECUTABLE_OUTPUT_PATH})
 
     endif()
 endif()
