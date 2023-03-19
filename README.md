@@ -37,12 +37,20 @@ docker run -it -p 1883:1883 --rm -v `pwd`/mosquitto.conf:/mosquitto/config/mosqu
 
 ```
 
-### Detail install instructions
+## Detail install instructions
+
+### some hints
+
+DISPLAY_LANE_COUNT - search in code for lane numbers  
+libs for os in folder receiver/libxx  
+
+### OS
 
 * [windows](binaries/win/Release/Readme.md)
 * [linux64](binaries/linux64/Readme.md)
 * [aarch64](binaries/aarch64/Readme.md)
 * [mac](binaries/mac/Readme.md)
+* [macarm](binaries/m1/Readme.md)
 
 ## Information about testing and compiling
 

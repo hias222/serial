@@ -7,10 +7,10 @@ Serial with ftdi libraries seems to be tricky, should work.
 
 ## install ftdi drivers mode
 
-* Use D2xx drivers
-* Copy libftd2xx.1.4.16.dylib to the /usr/local/lib directory
+* Use D2xx drivers for ARM
+* Copy **libftd2xx.1.4.24.dylib** to the /usr/local/lib directory
 * Change directory to the /usr/local/lib (cd /usr/local/lib)·
-* Create a symbolic link to the library (ln -sf libftd2xx.1.4.16.dylib libftd2xx.dylib)
+* Create a symbolic link to the library (ln -sf libftd2xx.1.4.24.dylib libftd2xx.dylib)
 
 ## test with serial-sender -> repo project
 
