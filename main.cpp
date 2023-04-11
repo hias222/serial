@@ -10,9 +10,9 @@
 #include <windows.h>
 #endif
 
-//#ifdef SEND_MODE
-//#include "send.h"
-//#endif
+// #ifdef SEND_MODE
+// #include "send.h"
+// #endif
 
 static volatile int keepRunning;
 static volatile int *ptrRunning;
@@ -57,20 +57,20 @@ int main(int argc, char *argv[])
     bool ftdi_mode = true;
 
     // out of SerialConfig
-    sprintf(portname, "%s", BASIC_PORTNAME);
-    sprintf(destinationportname, "%s", DESTINATION_PORTNAME);
+    snprintf(portname, 25, "%s", BASIC_PORTNAME);
+    snprintf(destinationportname, 25, "%s", DESTINATION_PORTNAME);
 
     bool cmd_line_failure = true;
     bool cmd_verbose_mode = false;
     bool lograwdata = false;
 
-/*
-    if (SEND_MODE)
-    {
-        printf("main - compiled with SENDMODE override with z\n");
-        send_mode = true;
-    }
-*/
+    /*
+        if (SEND_MODE)
+        {
+            printf("main - compiled with SENDMODE override with z\n");
+            send_mode = true;
+        }
+    */
     for (int n = 1; n < argc; n++) /* Scan through args. */
     {
         switch ((int)argv[n][0]) /* Check for option character. */
@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
             switch ((int)argv[n][1]) /* Check for option character. */
             {
             case 's':
-                //printf("we getting source \n");
+                // printf("we getting source \n");
                 if (argc > n)
                 {
                     portname = argv[n + 1];
@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
                 }
                 break;
             case 'f':
-                //printf("we getting source \n");
+                // printf("we getting source \n");
                 if (argc > n)
                 {
                     ftdi_mode = true;
@@ -162,7 +162,7 @@ int main(int argc, char *argv[])
     if (send_mode)
     {
         printf("main - send - send out to port %s\n", destinationportname);
-        //init_send(destinationportname);
+        // init_send(destinationportname);
         dataInit(ptrRunning, portname, destinationportname, true, cmd_verbose_mode, ftdi_mode, lograwdata);
     }
     else
@@ -173,12 +173,12 @@ int main(int argc, char *argv[])
 
     dataClean();
 
-/*
-    if (send_mode)
-    {
-        close_send();
-    }
-*/
+    /*
+        if (send_mode)
+        {
+            close_send();
+        }
+    */
     free(portname);
     free(destinationportname);
 }
