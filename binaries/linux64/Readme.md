@@ -7,3 +7,7 @@
 * add ftdi_sio to /etc/modprobe.d/blacklist.conf
 
 Attention: forward mode with ftdi not possible
+
+## simulate
+
+<https://github.com/hias222/serial-sender>
