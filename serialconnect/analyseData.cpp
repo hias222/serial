@@ -86,9 +86,9 @@ int putReadData(uint8_t ReadData)
 
     if ((ReadData & COLORADO_ADDRESS_WORD_MASK) == COLORADO_ADDRESS_WORD_MASK)
     {
-
         if (0x01 == colorado_start_detected)
         {
+            //wir haben genug und verarbeiten
             if (in_count == colorado_channel_length[colorado_control_channel])
             {
 
@@ -104,13 +104,13 @@ int putReadData(uint8_t ReadData)
 #ifdef debug_lane_pointer
                     showDisplayLine(&colorado_data[colorado_control_channel]);
 #endif
-
                     //please check number lanes in colorado config !!!!!!!!!
                     analyseActiveData(colorado_control_channel, &colorado_data[colorado_control_channel]);
                 }
                 else if (colorado_control_channel == 0x00)
                 {
                     checkStartStop(&colorado_data[colorado_control_channel]);
+                    // wir analsieren die zeit um unötiges schicken zu vermeiden
                     getTime(&colorado_data[colorado_control_channel]);
                 }
                 else if (colorado_control_channel == 0x0c)
@@ -130,6 +130,7 @@ int putReadData(uint8_t ReadData)
                 }
             }
         }
+        //wir starten neu mit sammeln
         in_count = 1;
         colorado_start_detected = 0x01;
         buf[0] = ReadData;

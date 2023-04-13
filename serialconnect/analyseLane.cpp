@@ -150,11 +150,10 @@ void getLaneTime(uint8_t lane, uint8_t data[])
     char mydata[64];
     char mydata_2[64];
     char shortdata[16];
-
     char ordereddata[64];
 
     // Button Zeit
-    // Problem ees wird die Zeit aus dem letzten lauf geschickt mit 0 als platz
+    // Problem es wird die Zeit aus dem letzten lauf geschickt mit 0 als platz
     sprintf(shortdata, "%d%d%d%d%d%d", checkBitValue(data[4]), checkBitValue(data[6]), checkBitValue(data[8]),
             checkBitValue(data[10]), checkBitValue(data[12]), checkBitValue(data[14]));
 

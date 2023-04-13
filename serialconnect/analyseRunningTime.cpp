@@ -6,9 +6,10 @@
 #include "mqttUtils.h"
 #include "helperFunctions.h"
 
-//#define debug
+// #define debug
 
-//100/s
+// 100/s
+//  -> 10s
 #define INACTIVE_TIME_AFTER_START 1000
 #define SEND_TIME_EVERY_COUNTS 30
 
@@ -16,17 +17,18 @@ int hundredth;
 int loopcount;
 
 bool sendActiveState;
+bool headerChange;
 
 void initRunninTime()
 {
-    hundredth = 0;
+    //hundredth = 0;
     loopcount = 0;
     sendActiveState = false;
+    headerChange = false;
 }
 
 int timehundredth(uint8_t data[])
 {
-
     int minutes;
     minutes = checkBitValue(data[4]) * 10 + checkBitValue(data[6]);
 
@@ -37,12 +39,12 @@ int timehundredth(uint8_t data[])
     decent = checkBitValue(data[12]);
     int timehundredth = (minutes * 60 + seconds) * 100 + decent * 10;
 
-    if (hundredth > INACTIVE_TIME_AFTER_START)
+    if (timehundredth > INACTIVE_TIME_AFTER_START)
     {
         sendActiveState = true;
     }
 
-    if (hundredth < INACTIVE_TIME_AFTER_START)
+    if (timehundredth < INACTIVE_TIME_AFTER_START)
     {
         sendActiveState = false;
     }
@@ -57,11 +59,18 @@ int timehundredth(uint8_t data[])
 void getTimeInternal(uint8_t data[])
 {
     char mydata[64];
-    //running = checknotnull(data);
-    hundredth = timehundredth(data);
+    // running = checknotnull(data);
+    //  wir bauen bei laufwechsel das mit ein
+    //  laufwechsel wird ausgeschaltet
+    // hundredth = timehundredth(data);
 
     if (loopcount > SEND_TIME_EVERY_COUNTS)
     {
+        if (!headerChange)
+        {
+            //setzen active state
+            timehundredth(data);
+        }
         sprintf(mydata, "time %d%d:%d%d,%d", checkBitValue(data[4]), checkBitValue(data[6]),
                 checkBitValue(data[8]), checkBitValue(data[10]), checkBitValue(data[12]));
 
@@ -85,4 +94,10 @@ void getTime(uint8_t *data[])
 bool getsendActiveState()
 {
     return sendActiveState;
+}
+
+void setsendActiveStateOff()
+{
+    sendActiveState = false;
+    headerChange = true;
 }

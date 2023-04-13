@@ -6,14 +6,15 @@
 #include "mqttUtils.h"
 #include "helperFunctions.h"
 #include "analyseLane.h"
+#include "analyseRunningTime.h"
 
-//#define debug
+// #define debug
 
 char *COLORADO_HEADER_DATA;
 
 int mqttLongLength;
 
-void initanalyseHeader( int mqttLength)
+void initanalyseHeader(int mqttLength)
 {
     int i;
     mqttLongLength = mqttLength;
@@ -46,8 +47,13 @@ void getHeaderInternal(uint8_t data[])
         mqtt_send(mydata);
         printf("Header: %s\n", mydata);
 
-        //TODO clean Lane Data
-        //nein es werden immer alle Zeiten bis zum erbrechen geschickt ...
+        // danach kann erstmal einige sekunden nichts kommen
+        // die colorado schickt aber einen Reset mit daten
+        // es entsteht datenmuell
+        setsendActiveStateOff();
+
+        // TODO clean Lane Data
+        // nein es werden immer alle Zeiten bis zum erbrechen geschickt ...
         resetAllData();
     }
 
