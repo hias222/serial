@@ -152,7 +152,7 @@ elseif(UNIX)
         #file(COPY ${PROJECT_BINARY_DIR}/serial
         #DESTINATION ${RELEASE_OUTPUT_PATH})
 
-        file(COPY ${PROJECT_SOURCE_DIR}/receiver/liblinux64/libftd2xx.so.1.4.8
+        file(COPY ${PROJECT_SOURCE_DIR}/receiver/liblinux64/libftd2xx.so.1.4.27
         DESTINATION ${RELEASE_OUTPUT_PATH})
 
         file(COPY ${PROJECT_SOURCE_DIR}/receiver/liblinux64/Readme.md
@@ -172,7 +172,7 @@ if(${ARCHITECTURE} STREQUAL "aarch64")
     #file(COPY ${PROJECT_BINARY_DIR}/serial
     #DESTINATION ${RELEASE_OUTPUT_PATH})
 
-    file(COPY ${PROJECT_SOURCE_DIR}/receiver/libarmv8/libftd2xx.so.1.4.8
+    file(COPY ${PROJECT_SOURCE_DIR}/receiver/libarmv8/libftd2xx.so.1.4.27
     DESTINATION ${RELEASE_OUTPUT_PATH})
 
     #file(COPY ${PROJECT_SOURCE_DIR}/receiver/libarmv8/libftd2xx.a

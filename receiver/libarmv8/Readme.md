@@ -9,7 +9,7 @@ With ubuntu 20, gpio didn't work. The programm was tested on 64bit versions, sho
 ## Install ftdi driver
 
 * Copy both libs to /lib
-* create link sudo ln -s /lib/libftd2xx.so.1.4.8 /lib/libftd2xx.so
+* create link sudo ln -s /lib/libftd2xx.so.1.4.27 /lib/libftd2xx.so
 * remove normal ftdi lib sudo rmmod ftdi_sio
 * add ftdi_sio to /etc/modprobe.d/blacklist.conf
 
