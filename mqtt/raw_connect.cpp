@@ -16,7 +16,7 @@ int raw_connect()
 
 	int *msgid;
 	char buf[50];
-	snprintf(buf, 50, "%s", "Hello World");
+	snprintf(buf, 50, "%s", "Starting Colorado Timing ...");
 
 	mosquitto_lib_init();
 	mosq = mosquitto_new(NULL, clean_session, NULL);

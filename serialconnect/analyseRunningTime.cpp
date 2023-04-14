@@ -10,8 +10,8 @@
 
 // 100/s
 //  -> 10s
-#define INACTIVE_TIME_AFTER_START 1000
-#define SEND_TIME_EVERY_COUNTS 30
+#define INACTIVE_TIME_AFTER_START 200
+#define SEND_TIME_EVERY_COUNTS 20
 
 int hundredth;
 int loopcount;
@@ -21,7 +21,7 @@ bool headerChange;
 
 void initRunninTime()
 {
-    //hundredth = 0;
+    // hundredth = 0;
     loopcount = 0;
     sendActiveState = false;
     headerChange = false;
@@ -39,6 +39,8 @@ int timehundredth(uint8_t data[])
     decent = checkBitValue(data[12]);
     int timehundredth = (minutes * 60 + seconds) * 100 + decent * 10;
 
+    bool sendActiveState_save = sendActiveState;
+
     if (timehundredth > INACTIVE_TIME_AFTER_START)
     {
         sendActiveState = true;
@@ -47,6 +49,16 @@ int timehundredth(uint8_t data[])
     if (timehundredth < INACTIVE_TIME_AFTER_START)
     {
         sendActiveState = false;
+    }
+
+    if (sendActiveState_save != sendActiveState && sendActiveState)
+    {
+        printf("Armed\n");
+    }
+
+    if (sendActiveState_save != sendActiveState && !sendActiveState)
+    {
+        printf("Paused\n");
     }
 
 #ifdef debug
@@ -66,11 +78,15 @@ void getTimeInternal(uint8_t data[])
 
     if (loopcount > SEND_TIME_EVERY_COUNTS)
     {
+
         if (!headerChange)
         {
-            //setzen active state
+            // setzen active state
             timehundredth(data);
         }
+        // einmal warten zum reset
+        headerChange = false;
+
         sprintf(mydata, "time %d%d:%d%d,%d", checkBitValue(data[4]), checkBitValue(data[6]),
                 checkBitValue(data[8]), checkBitValue(data[10]), checkBitValue(data[12]));
 
@@ -82,13 +98,7 @@ void getTimeInternal(uint8_t data[])
 
 void getTime(uint8_t *data[])
 {
-#ifdef debug
-    printf("getTime - start\n");
-#endif
     getTimeInternal(*data);
-#ifdef debug
-    printf("getTime - end\n");
-#endif
 };
 
 bool getsendActiveState()
@@ -100,4 +110,11 @@ void setsendActiveStateOff()
 {
     sendActiveState = false;
     headerChange = true;
+
+#ifdef debug
+    if (headerChange)
+    {
+        printf("header change - paused\n");
+    }
+#endif
 }
