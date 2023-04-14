@@ -11,7 +11,7 @@
 
 #include "mqttUtils.h"
 
-#define mqtt_host "rockpi-4b.fritz.box"
+#define mqtt_host "localhost"
 #define mqtt_port 1883
 
 static int run = 1;
