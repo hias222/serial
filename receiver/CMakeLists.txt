@@ -19,14 +19,14 @@ elseif ( ${ARCHITECTURE} STREQUAL "x86_64" )
     ## linux
     message(STATUS "x86_64 search lib libftd2xx.so.1.4.27 ")
     find_library(libftd2
-    Names libftd2xx.so.1.4.8
+    Names libftd2xx.so.1.4.27
     HINTS  liblinux64 )
     message(STATUS  ${libftd2})
 elseif ( ${ARCHITECTURE} STREQUAL "aarch64" )
     ## linux
     message(STATUS "others search lib armv8 libftd2xx.so.1.4.27 ")
     find_library(libftd2
-    Names libftd2xx.so.1.4.8
+    Names libftd2xx.so.1.4.27
     HINTS  libarmv8 )
     message(STATUS  ${libftd2})
 elseif (WIN32)
