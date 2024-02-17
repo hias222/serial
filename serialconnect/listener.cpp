@@ -15,6 +15,7 @@ using namespace std;
 #include <time.h>
 #else
 #include <unistd.h>
+#include <ctime>
 #endif
 
 #include "info.h"
