@@ -6,7 +6,7 @@
 #include "mqttUtils.h"
 #include "helperFunctions.h"
 
-//#define debug
+#define debug
 //#define debug_trace
 
 #ifdef _WIN32
