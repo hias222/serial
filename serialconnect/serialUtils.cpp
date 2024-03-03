@@ -78,6 +78,12 @@ void storeRoundsInternal(uint8_t data[])
     // printf("showDisplayLine\n");
     // printf("--> %s\n", mydata);
 
+#ifdef debug
+        printf("%d%d%d%d%d%d%d%d", checkBitValue(data[0]), checkBitValue(data[2]), checkBitValue(data[4]),
+            checkBitValue(data[6]), checkBitValue(data[8]), checkBitValue(data[10]),
+            checkBitValue(data[12]), checkBitValue(data[14]));
+#endif
+
     if (strcmp(mydata, "00000000") == 0)
     {
         p_round = 0;
