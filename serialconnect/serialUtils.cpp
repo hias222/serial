@@ -6,7 +6,7 @@
 #include "mqttUtils.h"
 #include "helperFunctions.h"
 
-#define debug
+//#define debug
 // #define debug_trace
 
 #ifdef _WIN32
@@ -79,7 +79,7 @@ void storeRoundsInternal(uint8_t data[])
     // printf("--> %s\n", mydata);
 
 #ifdef debug
-        printf("%d%d%d%d%d%d%d%d", checkBitValue(data[0]), checkBitValue(data[2]), checkBitValue(data[4]),
+        printf("round %d%d%d%d%d%d%d%d \n", checkBitValue(data[0]), checkBitValue(data[2]), checkBitValue(data[4]),
             checkBitValue(data[6]), checkBitValue(data[8]), checkBitValue(data[10]),
             checkBitValue(data[12]), checkBitValue(data[14]));
 #endif
